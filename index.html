@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>n8n Workflow Demo</title>
+  <meta name="description" content="Live-Demo Landingpage für Terminbuchung, Terminerinnerung und Bewertungsanfrage." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#081018;--bg2:#0d1b2a;--card:#0f2133cc;--stroke:#23364d;--text:#e8f0fb;--muted:#9ab0c8;--accent:#7c5cff;--accent2:#31d0aa;--warn:#ffcd6b;--shadow:0 20px 60px rgba(0,0,0,.35)}
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,sans-serif;background:radial-gradient(1200px 700px at 20% 0%, #14304c 0, transparent 50%),linear-gradient(180deg,var(--bg),var(--bg2));color:var(--text)}
+    a{text-decoration:none;color:inherit} .wrap{max-width:1180px;margin:0 auto;padding:24px} header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 0 30px} .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.2px} .logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#44b0ff);box-shadow:0 10px 30px rgba(124,92,255,.35)} .pill{padding:10px 14px;border:1px solid var(--stroke);background:#0f213399;border-radius:999px;color:var(--muted);font-size:14px}
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;padding:24px 0 26px} .h1{font-size:clamp(40px,6vw,72px);line-height:.95;margin:0 0 18px;letter-spacing:-.04em} .lead{font-size:clamp(16px,2vw,19px);line-height:1.7;color:var(--muted);max-width:60ch;margin:0 0 24px} .actions{display:flex;flex-wrap:wrap;gap:12px} .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 18px;border-radius:14px;font-weight:700;border:1px solid transparent;transition:.2s transform,.2s opacity} .btn:hover{transform:translateY(-1px)} .btn-primary{background:linear-gradient(135deg,var(--accent),#4cb4ff);box-shadow:var(--shadow)} .btn-secondary{background:#0f2133;border-color:var(--stroke);color:var(--text)}
+    .heroCard{background:linear-gradient(180deg,#10243acc,#0d1b2acc);border:1px solid rgba(255,255,255,.08);border-radius:24px;box-shadow:var(--shadow);padding:22px;position:relative;overflow:hidden} .heroCard:before{content:"";position:absolute;inset:auto -40px -40px auto;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle, rgba(49,208,170,.22), transparent 60%);filter:blur(10px)} .status{display:grid;gap:12px} .row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 14px;border:1px solid var(--stroke);border-radius:16px;background:rgba(8,16,24,.45)} .dot{width:10px;height:10px;border-radius:50%;background:var(--accent2);box-shadow:0 0 0 6px rgba(49,208,170,.12)} .row small{color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:24px 0 30px} .card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:20px;box-shadow:var(--shadow);backdrop-filter:blur(10px)} .icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg, rgba(124,92,255,.25), rgba(49,208,170,.22));border:1px solid rgba(255,255,255,.08);margin-bottom:14px} h2{font-size:24px;margin:0 0 8px} .desc{color:var(--muted);line-height:1.65;margin:0 0 16px} .mini{display:flex;gap:8px;flex-wrap:wrap} .tag{font-size:12px;padding:8px 10px;border-radius:999px;background:#0f2133;border:1px solid var(--stroke);color:#c7d5e6}
+    .demo{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:0 0 30px} .panel{background:linear-gradient(180deg,#10243acc,#0d1b2acc);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:20px;box-shadow:var(--shadow)} .field{display:grid;gap:8px;margin-bottom:14px} label{font-size:14px;color:#cdd8e6} input,select,textarea{width:100%;border-radius:14px;border:1px solid var(--stroke);background:#08121c;color:var(--text);padding:13px 14px;font:inherit;outline:none} textarea{min-height:110px;resize:vertical} .steps{display:grid;gap:10px;margin-top:14px} .step{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:14px;background:#08121c;border:1px solid var(--stroke);color:#d6e2f2} .step span{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#1b2c40;color:#8fb1d8;font-size:12px;font-weight:700} .step.done{border-color:rgba(49,208,170,.35);background:rgba(49,208,170,.08)} .step.done span{background:var(--accent2);color:#072019} .footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:12px 0 28px;color:var(--muted);font-size:14px} .note{color:#ffd98a}
+    @media (max-width: 980px){.hero,.demo,.grid{grid-template-columns:1fr}} @media (max-width: 640px){header{flex-direction:column;align-items:flex-start}.actions,.footer{flex-direction:column;align-items:stretch}.btn{justify-content:center}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand"><div class="logo"></div><div>n8n Workflow Studio</div></div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h1 class="h1">Echte Workflows.<br>Sauber präsentiert.</h1>
+        <p class="lead">Zeige deine Terminbuchung, Terminerinnerung und Bewertungsanfrage als moderne, interaktive Landingpage mit klarer Struktur, Workflow-Optik und starker Conversion.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#demo">Demo starten</a>
+          <a class="btn btn-secondary" href="#workflows">Workflows ansehen</a>
+        </div>
+      </div>
+      <div class="heroCard">
+        <div class="status">
+          <div class="row"><div><strong>Terminbuchung</strong><br><small>Webhook · Sheets · Mail</small></div><div class="dot"></div></div>
+          <div class="row"><div><strong>Terminerinnerung</strong><br><small>Filter · Gmail · Update</small></div><div class="dot"></div></div>
+          <div class="row"><div><strong>Bewertungsanfrage</strong><br><small>Filter · Gmail · Update</small></div><div class="dot"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflows" class="grid">
+      <article class="card">
+        <div class="icon">📅</div>
+        <h2>Terminbuchung</h2>
+        <p class="desc">Nimmt Buchungen auf, prüft Verfügbarkeit und bestätigt automatisch per E-Mail.</p>
+        <div class="mini"><span class="tag">Webhook</span><span class="tag">Google Sheets</span><span class="tag">Gmail</span></div>
+      </article>
+      <article class="card">
+        <div class="icon">🔔</div>
+        <h2>Terminerinnerung</h2>
+        <p class="desc">Erkennt offene Termine, sendet Erinnerungen und markiert den Eintrag direkt in Sheets.</p>
+        <div class="mini"><span class="tag">Code Filter</span><span class="tag">Gmail</span><span class="tag">Update Row</span></div>
+      </article>
+      <article class="card">
+        <div class="icon">⭐</div>
+        <h2>Bewertungsanfrage</h2>
+        <p class="desc">Fordert nach dem Termin automatisch eine Bewertung an und pflegt den Status zurück ins Sheet.</p>
+        <div class="mini"><span class="tag">Sheets</span><span class="tag">Code</span><span class="tag">Gmail</span></div>
+      </article>
+    </section>
+
+    <section id="demo" class="demo">
+      <div class="panel">
+        <h2>Live-Demo</h2>
+        <p class="desc">Simuliere hier den Ablauf deiner Workflows. Später kannst du die Buttons direkt mit n8n Webhooks verbinden.</p>
+        <div class="field"><label>Workflow</label><select><option>Terminbuchung</option><option>Terminerinnerung</option><option>Bewertungsanfrage</option></select></div>
+        <div class="field"><label>Name</label><input placeholder="Martin" /></div>
+        <div class="field"><label>E-Mail</label><input placeholder="martin@example.com" /></div>
+        <div class="field"><label>Termin-Datum</label><input type="date" /></div>
+        <a class="btn btn-primary" href="javascript:void(0)">Workflow starten</a>
+      </div>
+      <div class="panel">
+        <h2>Status</h2>
+        <div class="steps">
+          <div class="step done"><span>1</span>Workflow gestartet</div>
+          <div class="step done"><span>2</span>Daten verarbeitet</div>
+          <div class="step done"><span>3</span>E-Mail gesendet</div>
+          <div class="step"><span>4</span>Sheets aktualisiert</div>
+        </div>
+        <p class="desc" style="margin-top:16px">Tipp: Auf GitHub Pages kannst du diese Seite direkt veröffentlichen und später die Demo mit echten n8n Webhooks verbinden.</p>
+        <p class="note">Ideal für Kunden, Portfolio und Live-Präsentationen.</p>
+      </div>
+    </section>
+
+    <div class="footer">
+      <div>© 2026 n8n Workflow Studio</div>
+      <div>Bereit für GitHub Pages</div>
+    </div>
+  </div>
+</body>
+</html>
