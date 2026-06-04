@@ -157,17 +157,19 @@
     .stepAnim{width:140px;height:26px;position:relative;flex:0 0 140px;overflow:hidden;margin-left:auto}
     .mailAnim{position:relative;width:140px;height:26px;overflow:hidden}
     .mail{position:absolute;left:-36px;top:0;font-size:18px;opacity:0}
-    .mailbox{position:absolute;right:0;top:0;font-size:18px}
+    .mailbox{position:absolute;right:0;top:0;font-size:18px;opacity:0}
+    .step.showIcons .mailbox{opacity:1}
+    .step.showIcons .bell{opacity:1}
     .step.animating .mail{animation:flyMail 1.2s ease-in-out forwards}
     .step.animating .mailbox{animation:boxPulse 1.2s ease-in-out forwards}
     .bellAnim{position:relative;width:140px;height:26px;overflow:hidden}
-    .bell{position:absolute;right:0;top:0;font-size:18px;opacity:.85;transform-origin:center center}
+    .bell{position:absolute;right:0;top:0;font-size:18px;opacity:0;transform-origin:center center}
     .wave{position:absolute;top:4px;width:10px;height:10px;border:2px solid rgba(35,198,165,.8);border-radius:50%;opacity:0}
     .wave1{left:0}.wave2{left:14px}.wave3{left:28px}
-    .step.animating .wave1{animation:ring 1.1s ease-out 0s forwards}
-    .step.animating .wave2{animation:ring 1.1s ease-out .18s forwards}
-    .step.animating .wave3{animation:ring 1.1s ease-out .36s forwards}
-    .step.animating .bell{animation:bellMove 1.1s ease-out forwards}
+    .step.showIcons.animating .wave1{animation:ring 1.1s ease-out 0s forwards}
+    .step.showIcons.animating .wave2{animation:ring 1.1s ease-out .18s forwards}
+    .step.showIcons.animating .wave3{animation:ring 1.1s ease-out .36s forwards}
+    .step.showIcons.animating .bell{animation:bellMove 1.1s ease-out forwards}
     @keyframes flyMail{0%{left:-36px;opacity:0;transform:translateY(0)}12%{opacity:1}80%{left:72%;opacity:1}100%{left:82%;opacity:0;transform:translateY(0)}}
     @keyframes boxPulse{0%,75%{transform:scale(1)}85%{transform:scale(1.18)}100%{transform:scale(1)}}
     @keyframes ring{0%{transform:scale(.6) translateX(0);opacity:0}20%{opacity:1}100%{transform:scale(1.8) translateX(92px);opacity:0}}
@@ -207,132 +209,6 @@
     ========================== */
     @media (max-width: 980px){
       .hero,.grid,.demoGrid,.formGrid{grid-template-columns:1fr}
-    }
-    @media (max-width: 640px){
-<!doctype html>
-<html lang="de">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PlexPilot Demo</title>
-  <meta name="description" content="PlexPilot Demo: Terminbuchung, Terminerinnerung und Bewertungsanfrage als klare Kundenlösung." />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <style>
-    :root{
-      --bg:#07131d;
-      --bg2:#0b1b2a;
-      --card:#0f2235cc;
-      --stroke:#1f3550;
-      --text:#edf4fb;
-      --muted:#95acc4;
-      --accent:#6d5efc;
-      --accent2:#23c6a5;
-      --shadow:0 22px 70px rgba(0,0,0,.35);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter,system-ui,sans-serif;
-      background:
-        radial-gradient(900px 500px at 10% 0%, rgba(109,94,252,.28), transparent 55%),
-        radial-gradient(900px 500px at 90% 10%, rgba(35,198,165,.16), transparent 50%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-      color:var(--text)
-    }
-    a{text-decoration:none;color:inherit}
-    .wrap{max-width:1180px;margin:0 auto;padding:24px}
-    header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 14px}
-    .brand{display:flex;align-items:center;gap:12px;font-weight:800}
-    .logo{width:42px;height:42px;border-radius:14px;object-fit:cover;box-shadow:0 10px 30px rgba(109,94,252,.35);background:#fff}
-    .hero{padding:8px 0 18px;display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}
-    .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid rgba(255,255,255,.08);border-radius:999px;background:#0d1c2bcc;color:#b7c8da;font-size:13px;margin-bottom:18px}
-    .pulse{width:10px;height:10px;border-radius:50%;background:var(--accent2);box-shadow:0 0 0 0 rgba(35,198,165,.55);animation:pulse 1.8s infinite}
-    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(35,198,165,.5)}70%{box-shadow:0 0 0 14px rgba(35,198,165,0)}100%{box-shadow:0 0 0 0 rgba(35,198,165,0)}}
-    h1{font-size:clamp(42px,6vw,74px);line-height:.94;letter-spacing:-.05em;margin:0 0 16px}
-    .lead{font-size:clamp(16px,2vw,19px);line-height:1.8;color:var(--muted);max-width:60ch;margin:0 0 22px}
-    .actions{display:flex;flex-wrap:wrap;gap:12px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;border-radius:14px;font-weight:700;border:1px solid transparent;cursor:pointer}
-    .btn-primary{background:linear-gradient(135deg,var(--accent),#4cb4ff);box-shadow:var(--shadow)}
-    .visual{background:linear-gradient(180deg,#10253acc,#0d1c2bcc);border:1px solid rgba(255,255,255,.08);border-radius:28px;box-shadow:var(--shadow);padding:22px}
-    .flowtitle{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-    .flowtitle strong{font-size:18px}
-    .flowtitle span{font-size:13px;color:var(--muted)}
-    .flow{display:grid;gap:10px}
-    .node{display:flex;align-items:center;gap:14px;padding:14px 15px;border-radius:16px;background:#081521;border:1px solid var(--stroke)}
-    .node .nicon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(109,94,252,.25),rgba(35,198,165,.22));font-size:18px;flex:0 0 auto}
-    .node .ntext{display:grid;gap:3px}
-    .node .ntext b{font-size:15px}
-    .node .ntext small{color:var(--muted)}
-    .arrow{display:flex;justify-content:center;color:#89a4bf;font-size:18px}
-    .section{padding:18px 0 8px}
-    .section h2{font-size:30px;margin:0 0 10px}
-    .section p{color:var(--muted);margin:0 0 16px;line-height:1.75}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:10px 0 26px}
-    .card{background:linear-gradient(180deg,rgba(15,34,53,.88),rgba(9,22,35,.92));border:1px solid rgba(255,255,255,.08);border-radius:26px;padding:22px 20px 20px;box-shadow:var(--shadow);backdrop-filter:blur(10px);position:relative;overflow:hidden}
-    .cardHead{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-    .icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg, rgba(109,94,252,.25), rgba(35,198,165,.20));border:1px solid rgba(255,255,255,.08);box-shadow:0 12px 28px rgba(0,0,0,.18);flex:0 0 auto}
-    .cardHead h2{margin:0;font-size:24px;line-height:1.1;letter-spacing:-.03em;display:flex;align-items:center;min-height:52px}
-    .desc{color:var(--muted);line-height:1.65;margin:0 0 16px}
-    ul{margin:0;padding-left:18px;color:#d7e3ef;line-height:1.75}
-    .benefitInline{margin-top:14px;padding:16px 16px;border-radius:18px;background:linear-gradient(180deg,rgba(35,198,165,.12),rgba(13,28,43,.95));border:1px solid rgba(35,198,165,.24);box-shadow:0 14px 34px rgba(0,0,0,.16);min-height:136px;display:flex;flex-direction:column;justify-content:flex-start}
-    .benefitInline b{display:block;font-size:16px;margin-bottom:6px;letter-spacing:-.01em}
-    .benefitInline p{margin:0;color:#dce8f2;line-height:1.75}
-    .demoSection{margin:16px 0 28px;background:linear-gradient(180deg,rgba(15,34,53,.94),rgba(9,22,35,.96));border:1px solid rgba(255,255,255,.08);border-radius:28px;box-shadow:var(--shadow);padding:22px 20px 20px}
-    .demoTop{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:16px}
-    .demoTop h2{margin:0;font-size:30px;letter-spacing:-.04em}
-    .demoTop p{margin:0;color:var(--muted);line-height:1.7;max-width:68ch}
-    .demoGrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .demoPanel{background:linear-gradient(180deg,#10253acc,#0d1c2bcc);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:20px}
-    .field{display:grid;gap:8px;margin-bottom:14px}
-    label{font-size:14px;color:#cedae7}
-    select,input{width:100%;border-radius:14px;border:1px solid var(--stroke);background:#08121c;color:var(--text);padding:13px 14px;font:inherit;outline:none;transition:.18s border-color,.18s box-shadow}
-    select:focus,input:focus{border-color:rgba(123,108,255,.7);box-shadow:0 0 0 4px rgba(123,108,255,.12)}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid var(--stroke);background:#0d1c2b;color:#d3deea;font-size:13px;margin-bottom:14px}
-    .pill.good{background:rgba(35,198,165,.08);border-color:rgba(35,198,165,.24)}
-    .slots{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
-    .slotBtn{
-      width:100%;
-      border:1px solid rgba(123,108,255,.22);
-      background:rgba(123,108,255,.12);
-      color:var(--text);
-      padding:12px 14px;
-      border-radius:14px;
-      cursor:pointer;
-      font:inherit;
-      font-weight:700;
-      transition:.18s transform,.18s background,.18s border-color;
-      text-align:center;
-    }
-    .slotBtn:hover{transform:translateY(-1px);background:rgba(123,108,255,.18)}
-    .slotBtn.selected{border-color:rgba(35,198,165,.5);background:rgba(35,198,165,.16)}
-    .slotBtn:disabled{opacity:.45;cursor:not-allowed}
-    .selectedBox{
-      margin-top:14px;
-      padding:14px;
-      border-radius:16px;
-      border:1px solid rgba(35,198,165,.24);
-      background:rgba(35,198,165,.08);
-      color:#dff7f0;
-      display:none;
-    }
-    .formGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .bookingActions{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
-    .btn-secondary{background:#08121c;border:1px solid var(--stroke)}
-    .steps{display:grid;gap:10px;margin-top:14px}
-    .step{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:16px;background:#08121c;border:1px solid var(--stroke);color:#d6e2f2}
-    .step span{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#1b2c40;color:#8fb1d8;font-size:12px;font-weight:700;flex:0 0 auto}
-    .step.done{border-color:rgba(35,198,165,.34);background:rgba(35,198,165,.08)}
-    .step.done span{background:var(--accent2);color:#072019}
-    .step.pending{opacity:.35;background:#08121c;border-style:dashed;color:#94a3b8}
-    .step.pending span{background:#718096;color:#f0f4f8}
-    .footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:12px 0 24px;color:var(--muted);font-size:14px}
-    @media (max-width: 980px){
-      .hero,.grid,.demoGrid,.formGrid{grid-template-columns:1fr}
-      .slots{grid-template-columns:1fr}
     }
     @media (max-width: 640px){
       header,.footer{flex-direction:column;align-items:flex-start}
@@ -422,7 +298,7 @@
         <div>
           <div class="pill good">Live-Demo</div>
           <h2>TerminPilot</h2>
-          <p>Wähle ein Datum. Die freien Stunden werden live aus n8n geladen und als anklickbare Slots angezeigt.</p>
+          <p>Die Demo zeigt den sichtbaren Ablauf für den Kunden. Wenn TerminPilot gewählt wird, erscheint darunter die Eingabefläche für die Terminbuchung.</p>
         </div>
       </div>
 
@@ -436,35 +312,60 @@
             </select>
           </div>
 
-          <div class="field">
-            <label>Datum</label>
-            <input id="dateInput" type="date">
-          </div>
+          <div id="bookingArea" class="formWrap"></div>
 
-          <div class="bookingActions">
-            <button class="btn btn-primary" id="loadSlotsBtn" type="button">Verfügbarkeit laden</button>
-            <button class="btn btn-secondary" id="bookBtn" type="button" disabled>Buchung senden</button>
-          </div>
-
-          <div id="slotsArea" class="slots"></div>
-          <div id="selectedBox" class="selectedBox"></div>
-
-          <div class="formGrid" style="margin-top:18px">
-            <div class="field"><label>Name</label><input id="inpName" type="text" placeholder="Max Mustermann"></div>
-            <div class="field"><label>E-Mail</label><input id="inpEmail" type="email" placeholder="max@example.com"></div>
-            <div class="field"><label>Telefon</label><input id="inpPhone" type="tel" placeholder="+49 170 1234567"></div>
-            <div class="field"><label>Art des Termins</label><select id="inpType"><option>Beratung</option><option>Erstgespräch</option><option>Vor-Ort-Termin</option><option>Online-Call</option></select></div>
+          <div class="actions" id="start" style="margin-top:14px">
+            <a class="btn btn-primary" href="#bookingArea">Start</a>
           </div>
         </div>
 
         <div class="demoPanel">
           <h2 style="margin:0 0 8px;font-size:24px">Status</h2>
           <div class="steps">
-            <div class="step pending" id="step1"><span>1</span>Verfügbarkeit geladen</div>
-            <div class="step pending" id="step2"><span>2</span>Slot ausgewählt</div>
-            <div class="step pending" id="step3"><span>3</span>Termin gesendet</div>
+            <div class="step pending" id="step1">
+              <span>1</span>
+              <div class="stepLabel">
+                <div class="stepTitle">Termin angefragt</div>
+                <div class="stepAnim">
+                  <div class="mailAnim">
+                    <div class="mail">✉️</div>
+                    <div class="mailbox">📮</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step pending" id="step2">
+              <span>2</span>
+              <div class="stepLabel">
+                <div class="stepTitle">Erinnerung eingeplant</div>
+                <div class="stepAnim">
+                  <div class="bellAnim">
+                    <div class="wave wave1"></div>
+                    <div class="wave wave2"></div>
+                    <div class="wave wave3"></div>
+                    <div class="bell">🔔</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step pending" id="step3">
+              <span>3</span>
+              <div class="stepLabel">
+                <div class="stepTitle">Bewertung vorbereitet</div>
+                <div class="stepAnim">
+                  <div class="reviewMiniAnim">
+                    <div class="reviewMiniStar">⭐</div>
+                    <div class="reviewMiniThumb">👍</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step disabled"><span>4</span>TerminPilot Plus</div>
           </div>
-          <p class="desc" style="margin-top:16px">Hier sieht der Kunde den Ablauf: erst freie Zeiten, dann Auswahl, dann Buchung.</p>
+          <p class="desc" style="margin-top:16px">So sieht der sichtbare Kundenweg aus: klar, verständlich und ohne technische Details.</p>
         </div>
       </div>
     </section>
@@ -476,99 +377,59 @@
   </div>
 
   <script>
-    /* 
-    ===================================================================
-    DEINE N8N WEBHOOK URLS - HIER ÄNDERN
-    ===================================================================
-    Hier stehen deine beiden Webhooks. Falls du die Seite nicht lokal, 
-    sondern auf einem echten Webspace hostest, musst du beim 
-    availabilityWebhookUrl ebenfalls deine Cloudflare-Tunnel URL 
-    (https://inner-quotes-...) nutzen!
-    ===================================================================
-    */
+    /* ===================================================================
+       DEINE N8N WEBHOOK URLS - HIER ÄNDERN
+       ===================================================================
+       Verfügbarkeit = Slot-Liste laden
+       Buchung       = Termin abschicken
+       =================================================================== */
     const availabilityWebhookUrl = 'https://inner-quotes-collectible-wear.trycloudflare.com/webhook/Verfuegbarkeit';
     const bookingWebhookUrl = 'https://inner-quotes-collectible-wear.trycloudflare.com/webhook/Terminbuchung';
-    /* ================================================================= */
-
+    /* =================================================================== */
 
     const sel = document.getElementById('productSelect');
-    const dateInput = document.getElementById('dateInput');
-    const loadSlotsBtn = document.getElementById('loadSlotsBtn');
-    const bookBtn = document.getElementById('bookBtn');
-    const slotsArea = document.getElementById('slotsArea');
-    const selectedBox = document.getElementById('selectedBox');
-    const inpName = document.getElementById('inpName');
-    const inpEmail = document.getElementById('inpEmail');
-    const inpPhone = document.getElementById('inpPhone');
-    const inpType = document.getElementById('inpType');
+    const area = document.getElementById('bookingArea');
+    const startBtnContainer = document.getElementById('start');
 
-    let currentSlots = [];
-    let selectedSlot = null;
-    let currentDate = '';
+    const baseForm = `
+      <div class="formGrid">
+        <div class="field"><label>Name</label><input id="inpName" type="text" placeholder="Max Mustermann"></div>
+        <div class="field"><label>E-Mail</label><input id="inpEmail" type="email" placeholder="max@example.com"></div>
+        <div class="field"><label>Telefon</label><input id="inpPhone" type="tel" placeholder="+49 170 1234567"></div>
+        <div class="field"><label>Art des Termins</label><select id="inpType"><option>Beratung</option><option>Erstgespräch</option><option>Vor-Ort-Termin</option><option>Online-Call</option></select></div>
+        <div class="field">
+          <label>Datum</label>
+          <div style="display:flex;align-items:center;gap:12px;border:1px solid var(--stroke);background:#08121c;border-radius:14px;padding:13px 14px;color:var(--text)">
+            <span style="font-size:20px;line-height:1;color:#edf4fb;filter:drop-shadow(0 0 2px rgba(255,255,255,.15))">🗓️</span>
+            <input id="inpDate" type="date" style="border:none;background:transparent;padding:0;box-shadow:none;color:var(--text)">
+          </div>
+        </div>
+        <div class="field">
+          <label>Uhrzeit</label>
+          <select id="inpTime">
+            <option value="">Bitte zuerst Datum wählen</option>
+          </select>
+        </div>
+      </div>`;
 
-    function setStep(id, state) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.classList.remove('pending', 'done');
-      if (state === 'done') el.classList.add('done');
-      else el.classList.add('pending');
+    function showBooking(){
+      area.style.display = 'block';
+      area.innerHTML = baseForm;
+      if(startBtnContainer) startBtnContainer.style.display = 'flex';
+      setTimeout(() => {
+        const dateEl = document.getElementById('inpDate');
+        if (dateEl) {
+          dateEl.addEventListener('change', loadAvailabilityForDate);
+        }
+      }, 0);
     }
 
-    function resetSteps() {
-      setStep('step1', 'pending');
-      setStep('step2', 'pending');
-      setStep('step3', 'pending');
-    }
+    async function loadAvailabilityForDate(){
+      const date = document.getElementById('inpDate')?.value;
+      const timeSelect = document.getElementById('inpTime');
+      if(!date || !timeSelect) return;
 
-    function markDone(id) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.classList.remove('pending');
-      el.classList.add('done');
-    }
-
-    function renderSlots(freeSlots) {
-      slotsArea.innerHTML = '';
-      selectedSlot = null;
-      selectedBox.style.display = 'none';
-      bookBtn.disabled = true;
-
-      if (!freeSlots || !freeSlots.length) {
-        slotsArea.innerHTML = '<div class="pill">Keine freien Slots gefunden</div>';
-        return;
-      }
-
-      freeSlots.forEach((slot, index) => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'slotBtn';
-        btn.textContent = `${slot.start} – ${slot.end}`;
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.slotBtn').forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-          selectedSlot = slot;
-          selectedBox.style.display = 'block';
-          selectedBox.innerHTML = `<strong>Ausgewählt:</strong> ${currentDate} · ${slot.start} – ${slot.end}`;
-          bookBtn.disabled = false;
-          markDone('step2');
-        });
-        slotsArea.appendChild(btn);
-      });
-    }
-
-    async function loadAvailability() {
-      const date = dateInput.value;
-      if (!date) {
-        alert('Bitte zuerst ein Datum auswählen.');
-        return;
-      }
-
-      currentDate = date;
-      slotsArea.innerHTML = '<div class="pill">Lade Verfügbarkeit...</div>';
-      bookBtn.disabled = true;
-      selectedSlot = null;
-      selectedBox.style.display = 'none';
-      resetSteps();
+      timeSelect.innerHTML = '<option value="">Lade Verfügbarkeit...</option>';
 
       try {
         const url = `${availabilityWebhookUrl}?date=${encodeURIComponent(date)}`;
@@ -576,33 +437,158 @@
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
 
-        currentSlots = data.freeSlots || [];
-        renderSlots(currentSlots);
-        markDone('step1');
+        const freeSlots = data.freeSlots || [];
+        timeSelect.innerHTML = '';
+
+        if (!freeSlots.length) {
+          const opt = document.createElement('option');
+          opt.value = '';
+          opt.textContent = 'Keine freien Slots';
+          timeSelect.appendChild(opt);
+          return;
+        }
+
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = 'Bitte Uhrzeit auswählen';
+        timeSelect.appendChild(placeholder);
+
+        freeSlots.forEach(slot => {
+          const opt = document.createElement('option');
+          opt.value = slot.start;
+          opt.textContent = `${slot.start} – ${slot.end}`;
+          opt.dataset.end = slot.end;
+          timeSelect.appendChild(opt);
+        });
       } catch (err) {
-        slotsArea.innerHTML = '<div class="pill">Fehler beim Laden der Verfügbarkeit</div>';
+        timeSelect.innerHTML = '<option value="">Fehler beim Laden</option>';
         console.error(err);
       }
     }
 
-    async function sendBooking() {
-      if (!selectedSlot) {
-        alert('Bitte zuerst einen Slot auswählen.');
-        return;
+    function setStatusInitial(){
+      const s1=document.getElementById('step1');
+      const s2=document.getElementById('step2');
+      const s3=document.getElementById('step3');
+      [s1,s2,s3].forEach(s=>{
+        if(s){
+          s.classList.remove('done','active','animating','showIcons');
+          s.classList.add('pending');
+        }
+      });
+    }
+
+    function prepareIcons(){
+      const s1=document.getElementById('step1');
+      const s2=document.getElementById('step2');
+      const s3=document.getElementById('step3');
+      [s1,s2,s3].forEach(s=>{
+        if(s) s.classList.add('showIcons');
+      });
+    }
+
+    function runStep1Animation(){
+      const s1=document.getElementById('step1');
+      if(!s1) return;
+      s1.classList.remove('pending','done');
+      s1.classList.add('active','animating','showIcons');
+      setTimeout(()=>{
+        s1.classList.remove('animating','active');
+        s1.classList.add('done');
+      }, 1200);
+    }
+
+    function runStep2Animation(){
+      const s2=document.getElementById('step2');
+      if(!s2) return;
+      s2.classList.remove('pending','done');
+      s2.classList.add('active','animating','showIcons');
+      setTimeout(()=>{
+        s2.classList.remove('animating','active');
+        s2.classList.add('done');
+      }, 1200);
+    }
+
+    function runStep3Animation(){
+      const s3=document.getElementById('step3');
+      if(!s3) return;
+      s3.classList.remove('pending','done');
+      s3.classList.add('active','animating','showIcons');
+      setTimeout(()=>{
+        s3.classList.remove('animating','active');
+        s3.classList.add('done');
+      }, 1400);
+    }
+
+    function showComingSoon(){
+      area.style.display = 'block';
+      area.innerHTML = '<div class="pill" style="margin-top:0">Coming soon</div>';
+      if(startBtnContainer) startBtnContainer.style.display = 'none';
+    }
+
+    sel.addEventListener('change', () => {
+      if(sel.value === 'plus'){
+        showComingSoon();
+      } else {
+        showBooking();
       }
+    });
 
-      const payload = {
-        date: currentDate,
-        startTime: selectedSlot.start,
-        endTime: selectedSlot.end,
-        name: inpName.value || '',
-        email: inpEmail.value || '',
-        phone: inpPhone.value || '',
-        type: inpType.value || ''
-      };
+    showBooking();
+    setStatusInitial();
 
-      bookBtn.disabled = true;
-      bookBtn.textContent = 'Sende Buchung...';
+    if(startBtnContainer){
+      startBtnContainer.addEventListener('click', async (e) => {
+        e.preventDefault();
 
-      try {
-        const response = await 
+        const btn = startBtnContainer.querySelector('.btn');
+        if(!btn) return;
+        if(btn.style.pointerEvents === 'none') return;
+
+        const timeSelect = document.getElementById('inpTime');
+        const selectedTime = timeSelect?.value || '';
+        const selectedEnd = timeSelect?.selectedOptions?.[0]?.dataset?.end || '';
+
+        const data = {
+          Name: document.getElementById('inpName')?.value || '',
+          Email: document.getElementById('inpEmail')?.value || '',
+          Telefon: document.getElementById('inpPhone')?.value || '',
+          Art: document.getElementById('inpType')?.value || '',
+          Termin_Datum: document.getElementById('inpDate')?.value || '',
+          Termin_Uhrzeit: selectedTime,
+          Termin_Bis: selectedEnd
+        };
+
+        const oldText = btn.innerText;
+        btn.innerText = 'Wird gesendet...';
+        btn.style.opacity = '0.7';
+        btn.style.pointerEvents = 'none';
+
+        try {
+          await fetch(bookingWebhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+
+          prepareIcons();
+          runStep1Animation();
+          setTimeout(() => {
+            runStep2Animation();
+            setTimeout(() => {
+              runStep3Animation();
+              area.innerHTML = '<div class="pill good" style="font-size:16px; padding:16px 20px; width:100%; justify-content:center;">✅ Termin erfolgreich angefragt!</div>';
+              startBtnContainer.style.display = 'none';
+            }, 1250);
+          }, 1250);
+        } catch (err) {
+          btn.innerText = oldText;
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+          alert('Senden fehlgeschlagen. Bitte prüfe den Cloudflare Worker oder n8n Webhook.');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
