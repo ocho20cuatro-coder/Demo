@@ -179,13 +179,14 @@
        10) BEWERTUNGSANFRAGE-ANIMATION
        - Nur im Statusbereich
        - Stern fliegt von links nach rechts
-       - Am Ende Daumen hoch
+       - Daumen bleibt am Ende sichtbar
     ========================== */
     .reviewMiniAnim{position:relative;width:140px;height:26px;overflow:hidden}
     .reviewMiniStar{position:absolute;left:-26px;top:0;font-size:18px;opacity:0}
     .reviewMiniThumb{position:absolute;right:0;top:0;font-size:18px;opacity:0;transform:scale(.5)}
     .step.showIcons.animating .reviewMiniStar{animation:miniStarFly 1.4s ease-in-out forwards}
     .step.showIcons.animating .reviewMiniThumb{animation:miniThumbIn .5s ease forwards;animation-delay:1.08s}
+    .step.showIcons .reviewMiniThumb{opacity:1;transform:scale(1)}
     @keyframes miniStarFly{
       0%{transform:translateX(0) translateY(0) scale(.7) rotate(-20deg);opacity:0}
       12%{opacity:1}
