@@ -14,7 +14,7 @@
 
   <!-- =========================
        2) SCHRIFTARTEN
-       - Hier wird Inter geladen
+       - Inter wird geladen
        - Kann bei Bedarf ersetzt werden
   ========================== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,7 +27,7 @@
        - Farben
        - Schatten
        - globale Designwerte
-       - HIER passt du das Grunddesign an
+       - Hier passt du das Grunddesign an
     ========================== */
     :root{
       --bg:#07131d;
@@ -64,7 +64,7 @@
     /* =========================
        5) HEADER / LOGO
        - Oberer Bereich mit Logo und Name
-       - HIER Logo-URL oder Markenname ändern
+       - Hier Logo oder Markenname ändern
     ========================== */
     header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 14px}
     .brand{display:flex;align-items:center;gap:12px;font-weight:800}
@@ -72,7 +72,7 @@
 
     /* =========================
        6) HERO-BEREICH
-       - Überschrift
+       - Hauptüberschrift
        - Unterzeile
        - Buttons
     ========================== */
@@ -88,7 +88,7 @@
 
     /* =========================
        7) RECHTE HERO-KARTE / ABLAUF
-       - Visualisierung des Workflows
+       - Workflow-Visualisierung
     ========================== */
     .visual{background:linear-gradient(180deg,#10253acc,#0d1c2bcc);border:1px solid rgba(255,255,255,.08);border-radius:28px;box-shadow:var(--shadow);padding:22px}
     .flowtitle{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
@@ -125,7 +125,7 @@
        9) LIVE-DEMO / FORMULAR
        - Formular für TerminPilot
        - Coming soon bei TerminPilot Plus
-       - Start-Button für Workflow
+       - Start-Button startet Workflow
     ========================== */
     .demoSection{margin:16px 0 28px;background:linear-gradient(180deg,rgba(15,34,53,.94),rgba(9,22,35,.96));border:1px solid rgba(255,255,255,.08);border-radius:28px;box-shadow:var(--shadow);padding:22px 20px 20px}
     .demoTop{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:16px}
@@ -176,7 +176,7 @@
          12) HEADER-INHALT
          - Markenname
          - Logo
-         - HIER Logo oder Name ändern
+         - Hier Logo oder Name ändern
     ========================== -->
     <header>
       <div class="brand">
@@ -361,7 +361,7 @@
 
     /* =========================
        19) WORKFLOW-ANBINDUNG
-       - HIER deine Webhook-URL eintragen
+       - Hier deine Webhook-URL eintragen
        - Beim Klick auf Start werden die Daten gesendet
     ========================== */
     if(startBtnContainer){
@@ -387,29 +387,21 @@
         btn.style.pointerEvents = 'none';
 
         try {
-          /* =========================
-             WICHTIG:
-             Hier deine echte Webhook-URL einsetzen
-             Beispiel n8n / Make / Zapier
-          ========================== */
-const webhookUrl = 'https://inner-quotes-collectible-wear.trycloudflare.com/webhook/Terminbuchung';
+          const webhookUrl = 'https://inner-quotes-collectible-wear.trycloudflare.com/webhook/Terminbuchung';
 
-await fetch(webhookUrl, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(data)
-});
-
-area.innerHTML = '<div class="pill good" style="font-size:16px; padding:16px 20px; width:100%; justify-content:center;">✅ Termin erfolgreich angefragt!</div>';
-startBtnContainer.style.display = 'none';
+          await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
 
           area.innerHTML = '<div class="pill good" style="font-size:16px; padding:16px 20px; width:100%; justify-content:center;">✅ Termin erfolgreich angefragt!</div>';
           startBtnContainer.style.display = 'none';
-
         } catch (err) {
           btn.innerText = oldText;
           btn.style.opacity = '1';
           btn.style.pointerEvents = 'auto';
+          alert('Senden fehlgeschlagen. Bitte prüfe den Cloudflare Worker oder n8n Webhook.');
         }
       });
     }
