@@ -152,10 +152,10 @@
     .step.disabled span{background:#718096;color:#f0f4f8}
     .formWrap{display:none;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
     .formGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .stepLabel{display:flex;align-items:center;justify-content:space-between;gap:14px;flex:1;min-width:0}
-    .stepTitle{font-size:15px;font-weight:700;white-space:nowrap}
-    .stepAnim{width:170px;min-height:24px;position:relative;overflow:hidden}
-    .mailAnim{position:relative;width:170px;height:26px;overflow:hidden}
+    .stepLabel{display:flex;align-items:center;justify-content:space-between;gap:14px;flex:1;min-width:0;flex-wrap:nowrap}
+    .stepTitle{font-size:15px;font-weight:700;white-space:nowrap;flex:0 0 auto}
+    .stepAnim{width:140px;height:26px;position:relative;flex:0 0 140px;overflow:hidden;margin-left:auto}
+    .mailAnim{position:relative;width:140px;height:26px;overflow:hidden}
     .mail{position:absolute;left:-36px;top:0;font-size:18px;opacity:0}
     .mailbox{position:absolute;right:0;top:0;font-size:18px}
     .step.animating .mail{animation:flyMail 1.2s ease-in-out forwards}
