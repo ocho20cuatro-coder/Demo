@@ -160,8 +160,16 @@
     .mailbox{position:absolute;right:0;top:0;font-size:18px}
     .step.animating .mail{animation:flyMail 1.2s ease-in-out forwards}
     .step.animating .mailbox{animation:boxPulse 1.2s ease-in-out forwards}
+    .bellAnim{position:relative;width:140px;height:26px;overflow:hidden}
+    .bell{position:absolute;left:10px;top:0;font-size:18px;opacity:.85}
+    .wave{position:absolute;top:4px;width:10px;height:10px;border:2px solid rgba(35,198,165,.8);border-radius:50%;opacity:0}
+    .wave1{left:34px}.wave2{left:48px}.wave3{left:62px}
+    .step.animating .wave1{animation:ring 1.1s ease-out 0s forwards}
+    .step.animating .wave2{animation:ring 1.1s ease-out .18s forwards}
+    .step.animating .wave3{animation:ring 1.1s ease-out .36s forwards}
     @keyframes flyMail{0%{left:-36px;opacity:0;transform:translateY(0)}12%{opacity:1}80%{left:72%;opacity:1}100%{left:82%;opacity:0;transform:translateY(0)}}
     @keyframes boxPulse{0%,75%{transform:scale(1)}85%{transform:scale(1.18)}100%{transform:scale(1)}}
+    @keyframes ring{0%{transform:scale(.6);opacity:0}20%{opacity:1}100%{transform:scale(1.8);opacity:0}}
 
     /* =========================
        10) FOOTER
@@ -319,7 +327,20 @@
                 </div>
               </div>
             </div>
-            <div class="step pending" id="step2"><span>2</span>Erinnerung eingeplant</div>
+            <div class="step pending" id="step2">
+              <span>2</span>
+              <div class="stepLabel">
+                <div class="stepTitle">Erinnerung eingeplant</div>
+                <div class="stepAnim">
+                  <div class="bellAnim">
+                    <div class="bell">🔔</div>
+                    <div class="wave wave1"></div>
+                    <div class="wave wave2"></div>
+                    <div class="wave wave3"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="step pending" id="step3"><span>3</span>Bewertung vorbereitet</div>
             <div class="step disabled"><span>4</span>TerminPilot Plus</div>
           </div>
@@ -392,6 +413,17 @@
       }, 1200);
     }
 
+    function runStep2Animation(){
+      const s2=document.getElementById('step2');
+      if(!s2) return;
+      s2.classList.remove('pending','done');
+      s2.classList.add('active','animating');
+      setTimeout(()=>{
+        s2.classList.remove('animating','active');
+        s2.classList.add('done');
+      }, 1200);
+    }
+
     function showComingSoon(){
       area.style.display = 'block';
       area.innerHTML = '<div class="pill" style="margin-top:0">Coming soon</div>';
@@ -447,6 +479,7 @@
 
           runStep1Animation();
           setTimeout(() => {
+            runStep2Animation();
             area.innerHTML = '<div class="pill good" style="font-size:16px; padding:16px 20px; width:100%; justify-content:center;">✅ Termin erfolgreich angefragt!</div>';
             startBtnContainer.style.display = 'none';
           }, 1250);
