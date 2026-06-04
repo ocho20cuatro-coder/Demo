@@ -39,7 +39,6 @@
       --accent:#6d5efc;
       --accent2:#23c6a5;
       --shadow:0 22px 70px rgba(0,0,0,.35);
-
       --reviewStar:#facc15;
       --reviewThumb:#22c55e;
     }
@@ -177,9 +176,7 @@
     @keyframes bellMove{0%{transform:translateX(0) scale(1)}35%{transform:translateX(0) scale(1.12)}70%{transform:translateX(4px) scale(1.08)}100%{transform:translateX(0) scale(1)}}
 
     /* =========================
-       10) NEUE BEWERTUNGSANFRAGE-ANIMATION
-       - Stern fliegt von links nach rechts
-       - Am Ende erscheint Daumen hoch
+       10) BEWERTUNGSANFRAGE-ANIMATION
     ========================== */
     .reviewAnimWrap{
       position:relative;
@@ -251,6 +248,7 @@
     .rs2{top:60px;left:34%;animation-delay:1.05s}
     .rs3{top:18px;left:55%;animation-delay:1.7s}
     .rs4{top:52px;left:74%;animation-delay:2.25s}
+
     @keyframes reviewFly{
       0%{transform:translateX(0) translateY(0) scale(.7) rotate(-18deg);opacity:0}
       10%{opacity:1}
@@ -318,9 +316,6 @@
 
     <!-- =========================
          13) HEADER-INHALT
-         - Markenname
-         - Logo
-         - Hier Logo oder Name ändern
     ========================== -->
     <header>
       <div class="brand">
@@ -331,8 +326,6 @@
 
     <!-- =========================
          14) HERO-INHALT
-         - Hauptüberschrift
-         - Buttons für Navigation
     ========================== -->
     <section class="hero" id="top">
       <div>
@@ -359,7 +352,6 @@
 
     <!-- =========================
          15) BAUSTEINE
-         - Infobereiche / Nutzenkarten
     ========================== -->
     <section id="bausteine" class="section">
       <h2>Die Bausteine von TerminPilot</h2>
@@ -397,8 +389,7 @@
           <li>Stärkere Sichtbarkeit und Vertrauen.</li>
           <li>Bessere Kundenbindung.</li>
         </ul>
-
-        <div class="benefitInline" style="background:linear-gradient(180deg,rgba(123,108,255,.10),rgba(13,28,43,.95));border-color:rgba(123,108,255,.22);min-height:170px">
+        <div class="benefitInline" style="background:linear-gradient(180deg,rgba(123,108,255,.10),rgba(13,28,43,.95));border-color:rgba(123,108,255,.22)">
           <b>Mehr Vertrauen</b>
           <p>Durch die professionelle Nachbereitung wirkt dein Unternehmen modern, zuverlässig und kundenorientiert.</p>
 
@@ -419,10 +410,6 @@
 
     <!-- =========================
          16) LIVE-DEMO
-         - Dropdown für Produktwahl
-         - Formular für TerminPilot
-         - Coming soon für TerminPilot Plus
-         - Statusanzeige mit Animation
     ========================== -->
     <section class="demoSection" id="demo">
       <div class="demoTop">
@@ -465,6 +452,7 @@
                 </div>
               </div>
             </div>
+
             <div class="step pending" id="step2">
               <span>2</span>
               <div class="stepLabel">
@@ -479,7 +467,20 @@
                 </div>
               </div>
             </div>
-            <div class="step pending" id="step3"><span>3</span>Bewertung vorbereitet</div>
+
+            <div class="step pending" id="step3">
+              <span>3</span>
+              <div class="stepLabel">
+                <div class="stepTitle">Bewertung vorbereitet</div>
+                <div class="stepAnim">
+                  <div class="reviewMiniAnim">
+                    <div class="reviewMiniStar">⭐</div>
+                    <div class="reviewMiniThumb">👍</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="step disabled"><span>4</span>TerminPilot Plus</div>
           </div>
           <p class="desc" style="margin-top:16px">So sieht der sichtbare Kundenweg aus: klar, verständlich und ohne technische Details.</p>
@@ -497,11 +498,6 @@
   </div>
 
   <script>
-    /* =========================
-       18) FORMULAR-VORLAGE
-       - Hier werden die Eingabefelder definiert
-       - IDs sind wichtig für den Workflow
-    ========================== */
     const sel = document.getElementById('productSelect');
     const area = document.getElementById('bookingArea');
     const startBtnContainer = document.getElementById('start');
@@ -516,12 +512,6 @@
         <div class="field"><label>Uhrzeit</label><select id="inpTime"><option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option></select></div>
       </div>`;
 
-    /* =========================
-       19) ANZEIGE-LOGIK
-       - TerminPilot => Formular anzeigen
-       - TerminPilot Plus => Coming soon anzeigen
-       - Status initial grau setzen
-    ========================== */
     function showBooking(){
       area.style.display = 'block';
       area.innerHTML = baseForm;
@@ -566,11 +556,11 @@
       const s3=document.getElementById('step3');
       if(!s3) return;
       s3.classList.remove('pending','done');
-      s3.classList.add('active');
+      s3.classList.add('active','animating');
       setTimeout(()=>{
-        s3.classList.remove('active');
+        s3.classList.remove('animating','active');
         s3.classList.add('done');
-      }, 1200);
+      }, 1400);
     }
 
     function showComingSoon(){
@@ -590,11 +580,6 @@
     showBooking();
     setStatusInitial();
 
-    /* =========================
-       20) WORKFLOW-ANBINDUNG
-       - Hier deine Webhook-URL eintragen
-       - Beim Klick auf Start werden die Daten gesendet
-    ========================== */
     if(startBtnContainer){
       startBtnContainer.addEventListener('click', async (e) => {
         e.preventDefault();
@@ -643,6 +628,27 @@
         }
       });
     }
+
+    /* Bewertung Mini-Animation im Status 3 */
+    const reviewMiniStyle = document.createElement('style');
+    reviewMiniStyle.textContent = `
+      .reviewMiniAnim{position:relative;width:140px;height:26px;overflow:hidden}
+      .reviewMiniStar{position:absolute;left:-26px;top:0;font-size:18px;opacity:0}
+      .reviewMiniThumb{position:absolute;right:0;top:0;font-size:18px;opacity:0;transform:scale(.5)}
+      .step.animating .reviewMiniStar{animation:miniStarFly 1.4s ease-in-out forwards}
+      .step.animating .reviewMiniThumb{animation:miniThumbIn .5s ease forwards;animation-delay:1.08s}
+      @keyframes miniStarFly{
+        0%{transform:translateX(0) translateY(0) scale(.7) rotate(-20deg);opacity:0}
+        12%{opacity:1}
+        68%{transform:translateX(88px) translateY(-1px) scale(1) rotate(12deg);opacity:1}
+        100%{transform:translateX(118px) translateY(0) scale(.8) rotate(18deg);opacity:0}
+      }
+      @keyframes miniThumbIn{
+        from{opacity:0;transform:scale(.5) rotate(-10deg)}
+        to{opacity:1;transform:scale(1) rotate(0deg)}
+      }
+    `;
+    document.head.appendChild(reviewMiniStyle);
   </script>
 </body>
 </html>
