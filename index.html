@@ -1,498 +1,384 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <!-- =========================
-       1) GRUNDEINSTELLUNGEN
-       - Seitentitel
-       - Zeichensatz
-       - Responsive Ansicht
-  ========================== -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PlexPilot Demo</title>
-  <meta name="description" content="PlexPilot Demo: Terminbuchung, Terminerinnerung und Bewertungsanfrage als klare Kundenlösung." />
-
-  <!-- =========================
-       2) SCHRIFTARTEN
-       - Inter wird geladen
-       - Kann bei Bedarf ersetzt werden
-  ========================== -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bewertung vorbereitet</title>
   <style>
-    /* =========================
-       3) DESIGN-VARIABLEN
-       - Farben
-       - Schatten
-       - globale Designwerte
-       - Hier passt du das Grunddesign an
-    ========================== */
-    :root{
-      --bg:#07131d;
-      --bg2:#0b1b2a;
-      --card:#0f2235cc;
-      --stroke:#1f3550;
-      --text:#edf4fb;
-      --muted:#95acc4;
-      --accent:#6d5efc;
-      --accent2:#23c6a5;
-      --shadow:0 22px 70px rgba(0,0,0,.35);
+    :root {
+      --bg1: #0f172a;
+      --bg2: #111827;
+      --card: rgba(255, 255, 255, 0.08);
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.75);
+      --accent: #facc15;
+      --accent2: #22c55e;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
     }
 
-    /* =========================
-       4) BASIS-STYLING
-       - Reset
-       - Body
-       - Links
-       - Container
-    ========================== */
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter,system-ui,sans-serif;
-      background:
-        radial-gradient(900px 500px at 10% 0%, rgba(109,94,252,.28), transparent 55%),
-        radial-gradient(900px 500px at 90% 10%, rgba(35,198,165,.16), transparent 50%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-      color:var(--text)
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    a{text-decoration:none;color:inherit}
-    .wrap{max-width:1180px;margin:0 auto;padding:24px}
 
-    /* =========================
-       5) HEADER / LOGO
-       - Oberer Bereich mit Logo und Name
-       - Hier Logo oder Markenname ändern
-    ========================== */
-    header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 14px}
-    .brand{display:flex;align-items:center;gap:12px;font-weight:800}
-    .logo{width:42px;height:42px;border-radius:14px;object-fit:cover;box-shadow:0 10px 30px rgba(109,94,252,.35);background:#fff}
-
-    /* =========================
-       6) HERO-BEREICH
-       - Hauptüberschrift
-       - Unterzeile
-       - Buttons
-    ========================== */
-    .hero{padding:8px 0 18px;display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}
-    .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid rgba(255,255,255,.08);border-radius:999px;background:#0d1c2bcc;color:#b7c8da;font-size:13px;margin-bottom:18px}
-    .pulse{width:10px;height:10px;border-radius:50%;background:var(--accent2);box-shadow:0 0 0 0 rgba(35,198,165,.55);animation:pulse 1.8s infinite}
-    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(35,198,165,.5)}70%{box-shadow:0 0 0 14px rgba(35,198,165,0)}100%{box-shadow:0 0 0 0 rgba(35,198,165,0)}}
-    h1{font-size:clamp(42px,6vw,74px);line-height:.94;letter-spacing:-.05em;margin:0 0 16px}
-    .lead{font-size:clamp(16px,2vw,19px);line-height:1.8;color:var(--muted);max-width:60ch;margin:0 0 22px}
-    .actions{display:flex;flex-wrap:wrap;gap:12px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;border-radius:14px;font-weight:700;border:1px solid transparent;cursor:pointer}
-    .btn-primary{background:linear-gradient(135deg,var(--accent),#4cb4ff);box-shadow:var(--shadow)}
-
-    /* =========================
-       7) RECHTE HERO-KARTE / ABLAUF
-       - Workflow-Visualisierung
-    ========================== */
-    .visual{background:linear-gradient(180deg,#10253acc,#0d1c2bcc);border:1px solid rgba(255,255,255,.08);border-radius:28px;box-shadow:var(--shadow);padding:22px}
-    .flowtitle{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-    .flowtitle strong{font-size:18px}
-    .flowtitle span{font-size:13px;color:var(--muted)}
-    .flow{display:grid;gap:10px}
-    .node{display:flex;align-items:center;gap:14px;padding:14px 15px;border-radius:16px;background:#081521;border:1px solid var(--stroke)}
-    .node .nicon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(109,94,252,.25),rgba(35,198,165,.22));font-size:18px;flex:0 0 auto}
-    .node .ntext{display:grid;gap:3px}
-    .node .ntext b{font-size:15px}
-    .node .ntext small{color:var(--muted)}
-    .arrow{display:flex;justify-content:center;color:#89a4bf;font-size:18px}
-
-    /* =========================
-       8) BAUSTEIN-BEREICHE
-       - Karten unterhalb des Hero-Bereichs
-    ========================== */
-    .section{padding:18px 0 8px}
-    .section h2{font-size:30px;margin:0 0 10px}
-    .section p{color:var(--muted);margin:0 0 16px;line-height:1.75}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:10px 0 26px}
-    .card{background:linear-gradient(180deg,rgba(15,34,53,.88),rgba(9,22,35,.92));border:1px solid rgba(255,255,255,.08);border-radius:26px;padding:22px 20px 20px;box-shadow:var(--shadow);backdrop-filter:blur(10px);position:relative;overflow:hidden}
-    .card:before{content:"";position:absolute;inset:auto -40px -60px auto;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(109,94,252,.16),transparent 65%);filter:blur(6px)}
-    .cardHead{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-    .icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg, rgba(109,94,252,.25), rgba(35,198,165,.20));border:1px solid rgba(255,255,255,.08);box-shadow:0 12px 28px rgba(0,0,0,.18);flex:0 0 auto}
-    .cardHead h2{margin:0;font-size:24px;line-height:1.1;letter-spacing:-.03em;display:flex;align-items:center;min-height:52px}
-    .desc{color:var(--muted);line-height:1.65;margin:0 0 16px}
-    ul{margin:0;padding-left:18px;color:#d7e3ef;line-height:1.75}
-    .benefitInline{margin-top:14px;padding:16px 16px;border-radius:18px;background:linear-gradient(180deg,rgba(35,198,165,.12),rgba(13,28,43,.95));border:1px solid rgba(35,198,165,.24);box-shadow:0 14px 34px rgba(0,0,0,.16);min-height:136px;display:flex;flex-direction:column;justify-content:flex-start}
-    .benefitInline b{display:block;font-size:16px;margin-bottom:6px;letter-spacing:-.01em}
-    .benefitInline p{margin:0;color:#dce8f2;line-height:1.75}
-
-    /* =========================
-       9) LIVE-DEMO / FORMULAR
-       - Formular für TerminPilot
-       - Coming soon bei TerminPilot Plus
-       - Start-Button startet Workflow
-    ========================== */
-    .demoSection{margin:16px 0 28px;background:linear-gradient(180deg,rgba(15,34,53,.94),rgba(9,22,35,.96));border:1px solid rgba(255,255,255,.08);border-radius:28px;box-shadow:var(--shadow);padding:22px 20px 20px}
-    .demoTop{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:16px}
-    .demoTop h2{margin:0;font-size:30px;letter-spacing:-.04em}
-    .demoTop p{margin:0;color:var(--muted);line-height:1.7;max-width:68ch}
-    .demoGrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .demoPanel{background:linear-gradient(180deg,#10253acc,#0d1c2bcc);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:20px}
-    .field{display:grid;gap:8px;margin-bottom:14px}
-    label{font-size:14px;color:#cedae7}
-    select,input{width:100%;border-radius:14px;border:1px solid var(--stroke);background:#08121c;color:var(--text);padding:13px 14px;font:inherit;outline:none;transition:.18s border-color,.18s box-shadow}
-    select:focus,input:focus{border-color:rgba(123,108,255,.7);box-shadow:0 0 0 4px rgba(123,108,255,.12)}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid var(--stroke);background:#0d1c2b;color:#d3deea;font-size:13px;margin-bottom:14px}
-    .pill.good{background:rgba(35,198,165,.08);border-color:rgba(35,198,165,.24)}
-    .steps{display:grid;gap:10px;margin-top:14px}
-    .step{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:16px;background:#08121c;border:1px solid var(--stroke);color:#d6e2f2}
-    .step span{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#1b2c40;color:#8fb1d8;font-size:12px;font-weight:700;flex:0 0 auto}
-    .step.done{border-color:rgba(35,198,165,.34);background:rgba(35,198,165,.08)}
-    .step.done span{background:var(--accent2);color:#072019}
-    .step.pending{opacity:.35;background:#08121c;border-style:dashed;color:#94a3b8}
-    .step.pending span{background:#718096;color:#f0f4f8}
-    .step.active{border-color:rgba(123,108,255,.34);background:rgba(123,108,255,.08);opacity:1}
-    .step.active span{background:var(--accent);color:#fff}
-    .step.disabled{opacity:.45;border-style:dashed;background:#08121c}
-    .step.disabled span{background:#718096;color:#f0f4f8}
-    .formWrap{display:none;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
-    .formGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .stepLabel{display:flex;align-items:center;justify-content:space-between;gap:14px;flex:1;min-width:0;flex-wrap:nowrap}
-    .stepTitle{font-size:15px;font-weight:700;white-space:nowrap;flex:0 0 auto}
-    .stepAnim{width:140px;height:26px;position:relative;flex:0 0 140px;overflow:hidden;margin-left:auto}
-    .mailAnim{position:relative;width:140px;height:26px;overflow:hidden}
-    .mail{position:absolute;left:-36px;top:0;font-size:18px;opacity:0}
-    .mailbox{position:absolute;right:0;top:0;font-size:18px}
-    .step.animating .mail{animation:flyMail 1.2s ease-in-out forwards}
-    .step.animating .mailbox{animation:boxPulse 1.2s ease-in-out forwards}
-    .bellAnim{position:relative;width:140px;height:26px;overflow:hidden}
-    .bell{position:absolute;right:0;top:0;font-size:18px;opacity:.85;transform-origin:center center}
-    .wave{position:absolute;top:4px;width:10px;height:10px;border:2px solid rgba(35,198,165,.8);border-radius:50%;opacity:0}
-    .wave1{left:0}.wave2{left:14px}.wave3{left:28px}
-    .step.animating .wave1{animation:ring 1.1s ease-out 0s forwards}
-    .step.animating .wave2{animation:ring 1.1s ease-out .18s forwards}
-    .step.animating .wave3{animation:ring 1.1s ease-out .36s forwards}
-    .step.animating .bell{animation:bellMove 1.1s ease-out forwards}
-    @keyframes flyMail{0%{left:-36px;opacity:0;transform:translateY(0)}12%{opacity:1}80%{left:72%;opacity:1}100%{left:82%;opacity:0;transform:translateY(0)}}
-    @keyframes boxPulse{0%,75%{transform:scale(1)}85%{transform:scale(1.18)}100%{transform:scale(1)}}
-    @keyframes ring{0%{transform:scale(.6) translateX(0);opacity:0}20%{opacity:1}100%{transform:scale(1.8) translateX(92px);opacity:0}}
-    @keyframes bellMove{0%{transform:translateX(0) scale(1)}35%{transform:translateX(0) scale(1.12)}70%{transform:translateX(4px) scale(1.08)}100%{transform:translateX(0) scale(1)}}
-
-    /* =========================
-       10) FOOTER
-    ========================== */
-    .footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:12px 0 24px;color:var(--muted);font-size:14px}
-
-    /* =========================
-       11) RESPONSIVE
-       - Mobile Anpassungen
-    ========================== */
-    @media (max-width: 980px){
-      .hero,.grid,.demoGrid,.formGrid{grid-template-columns:1fr}
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0%, var(--bg1) 45%, var(--bg2) 100%);
+      color: var(--text);
+      overflow: hidden;
     }
-    @media (max-width: 640px){
-      header,.footer{flex-direction:column;align-items:flex-start}
-      .actions{width:100%}
-      .btn{width:100%}
-      .cardHead h2{min-height:auto}
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .page {
+      position: relative;
+      width: min(960px, 100%);
+      min-height: 620px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .content {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+      max-width: 720px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(250, 204, 21, 0.12);
+      border: 1px solid rgba(250, 204, 21, 0.25);
+      color: #fde68a;
+      font-size: 14px;
+      letter-spacing: 0.4px;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.05;
+      margin-bottom: 18px;
+    }
+
+    .subtitle {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      line-height: 1.7;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .status-card {
+      margin: 0 auto;
+      width: min(640px, 100%);
+      border-radius: 24px;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 28px 22px 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .status-text {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .track {
+      position: relative;
+      width: 100%;
+      height: 120px;
+      margin-top: 26px;
+      border-radius: 18px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px dashed rgba(255,255,255,0.12);
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      left: -80px;
+      top: 34px;
+      font-size: 64px;
+      color: var(--accent);
+      text-shadow: 0 0 18px rgba(250, 204, 21, 0.65);
+      animation: flyStar 3.6s ease-in-out forwards;
+      z-index: 2;
+    }
+
+    .trail {
+      position: absolute;
+      left: -120px;
+      top: 62px;
+      width: 140px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(250,204,21,0), rgba(250,204,21,0.9), rgba(250,204,21,0));
+      filter: blur(2px);
+      animation: flyTrail 3.6s ease-in-out forwards;
+    }
+
+    .thumb {
+      position: absolute;
+      right: 34px;
+      top: 24px;
+      width: 72px;
+      height: 72px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.25);
+      color: #86efac;
+      font-size: 38px;
+      opacity: 0;
+      transform: scale(0.5);
+      animation: thumbIn 0.7s ease forwards;
+      animation-delay: 3.35s;
+      box-shadow: 0 0 24px rgba(34, 197, 94, 0.18);
+    }
+
+    .thumb-label {
+      position: absolute;
+      right: 18px;
+      top: 104px;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.78);
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
+      animation-delay: 3.45s;
+    }
+
+    .sparkle {
+      position: absolute;
+      font-size: 18px;
+      color: rgba(250, 204, 21, 0.8);
+      opacity: 0;
+      animation: sparkle 3.6s ease-in-out forwards;
+    }
+
+    .s1 { top: 18px; left: 18%; animation-delay: 0.4s; }
+    .s2 { top: 92px; left: 36%; animation-delay: 1.0s; }
+    .s3 { top: 28px; left: 56%; animation-delay: 1.6s; }
+    .s4 { top: 86px; left: 74%; animation-delay: 2.2s; }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.62);
+    }
+
+    @keyframes flyStar {
+      0% {
+        transform: translateX(0) translateY(0) scale(0.7) rotate(-20deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      45% {
+        transform: translateX(420px) translateY(-8px) scale(1) rotate(12deg);
+        opacity: 1;
+      }
+      75% {
+        transform: translateX(740px) translateY(4px) scale(1.04) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(840px) translateY(0) scale(0.9) rotate(18deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes flyTrail {
+      0% {
+        transform: translateX(0) scaleX(0.4);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.95;
+      }
+      70% {
+        transform: translateX(520px) scaleX(1.6);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateX(840px) scaleX(0.5);
+        opacity: 0;
+      }
+    }
+
+    @keyframes thumbIn {
+      from {
+        opacity: 0;
+        transform: scale(0.5) rotate(-14deg);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes sparkle {
+      0% { opacity: 0; transform: scale(0.5); }
+      12% { opacity: 1; transform: scale(1.1); }
+      55% { opacity: 0.9; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.8); }
+    }
+
+    .glow {
+      position: absolute;
+      inset: auto auto -80px -80px;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(250,204,21,0.18), transparent 70%);
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .glow.right {
+      inset: -90px -70px auto auto;
+      background: radial-gradient(circle, rgba(34,197,94,0.16), transparent 70%);
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        min-height: 700px;
+        padding: 22px;
+      }
+
+      .status-card {
+        padding: 22px 16px 20px;
+      }
+
+      .track {
+        height: 140px;
+      }
+
+      .star {
+        font-size: 54px;
+      }
+
+      .thumb {
+        right: 20px;
+        top: 22px;
+        width: 66px;
+        height: 66px;
+        font-size: 34px;
+      }
+
+      .thumb-label {
+        right: 10px;
+        top: 102px;
+      }
+
+      @keyframes flyStar {
+        0% {
+          transform: translateX(0) translateY(0) scale(0.7) rotate(-20deg);
+          opacity: 0;
+        }
+        10% { opacity: 1; }
+        45% {
+          transform: translateX(220px) translateY(-8px) scale(1) rotate(12deg);
+          opacity: 1;
+        }
+        75% {
+          transform: translateX(420px) translateY(4px) scale(1.04) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateX(500px) translateY(0) scale(0.9) rotate(18deg);
+          opacity: 0;
+        }
+      }
+
+      @keyframes flyTrail {
+        0% {
+          transform: translateX(0) scaleX(0.4);
+          opacity: 0;
+        }
+        10% { opacity: 0.95; }
+        70% {
+          transform: translateX(260px) scaleX(1.2);
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateX(500px) scaleX(0.5);
+          opacity: 0;
+        }
+      }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <main class="page">
+    <div class="glow"></div>
+    <div class="glow right"></div>
 
-    <!-- =========================
-         12) HEADER-INHALT
-         - Markenname
-         - Logo
-         - Hier Logo oder Name ändern
-    ========================== -->
-    <header>
-      <div class="brand">
-        <img class="logo" src="https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/028d4327-da9e-4d98-be9c-6c08a6e77a6a.png" alt="PlexPilot Logo">
-        <div>PlexPilot</div>
-      </div>
-    </header>
+    <section class="content">
+      <div class="badge">Bewertung vorbereitet</div>
+      <h1>Vielen Dank für deinen Termin</h1>
+      <p class="subtitle">
+        Deine Bewertung wurde vorbereitet. Der Stern startet links und fliegt nach rechts,
+        danach erscheint das Daumen-hoch-Symbol als Abschluss.
+      </p>
 
-    <!-- =========================
-         13) HERO-INHALT
-         - Hauptüberschrift
-         - Buttons für Navigation
-    ========================== -->
-    <section class="hero" id="top">
-      <div>
-        <div class="eyebrow"><span class="pulse"></span> Demo des Produkts TerminPilot</div>
-        <h1>Ein klarer Ablauf.<br>Ein besseres Kundenerlebnis.</h1>
-        <p class="lead">TerminPilot zeigt deinen Kunden nicht die Technik dahinter, sondern nur die drei Bausteine, die für sie wirklich wichtig sind: Terminbuchung, Terminerinnerung und Bewertungsanfrage.</p>
-        <div class="actions">
-          <a class="btn btn-primary" href="#bausteine">Bausteine ansehen</a>
-          <a class="btn btn-primary" href="#demo">Live-Demo</a>
+      <div class="status-card">
+        <div class="status-title">Status: Bewertung eingeplant</div>
+        <div class="status-text">
+          Wir haben deinen Termin erfolgreich verarbeitet. Die Bewertungsanfrage ist bereit
+          und wird passend in deinem Workflow weiterverwendet.
+        </div>
+
+        <div class="track">
+          <div class="trail"></div>
+          <div class="star">⭐</div>
+          <div class="thumb">👍</div>
+          <div class="thumb-label">Alles bereit</div>
+
+          <div class="sparkle s1">✦</div>
+          <div class="sparkle s2">✦</div>
+          <div class="sparkle s3">✦</div>
+          <div class="sparkle s4">✦</div>
         </div>
       </div>
 
-      <div class="visual">
-        <div class="flowtitle"><strong>Demo Ablauf</strong><span>Kundenfreundlich dargestellt</span></div>
-        <div class="flow">
-          <div class="node"><div class="nicon">1</div><div class="ntext"><b>Terminbuchung</b><small>Der Kunde bucht seinen Termin einfach und schnell.</small></div></div>
-          <div class="arrow">↓</div>
-          <div class="node"><div class="nicon">2</div><div class="ntext"><b>Terminerinnerung</b><small>Vor dem Termin erhält der Kunde automatisch eine Erinnerung.</small></div></div>
-          <div class="arrow">↓</div>
-          <div class="node"><div class="nicon">3</div><div class="ntext"><b>Bewertungsanfrage</b><small>Nach dem Termin wird freundlich um eine Bewertung gebeten.</small></div></div>
-        </div>
+      <div class="footer-note">
+        Bewertungsanfrage vorbereitet · Animation läuft automatisch
       </div>
     </section>
-
-    <!-- =========================
-         14) BAUSTEINE
-         - Infobereiche / Nutzenkarten
-    ========================== -->
-    <section id="bausteine" class="section">
-      <h2>Die Bausteine von TerminPilot</h2>
-      <p>Jeder Baustein ist bewusst einfach erklärt. So versteht dein Kunde sofort, welchen Nutzen er bekommt, ohne etwas über den internen Ablauf wissen zu müssen.</p>
-    </section>
-
-    <section class="grid">
-      <article class="card">
-        <div class="cardHead"><div class="icon">📅</div><h2>Terminbuchung</h2></div>
-        <p class="desc">Der Kunde kann Termine sauber und ohne Rückfragen buchen.</p>
-        <ul>
-          <li>Einfacher Einstieg für neue Anfragen.</li>
-          <li>Weniger manuelle Terminabstimmung.</li>
-          <li>Mehr Übersicht für dein Team.</li>
-        </ul>
-        <div class="benefitInline"><b>Mehr Komfort</b><p>Der Kunde erlebt einen strukturierten, klaren Ablauf ohne unnötige Rückfragen oder Wartezeiten.</p></div>
-      </article>
-
-      <article class="card">
-        <div class="cardHead"><div class="icon">🔔</div><h2>Terminerinnerung</h2></div>
-        <p class="desc">Der Kunde wird rechtzeitig erinnert und vergisst seinen Termin deutlich seltener.</p>
-        <ul>
-          <li>Weniger No-Shows.</li>
-          <li>Professioneller Eindruck beim Kunden.</li>
-          <li>Entlastung für dein Backoffice.</li>
-        </ul>
-        <div class="benefitInline"><b>Mehr Sicherheit</b><p>Termine werden sauber bestätigt und Erinnerungen sorgen für weniger Verwechslungen oder Versäumnisse.</p></div>
-      </article>
-
-      <article class="card">
-        <div class="cardHead"><div class="icon">⭐</div><h2>Bewertungsanfrage</h2></div>
-        <p class="desc">Nach dem Termin wird automatisch und freundlich um Feedback gebeten.</p>
-        <ul>
-          <li>Mehr positive Bewertungen.</li>
-          <li>Stärkere Sichtbarkeit und Vertrauen.</li>
-          <li>Bessere Kundenbindung.</li>
-        </ul>
-        <div class="benefitInline" style="background:linear-gradient(180deg,rgba(123,108,255,.10),rgba(13,28,43,.95));border-color:rgba(123,108,255,.22)"><b>Mehr Vertrauen</b><p>Durch die professionelle Nachbereitung wirkt dein Unternehmen modern, zuverlässig und kundenorientiert.</p></div>
-      </article>
-    </section>
-
-    <!-- =========================
-         15) LIVE-DEMO
-         - Dropdown für Produktwahl
-         - Formular für TerminPilot
-         - Coming soon für TerminPilot Plus
-         - Statusanzeige mit Animation
-    ========================== -->
-    <section class="demoSection" id="demo">
-      <div class="demoTop">
-        <div>
-          <div class="pill good">Live-Demo</div>
-          <h2>TerminPilot</h2>
-          <p>Die Demo zeigt den sichtbaren Ablauf für den Kunden. Wenn TerminPilot gewählt wird, erscheint darunter die Eingabefläche für die Terminbuchung.</p>
-        </div>
-      </div>
-
-      <div class="demoGrid">
-        <div class="demoPanel">
-          <div class="field">
-            <label>Produkt</label>
-            <select id="productSelect">
-              <option value="terminpilot">TerminPilot</option>
-              <option value="plus">TerminPilot Plus</option>
-            </select>
-          </div>
-
-          <div id="bookingArea" class="formWrap"></div>
-
-          <div class="actions" id="start" style="margin-top:14px">
-            <a class="btn btn-primary" href="#bookingArea">Start</a>
-          </div>
-        </div>
-
-        <div class="demoPanel">
-          <h2 style="margin:0 0 8px;font-size:24px">Status</h2>
-          <div class="steps">
-            <div class="step pending" id="step1">
-              <span>1</span>
-              <div class="stepLabel">
-                <div class="stepTitle">Termin angefragt</div>
-                <div class="stepAnim">
-                  <div class="mailAnim">
-                    <div class="mail">✉️</div>
-                    <div class="mailbox">📮</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="step pending" id="step2">
-              <span>2</span>
-              <div class="stepLabel">
-                <div class="stepTitle">Erinnerung eingeplant</div>
-                <div class="stepAnim">
-                  <div class="bellAnim">
-                    <div class="wave wave1"></div>
-                    <div class="wave wave2"></div>
-                    <div class="wave wave3"></div>
-                    <div class="bell">🔔</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="step pending" id="step3"><span>3</span>Bewertung vorbereitet</div>
-            <div class="step disabled"><span>4</span>TerminPilot Plus</div>
-          </div>
-          <p class="desc" style="margin-top:16px">So sieht der sichtbare Kundenweg aus: klar, verständlich und ohne technische Details.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- =========================
-         16) FOOTER-INHALT
-    ========================== -->
-    <div class="footer">
-      <div>© 2026 PlexPilot</div>
-      <div>Demo für Kundenkommunikation und Terminprozesse</div>
-    </div>
-  </div>
-
-  <script>
-    /* =========================
-       17) FORMULAR-VORLAGE
-       - Hier werden die Eingabefelder definiert
-       - IDs sind wichtig für den Workflow
-    ========================== */
-    const sel = document.getElementById('productSelect');
-    const area = document.getElementById('bookingArea');
-    const startBtnContainer = document.getElementById('start');
-
-    const baseForm = `
-      <div class="formGrid">
-        <div class="field"><label>Name</label><input id="inpName" type="text" placeholder="Max Mustermann"></div>
-        <div class="field"><label>E-Mail</label><input id="inpEmail" type="email" placeholder="max@example.com"></div>
-        <div class="field"><label>Telefon</label><input id="inpPhone" type="tel" placeholder="+49 170 1234567"></div>
-        <div class="field"><label>Art des Termins</label><select id="inpType"><option>Beratung</option><option>Erstgespräch</option><option>Vor-Ort-Termin</option><option>Online-Call</option></select></div>
-        <div class="field"><label>Datum</label><div style="display:flex;align-items:center;gap:12px;border:1px solid var(--stroke);background:#08121c;border-radius:14px;padding:13px 14px;color:var(--text)"><span style="font-size:20px;line-height:1;color:#edf4fb;filter:drop-shadow(0 0 2px rgba(255,255,255,.15))">🗓️</span><input id="inpDate" type="date" style="border:none;background:transparent;padding:0;box-shadow:none;color:var(--text)"></div></div>
-        <div class="field"><label>Uhrzeit</label><select id="inpTime"><option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option></select></div>
-      </div>`;
-
-    /* =========================
-       18) ANZEIGE-LOGIK
-       - TerminPilot => Formular anzeigen
-       - TerminPilot Plus => Coming soon anzeigen
-       - Status initial grau setzen
-    ========================== */
-    function showBooking(){
-      area.style.display = 'block';
-      area.innerHTML = baseForm;
-      if(startBtnContainer) startBtnContainer.style.display = 'flex';
-    }
-
-    function setStatusInitial(){
-      const s1=document.getElementById('step1');
-      const s2=document.getElementById('step2');
-      const s3=document.getElementById('step3');
-      [s1,s2,s3].forEach(s=>{
-        if(s){
-          s.classList.remove('done','active','animating');
-          s.classList.add('pending');
-        }
-      });
-    }
-
-    function runStep1Animation(){
-      const s1=document.getElementById('step1');
-      if(!s1) return;
-      s1.classList.remove('pending','done');
-      s1.classList.add('active','animating');
-      setTimeout(()=>{
-        s1.classList.remove('animating','active');
-        s1.classList.add('done');
-      }, 1200);
-    }
-
-    function runStep2Animation(){
-      const s2=document.getElementById('step2');
-      if(!s2) return;
-      s2.classList.remove('pending','done');
-      s2.classList.add('active','animating');
-      setTimeout(()=>{
-        s2.classList.remove('animating','active');
-        s2.classList.add('done');
-      }, 1200);
-    }
-
-    function showComingSoon(){
-      area.style.display = 'block';
-      area.innerHTML = '<div class="pill" style="margin-top:0">Coming soon</div>';
-      if(startBtnContainer) startBtnContainer.style.display = 'none';
-    }
-
-    sel.addEventListener('change', () => {
-      if(sel.value === 'plus'){
-        showComingSoon();
-      } else {
-        showBooking();
-      }
-    });
-
-    showBooking();
-    setStatusInitial();
-
-    /* =========================
-       19) WORKFLOW-ANBINDUNG
-       - Hier deine Webhook-URL eintragen
-       - Beim Klick auf Start werden die Daten gesendet
-    ========================== */
-    if(startBtnContainer){
-      startBtnContainer.addEventListener('click', async (e) => {
-        e.preventDefault();
-
-        const btn = startBtnContainer.querySelector('.btn');
-        if(!btn) return;
-        if(btn.style.pointerEvents === 'none') return;
-
-        const data = {
-          Name: document.getElementById('inpName')?.value || '',
-          Email: document.getElementById('inpEmail')?.value || '',
-          Telefon: document.getElementById('inpPhone')?.value || '',
-          Art: document.getElementById('inpType')?.value || '',
-          Termin_Datum: document.getElementById('inpDate')?.value || '',
-          Termin_Uhrzeit: document.getElementById('inpTime')?.value || ''
-        };
-
-        const oldText = btn.innerText;
-        btn.innerText = 'Wird gesendet...';
-        btn.style.opacity = '0.7';
-        btn.style.pointerEvents = 'none';
-
-        try {
-          const webhookUrl = 'https://inner-quotes-collectible-wear.trycloudflare.com/webhook/Terminbuchung';
-
-          await fetch(webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-          });
-
-          runStep1Animation();
-          setTimeout(() => {
-            runStep2Animation();
-            area.innerHTML = '<div class="pill good" style="font-size:16px; padding:16px 20px; width:100%; justify-content:center;">✅ Termin erfolgreich angefragt!</div>';
-            startBtnContainer.style.display = 'none';
-          }, 1250);
-        } catch (err) {
-          btn.innerText = oldText;
-          btn.style.opacity = '1';
-          btn.style.pointerEvents = 'auto';
-          alert('Senden fehlgeschlagen. Bitte prüfe den Cloudflare Worker oder n8n Webhook.');
-        }
-      });
-    }
-  </script>
+  </main>
 </body>
 </html>
