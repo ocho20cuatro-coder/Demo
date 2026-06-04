@@ -22,6 +22,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
+    /* =========================
+       3) DESIGN-VARIABLEN
+       - Farben
+       - Schatten
+       - globale Designwerte
+       - Hier passt du das Grunddesign an
+    ========================== */
     :root{
       --bg:#07131d;
       --bg2:#0b1b2a;
@@ -34,6 +41,13 @@
       --shadow:0 22px 70px rgba(0,0,0,.35);
     }
 
+    /* =========================
+       4) BASIS-STYLING
+       - Reset
+       - Body
+       - Links
+       - Container
+    ========================== */
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -47,10 +61,21 @@
     a{text-decoration:none;color:inherit}
     .wrap{max-width:1180px;margin:0 auto;padding:24px}
 
+    /* =========================
+       5) HEADER / LOGO
+       - Oberer Bereich mit Logo und Name
+       - Hier Logo oder Markenname ändern
+    ========================== */
     header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 14px}
     .brand{display:flex;align-items:center;gap:12px;font-weight:800}
     .logo{width:42px;height:42px;border-radius:14px;object-fit:cover;box-shadow:0 10px 30px rgba(109,94,252,.35);background:#fff}
 
+    /* =========================
+       6) HERO-BEREICH
+       - Hauptüberschrift
+       - Unterzeile
+       - Buttons
+    ========================== */
     .hero{padding:8px 0 18px;display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}
     .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid rgba(255,255,255,.08);border-radius:999px;background:#0d1c2bcc;color:#b7c8da;font-size:13px;margin-bottom:18px}
     .pulse{width:10px;height:10px;border-radius:50%;background:var(--accent2);box-shadow:0 0 0 0 rgba(35,198,165,.55);animation:pulse 1.8s infinite}
@@ -61,6 +86,10 @@
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;border-radius:14px;font-weight:700;border:1px solid transparent;cursor:pointer}
     .btn-primary{background:linear-gradient(135deg,var(--accent),#4cb4ff);box-shadow:var(--shadow)}
 
+    /* =========================
+       7) RECHTE HERO-KARTE / ABLAUF
+       - Workflow-Visualisierung
+    ========================== */
     .visual{background:linear-gradient(180deg,#10253acc,#0d1c2bcc);border:1px solid rgba(255,255,255,.08);border-radius:28px;box-shadow:var(--shadow);padding:22px}
     .flowtitle{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
     .flowtitle strong{font-size:18px}
@@ -73,6 +102,10 @@
     .node .ntext small{color:var(--muted)}
     .arrow{display:flex;justify-content:center;color:#89a4bf;font-size:18px}
 
+    /* =========================
+       8) BAUSTEIN-BEREICHE
+       - Karten unterhalb des Hero-Bereichs
+    ========================== */
     .section{padding:18px 0 8px}
     .section h2{font-size:30px;margin:0 0 10px}
     .section p{color:var(--muted);margin:0 0 16px;line-height:1.75}
@@ -88,6 +121,12 @@
     .benefitInline b{display:block;font-size:16px;margin-bottom:6px;letter-spacing:-.01em}
     .benefitInline p{margin:0;color:#dce8f2;line-height:1.75}
 
+    /* =========================
+       9) LIVE-DEMO / FORMULAR
+       - Formular für TerminPilot
+       - Coming soon bei TerminPilot Plus
+       - Start-Button startet Workflow
+    ========================== */
     .demoSection{margin:16px 0 28px;background:linear-gradient(180deg,rgba(15,34,53,.94),rgba(9,22,35,.96));border:1px solid rgba(255,255,255,.08);border-radius:28px;box-shadow:var(--shadow);padding:22px 20px 20px}
     .demoTop{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:16px}
     .demoTop h2{margin:0;font-size:30px;letter-spacing:-.04em}
@@ -119,7 +158,8 @@
     .mailAnim{position:relative;width:140px;height:26px;overflow:hidden}
     .mail{position:absolute;left:-36px;top:0;font-size:18px;opacity:0}
     .mailbox{position:absolute;right:0;top:0;font-size:18px;opacity:0}
-    .step.showIcons .mailbox,.step.showIcons .bell{opacity:1}
+    .step.showIcons .mailbox{opacity:1}
+    .step.showIcons .bell{opacity:1}
     .step.animating .mail{animation:flyMail 1.2s ease-in-out forwards}
     .step.animating .mailbox{animation:boxPulse 1.2s ease-in-out forwards}
     .bellAnim{position:relative;width:140px;height:26px;overflow:hidden}
@@ -135,6 +175,12 @@
     @keyframes ring{0%{transform:scale(.6) translateX(0);opacity:0}20%{opacity:1}100%{transform:scale(1.8) translateX(92px);opacity:0}}
     @keyframes bellMove{0%{transform:translateX(0) scale(1)}35%{transform:translateX(0) scale(1.12)}70%{transform:translateX(4px) scale(1.08)}100%{transform:translateX(0) scale(1)}}
 
+    /* =========================
+       10) BEWERTUNGSANFRAGE-ANIMATION
+       - Nur im Statusbereich
+       - Stern fliegt von links nach rechts
+       - Daumen bleibt am Ende sichtbar
+    ========================== */
     .reviewMiniAnim{position:relative;width:140px;height:26px;overflow:hidden}
     .reviewMiniStar{position:absolute;left:-26px;top:0;font-size:18px;opacity:0}
     .reviewMiniThumb{position:absolute;right:0;top:0;font-size:18px;opacity:0;transform:scale(.5)}
@@ -151,7 +197,16 @@
       from{opacity:0;transform:scale(.5) rotate(-10deg)}
       to{opacity:1;transform:scale(1) rotate(0deg)}
     }
+
+    /* =========================
+       11) FOOTER
+    ========================== */
     .footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:12px 0 24px;color:var(--muted);font-size:14px}
+
+    /* =========================
+       12) RESPONSIVE
+       - Mobile Anpassungen
+    ========================== */
     @media (max-width: 980px){
       .hero,.grid,.demoGrid,.formGrid{grid-template-columns:1fr}
     }
@@ -181,6 +236,13 @@
 </head>
 <body>
   <div class="wrap">
+
+    <!-- =========================
+         13) HEADER-INHALT
+         - Markenname
+         - Logo
+         - Hier Logo oder Name ändern
+    ========================== -->
     <header>
       <div class="brand">
         <img class="logo" src="https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/028d4327-da9e-4d98-be9c-6c08a6e77a6a.png" alt="PlexPilot Logo">
@@ -188,6 +250,11 @@
       </div>
     </header>
 
+    <!-- =========================
+         14) HERO-INHALT
+         - Hauptüberschrift
+         - Buttons für Navigation
+    ========================== -->
     <section class="hero" id="top">
       <div>
         <div class="eyebrow"><span class="pulse"></span> Demo des Produkts TerminPilot</div>
@@ -211,6 +278,10 @@
       </div>
     </section>
 
+    <!-- =========================
+         15) BAUSTEINE
+         - Infobereiche / Nutzenkarten
+    ========================== -->
     <section id="bausteine" class="section">
       <h2>Die Bausteine von TerminPilot</h2>
       <p>Jeder Baustein ist bewusst einfach erklärt. So versteht dein Kunde sofort, welchen Nutzen er bekommt, ohne etwas über den internen Ablauf wissen zu müssen.</p>
@@ -254,6 +325,13 @@
       </article>
     </section>
 
+    <!-- =========================
+         16) LIVE-DEMO
+         - Dropdown für Produktwahl
+         - Formular für TerminPilot
+         - Coming soon für TerminPilot Plus
+         - Statusanzeige mit Animation
+    ========================== -->
     <section class="demoSection" id="demo">
       <div class="demoTop">
         <div>
@@ -332,6 +410,9 @@
       </div>
     </section>
 
+    <!-- =========================
+         17) FOOTER-INHALT
+    ========================== -->
     <div class="footer">
       <div>© 2026 PlexPilot</div>
       <div>Demo für Kundenkommunikation und Terminprozesse</div>
@@ -345,6 +426,7 @@
     const availabilityInfo = document.getElementById('availabilityInfo');
 
     const BOOKING_API = 'https://YOUR-N8N-WEBHOOK-URL-HERE';
+
     const baseForm = `
       <div class="formGrid">
         <div class="field"><label>Name</label><input id="inpName" type="text" placeholder="Max Mustermann"></div>
@@ -371,9 +453,7 @@
       area.innerHTML = baseForm;
       if(startBtnContainer) startBtnContainer.style.display = 'flex';
       const inpDate = document.getElementById('inpDate');
-      if(inpDate){
-        inpDate.addEventListener('change', loadAvailableTimes);
-      }
+      if(inpDate) inpDate.addEventListener('change', loadAvailableTimes);
       loadAvailableTimes();
     }
 
@@ -390,12 +470,7 @@
     }
 
     function prepareIcons(){
-      const s1=document.getElementById('step1');
-      const s2=document.getElementById('step2');
-      const s3=document.getElementById('step3');
-      [s1,s2,s3].forEach(s=>{
-        if(s) s.classList.add('showIcons');
-      });
+      ['step1','step2','step3'].forEach(id => document.getElementById(id)?.classList.add('showIcons'));
     }
 
     function runStep1Animation(){
@@ -403,10 +478,7 @@
       if(!s1) return;
       s1.classList.remove('pending','done');
       s1.classList.add('active','animating','showIcons');
-      setTimeout(()=>{
-        s1.classList.remove('animating','active');
-        s1.classList.add('done');
-      }, 1200);
+      setTimeout(()=>{ s1.classList.remove('animating','active'); s1.classList.add('done'); },1200);
     }
 
     function runStep2Animation(){
@@ -414,10 +486,7 @@
       if(!s2) return;
       s2.classList.remove('pending','done');
       s2.classList.add('active','animating','showIcons');
-      setTimeout(()=>{
-        s2.classList.remove('animating','active');
-        s2.classList.add('done');
-      }, 1200);
+      setTimeout(()=>{ s2.classList.remove('animating','active'); s2.classList.add('done'); },1200);
     }
 
     function runStep3Animation(){
@@ -425,10 +494,7 @@
       if(!s3) return;
       s3.classList.remove('pending','done');
       s3.classList.add('active','animating','showIcons');
-      setTimeout(()=>{
-        s3.classList.remove('animating','active');
-        s3.classList.add('done');
-      }, 1400);
+      setTimeout(()=>{ s3.classList.remove('animating','active'); s3.classList.add('done'); },1400);
     }
 
     async function loadAvailableTimes(){
@@ -439,20 +505,20 @@
       const date = inpDate.value;
       if(!date){
         inpTime.innerHTML = '<option value="">Bitte Datum wählen</option>';
-        if(availabilityInfo) availabilityInfo.innerHTML = '<span class="timeBadge">Datum wählen, um freie Zeiten zu laden</span>';
+        availabilityInfo.innerHTML = '<span class="timeBadge">Datum wählen, um freie Zeiten zu laden</span>';
         return;
       }
 
       inpTime.innerHTML = '<option value="">Lade verfügbare Zeiten ...</option>';
 
       try{
-        const res = await fetch(`${BOOKING_API}?date=${encodeURIComponent(date)}`);
+        const res = await fetch(`${BOOKING_API}?action=slots&date=${encodeURIComponent(date)}`);
         const data = await res.json();
-
         const slots = Array.isArray(data.slots) ? data.slots : [];
+
         if(!slots.length){
           inpTime.innerHTML = '<option value="">Keine freien Zeiten verfügbar</option>';
-          if(availabilityInfo) availabilityInfo.innerHTML = '<span class="timeBadge busy">Für diesen Tag keine Slots frei</span>';
+          availabilityInfo.innerHTML = '<span class="timeBadge busy">Für diesen Tag keine Slots frei</span>';
           return;
         }
 
@@ -461,21 +527,21 @@
           const option = document.createElement('option');
           option.value = slot.value;
           option.textContent = slot.label || slot.value;
-          if(slot.booked) option.disabled = true;
-          if(slot.booked) option.textContent = `${option.textContent} - belegt`;
+          if(slot.booked){
+            option.disabled = true;
+            option.textContent += ' - belegt';
+          }
           inpTime.appendChild(option);
         });
 
-        if(availabilityInfo){
-          const freeCount = slots.filter(s => !s.booked).length;
-          availabilityInfo.innerHTML = `
-            <span class="timeBadge free">${freeCount} freie Zeiten</span>
-            <span class="timeBadge">Gebuchte Slots werden automatisch ausgeblendet oder deaktiviert</span>
-          `;
-        }
+        const freeCount = slots.filter(s => !s.booked).length;
+        availabilityInfo.innerHTML = `
+          <span class="timeBadge free">${freeCount} freie Zeiten</span>
+          <span class="timeBadge">Gebuchte Slots werden automatisch nicht mehr gezeigt</span>
+        `;
       }catch(err){
         inpTime.innerHTML = '<option value="">Fehler beim Laden</option>';
-        if(availabilityInfo) availabilityInfo.innerHTML = '<span class="timeBadge busy">Verfügbarkeiten konnten nicht geladen werden</span>';
+        availabilityInfo.innerHTML = '<span class="timeBadge busy">Verfügbarkeiten konnten nicht geladen werden</span>';
       }
     }
 
@@ -486,11 +552,8 @@
     }
 
     sel.addEventListener('change', () => {
-      if(sel.value === 'plus'){
-        showComingSoon();
-      } else {
-        showBooking();
-      }
+      if(sel.value === 'plus') showComingSoon();
+      else showBooking();
     });
 
     showBooking();
@@ -501,10 +564,10 @@
         e.preventDefault();
 
         const btn = startBtnContainer.querySelector('.btn');
-        if(!btn) return;
-        if(btn.style.pointerEvents === 'none') return;
+        if(!btn || btn.style.pointerEvents === 'none') return;
 
         const data = {
+          action: 'book',
           Name: document.getElementById('inpName')?.value || '',
           Email: document.getElementById('inpEmail')?.value || '',
           Telefon: document.getElementById('inpPhone')?.value || '',
@@ -519,21 +582,16 @@
         btn.style.pointerEvents = 'none';
 
         try {
-          const webhookUrl = 'https://inner-quotes-collectible-wear.trycloudflare.com/webhook/Terminbuchung';
-
-          const response = await fetch(webhookUrl, {
+          const response = await fetch(BOOKING_API, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
           });
 
-          if(!response.ok){
-            throw new Error('Booking failed');
-          }
+          if(!response.ok) throw new Error('Booking failed');
 
           prepareIcons();
           runStep1Animation();
-
           setTimeout(() => {
             runStep2Animation();
             setTimeout(() => {
@@ -547,7 +605,7 @@
           btn.innerText = oldText;
           btn.style.opacity = '1';
           btn.style.pointerEvents = 'auto';
-          alert('Senden fehlgeschlagen. Bitte prüfe den Cloudflare Worker oder n8n Webhook.');
+          alert('Senden fehlgeschlagen. Bitte prüfe den Webhook oder die Verfügbarkeitslogik.');
         }
       });
     }
