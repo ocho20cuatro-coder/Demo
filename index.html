@@ -392,9 +392,9 @@
              Hier deine echte Webhook-URL einsetzen
              Beispiel n8n / Make / Zapier
           ========================== */
-          const webhookUrl = 'https://inner-quotes-collectible-wear.trycloudflare.com/webhook-test/Terminbuchung';
+          const webhookUrl = 'https://inner-quotes-collectible-wear.trycloudflare.com/webhook/Terminbuchung';
 
-          if (webhookUrl.includes('DEIN-WEBHOOK-LINK-HIER')) {
+          if (webhookUrl.includes('https://inner-quotes-collectible-wear.trycloudflare.com/webhook/Terminbuchung')) {
             alert('Bitte trage zuerst deine Webhook-URL im Code ein!');
             throw new Error('Webhook URL missing');
           }
