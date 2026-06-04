@@ -144,10 +144,24 @@
     .step span{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#1b2c40;color:#8fb1d8;font-size:12px;font-weight:700;flex:0 0 auto}
     .step.done{border-color:rgba(35,198,165,.34);background:rgba(35,198,165,.08)}
     .step.done span{background:var(--accent2);color:#072019}
+    .step.pending{opacity:.35;background:#08121c;border-style:dashed;color:#94a3b8}
+    .step.pending span{background:#718096;color:#f0f4f8}
+    .step.active{border-color:rgba(123,108,255,.34);background:rgba(123,108,255,.08);opacity:1}
+    .step.active span{background:var(--accent);color:#fff}
     .step.disabled{opacity:.45;border-style:dashed;background:#08121c}
     .step.disabled span{background:#718096;color:#f0f4f8}
     .formWrap{display:none;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
     .formGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .stepLabel{display:grid;gap:6px;flex:1}
+    .stepTitle{font-size:15px;font-weight:700}
+    .stepAnim{min-height:24px}
+    .mailAnim{position:relative;height:26px;overflow:hidden}
+    .mail{position:absolute;left:-36px;top:0;font-size:18px;opacity:0}
+    .mailbox{position:absolute;right:0;top:0;font-size:18px}
+    .step.animating .mail{animation:flyMail 1.2s ease-in-out forwards}
+    .step.animating .mailbox{animation:boxPulse 1.2s ease-in-out forwards}
+    @keyframes flyMail{0%{left:-36px;opacity:0;transform:translateY(0)}12%{opacity:1}80%{left:72%;opacity:1}100%{left:82%;opacity:0;transform:translateY(0)}}
+    @keyframes boxPulse{0%,75%{transform:scale(1)}85%{transform:scale(1.18)}100%{transform:scale(1)}}
 
     /* =========================
        10) FOOTER
@@ -262,7 +276,7 @@
          - Dropdown für Produktwahl
          - Formular für TerminPilot
          - Coming soon für TerminPilot Plus
-         - Start-Button startet Workflow
+         - Statusanzeige mit Animation
     ========================== -->
     <section class="demoSection" id="demo">
       <div class="demoTop">
@@ -293,9 +307,20 @@
         <div class="demoPanel">
           <h2 style="margin:0 0 8px;font-size:24px">Status</h2>
           <div class="steps">
-            <div class="step done"><span>1</span>Termin angefragt</div>
-            <div class="step done"><span>2</span>Erinnerung eingeplant</div>
-            <div class="step done"><span>3</span>Bewertung vorbereitet</div>
+            <div class="step pending" id="step1">
+              <span>1</span>
+              <div class="stepLabel">
+                <div class="stepTitle">Termin angefragt</div>
+                <div class="stepAnim">
+                  <div class="mailAnim">
+                    <div class="mail">✉️</div>
+                    <div class="mailbox">📮</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="step pending" id="step2"><span>2</span>Erinnerung eingeplant</div>
+            <div class="step pending" id="step3"><span>3</span>Bewertung vorbereitet</div>
             <div class="step disabled"><span>4</span>TerminPilot Plus</div>
           </div>
           <p class="desc" style="margin-top:16px">So sieht der sichtbare Kundenweg aus: klar, verständlich und ohne technische Details.</p>
@@ -336,11 +361,35 @@
        18) ANZEIGE-LOGIK
        - TerminPilot => Formular anzeigen
        - TerminPilot Plus => Coming soon anzeigen
+       - Status initial grau setzen
     ========================== */
     function showBooking(){
       area.style.display = 'block';
       area.innerHTML = baseForm;
       if(startBtnContainer) startBtnContainer.style.display = 'flex';
+    }
+
+    function setStatusInitial(){
+      const s1=document.getElementById('step1');
+      const s2=document.getElementById('step2');
+      const s3=document.getElementById('step3');
+      [s1,s2,s3].forEach(s=>{
+        if(s){
+          s.classList.remove('done','active','animating');
+          s.classList.add('pending');
+        }
+      });
+    }
+
+    function runStep1Animation(){
+      const s1=document.getElementById('step1');
+      if(!s1) return;
+      s1.classList.remove('pending','done');
+      s1.classList.add('active','animating');
+      setTimeout(()=>{
+        s1.classList.remove('animating','active');
+        s1.classList.add('done');
+      }, 1200);
     }
 
     function showComingSoon(){
@@ -358,6 +407,7 @@
     });
 
     showBooking();
+    setStatusInitial();
 
     /* =========================
        19) WORKFLOW-ANBINDUNG
@@ -395,8 +445,11 @@
             body: JSON.stringify(data)
           });
 
-          area.innerHTML = '<div class="pill good" style="font-size:16px; padding:16px 20px; width:100%; justify-content:center;">✅ Termin erfolgreich angefragt!</div>';
-          startBtnContainer.style.display = 'none';
+          runStep1Animation();
+          setTimeout(() => {
+            area.innerHTML = '<div class="pill good" style="font-size:16px; padding:16px 20px; width:100%; justify-content:center;">✅ Termin erfolgreich angefragt!</div>';
+            startBtnContainer.style.display = 'none';
+          }, 1250);
         } catch (err) {
           btn.innerText = oldText;
           btn.style.opacity = '1';
