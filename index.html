@@ -191,22 +191,6 @@
       .btn{width:100%}
       .cardHead h2{min-height:auto}
     }
-    .timeMeta{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:8px;
-      color:var(--muted);
-      font-size:13px;
-    }
-    .timeBadge{
-      padding:6px 10px;
-      border:1px solid var(--stroke);
-      border-radius:999px;
-      background:#0d1c2b;
-    }
-    .timeBadge.free{border-color:rgba(35,198,165,.24);background:rgba(35,198,165,.08);color:#b9f6e8}
-    .timeBadge.busy{border-color:rgba(255,120,120,.24);background:rgba(255,120,120,.08);color:#ffd3d3}
   </style>
 </head>
 <body>
@@ -310,7 +294,6 @@
           <div class="pill good">Live-Demo</div>
           <h2>TerminPilot</h2>
           <p>Die Demo zeigt den sichtbaren Ablauf für den Kunden. Wenn TerminPilot gewählt wird, erscheint darunter die Eingabefläche für die Terminbuchung.</p>
-          <div class="timeMeta" id="availabilityInfo"></div>
         </div>
       </div>
 
@@ -386,7 +369,6 @@
     const sel = document.getElementById('productSelect');
     const area = document.getElementById('bookingArea');
     const startBtnContainer = document.getElementById('start');
-    const availabilityInfo = document.getElementById('availabilityInfo');
 
     const baseForm = `
       <div class="formGrid">
@@ -395,7 +377,7 @@
         <div class="field"><label>Telefon</label><input id="inpPhone" type="tel" placeholder="+49 170 1234567"></div>
         <div class="field"><label>Art des Termins</label><select id="inpType"><option>Beratung</option><option>Erstgespräch</option><option>Vor-Ort-Termin</option><option>Online-Call</option></select></div>
         <div class="field"><label>Datum</label><div style="display:flex;align-items:center;gap:12px;border:1px solid var(--stroke);background:#08121c;border-radius:14px;padding:13px 14px;color:var(--text)"><span style="font-size:20px;line-height:1;color:#edf4fb;filter:drop-shadow(0 0 2px rgba(255,255,255,.15))">🗓️</span><input id="inpDate" type="date" style="border:none;background:transparent;padding:0;box-shadow:none;color:var(--text)"></div></div>
-        <div class="field"><label>Uhrzeit</label><select id="inpTime"><option value="">Bitte Datum wählen</option></select></div>
+        <div class="field"><label>Uhrzeit</label><select id="inpTime"><option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option></select></div>
       </div>`;
 
     /* =========================
@@ -408,9 +390,6 @@
       area.style.display = 'block';
       area.innerHTML = baseForm;
       if(startBtnContainer) startBtnContainer.style.display = 'flex';
-      const inpDate = document.getElementById('inpDate');
-      if(inpDate) inpDate.addEventListener('change', loadAvailableTimes);
-      loadAvailableTimes();
     }
 
     function setStatusInitial(){
@@ -453,61 +432,6 @@
       if(startBtnContainer) startBtnContainer.style.display = 'none';
     }
 
-    /* =========================
-       19) SLOT-ABFRAGE
-       - Beim Datum ändern freie Zeiten laden
-       - action=slots an n8n senden
-    ========================== */
-    async function loadAvailableTimes(){
-      const inpDate = document.getElementById('inpDate');
-      const inpTime = document.getElementById('inpTime');
-      const webhookUrl = 'https://inner-quotes-collectible-wear.trycloudflare.com/webhook/Terminbuchung';
-      
-      if(!inpDate || !inpTime) return;
-
-      const date = inpDate.value;
-      if(!date){
-        inpTime.innerHTML = '<option value="">Bitte Datum wählen</option>';
-        availabilityInfo.innerHTML = '<span class="timeBadge">Datum wählen, um freie Zeiten zu laden</span>';
-        return;
-      }
-
-      inpTime.innerHTML = '<option value="">Lade verfügbare Zeiten ...</option>';
-
-      try{
-        const res = await fetch(`${webhookUrl}?action=slots&date=${encodeURIComponent(date)}`);
-        const data = await res.json();
-        const slots = Array.isArray(data.slots) ? data.slots : [];
-
-        if(!slots.length){
-          inpTime.innerHTML = '<option value="">Keine freien Zeiten verfügbar</option>';
-          availabilityInfo.innerHTML = '<span class="timeBadge busy">Für diesen Tag keine Slots frei</span>';
-          return;
-        }
-
-        inpTime.innerHTML = '';
-        slots.forEach(slot => {
-          const option = document.createElement('option');
-          option.value = slot.value;
-          option.textContent = slot.label || slot.value;
-          if(slot.booked){
-            option.disabled = true;
-            option.textContent += ' - belegt';
-          }
-          inpTime.appendChild(option);
-        });
-
-        const freeCount = slots.filter(s => !s.booked).length;
-        availabilityInfo.innerHTML = `
-          <span class="timeBadge free">${freeCount} freie Zeiten</span>
-          <span class="timeBadge">Gebuchte Slots werden automatisch nicht mehr gezeigt</span>
-        `;
-      }catch(err){
-        inpTime.innerHTML = '<option value="">Fehler beim Laden</option>';
-        availabilityInfo.innerHTML = '<span class="timeBadge busy">Verfügbarkeiten konnten nicht geladen werden</span>';
-      }
-    }
-
     sel.addEventListener('change', () => {
       if(sel.value === 'plus'){
         showComingSoon();
@@ -520,9 +444,9 @@
     setStatusInitial();
 
     /* =========================
-       20) WORKFLOW-ANBINDUNG
+       19) WORKFLOW-ANBINDUNG
        - Hier deine Webhook-URL eintragen
-       - action=book beim Klick auf Start
+       - Beim Klick auf Start werden die Daten gesendet
     ========================== */
     if(startBtnContainer){
       startBtnContainer.addEventListener('click', async (e) => {
@@ -533,7 +457,6 @@
         if(btn.style.pointerEvents === 'none') return;
 
         const data = {
-          action: 'book',
           Name: document.getElementById('inpName')?.value || '',
           Email: document.getElementById('inpEmail')?.value || '',
           Telefon: document.getElementById('inpPhone')?.value || '',
@@ -542,14 +465,14 @@
           Termin_Uhrzeit: document.getElementById('inpTime')?.value || ''
         };
 
-        const webhookUrl = 'https://inner-quotes-collectible-wear.trycloudflare.com/webhook/Terminbuchung';
-
         const oldText = btn.innerText;
         btn.innerText = 'Wird gesendet...';
         btn.style.opacity = '0.7';
         btn.style.pointerEvents = 'none';
 
         try {
+          const webhookUrl = 'https://inner-quotes-collectible-wear.trycloudflare.com/webhook/Terminbuchung';
+
           await fetch(webhookUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -561,7 +484,6 @@
             runStep2Animation();
             area.innerHTML = '<div class="pill good" style="font-size:16px; padding:16px 20px; width:100%; justify-content:center;">✅ Termin erfolgreich angefragt!</div>';
             startBtnContainer.style.display = 'none';
-            loadAvailableTimes();
           }, 1250);
         } catch (err) {
           btn.innerText = oldText;
