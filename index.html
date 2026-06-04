@@ -157,29 +157,54 @@
     .stepAnim{width:140px;height:26px;position:relative;flex:0 0 140px;overflow:hidden;margin-left:auto}
     .mailAnim{position:relative;width:140px;height:26px;overflow:hidden}
     .mail{position:absolute;left:-36px;top:0;font-size:18px;opacity:0}
-    .mailbox{position:absolute;right:0;top:0;font-size:18px}
+    .mailbox{position:absolute;right:0;top:0;font-size:18px;opacity:0}
+    .step.showIcons .mailbox{opacity:1}
+    .step.showIcons .bell{opacity:1}
     .step.animating .mail{animation:flyMail 1.2s ease-in-out forwards}
     .step.animating .mailbox{animation:boxPulse 1.2s ease-in-out forwards}
     .bellAnim{position:relative;width:140px;height:26px;overflow:hidden}
-    .bell{position:absolute;right:0;top:0;font-size:18px;opacity:.85;transform-origin:center center}
+    .bell{position:absolute;right:0;top:0;font-size:18px;opacity:0;transform-origin:center center}
     .wave{position:absolute;top:4px;width:10px;height:10px;border:2px solid rgba(35,198,165,.8);border-radius:50%;opacity:0}
     .wave1{left:0}.wave2{left:14px}.wave3{left:28px}
-    .step.animating .wave1{animation:ring 1.1s ease-out 0s forwards}
-    .step.animating .wave2{animation:ring 1.1s ease-out .18s forwards}
-    .step.animating .wave3{animation:ring 1.1s ease-out .36s forwards}
-    .step.animating .bell{animation:bellMove 1.1s ease-out forwards}
+    .step.showIcons.animating .wave1{animation:ring 1.1s ease-out 0s forwards}
+    .step.showIcons.animating .wave2{animation:ring 1.1s ease-out .18s forwards}
+    .step.showIcons.animating .wave3{animation:ring 1.1s ease-out .36s forwards}
+    .step.showIcons.animating .bell{animation:bellMove 1.1s ease-out forwards}
     @keyframes flyMail{0%{left:-36px;opacity:0;transform:translateY(0)}12%{opacity:1}80%{left:72%;opacity:1}100%{left:82%;opacity:0;transform:translateY(0)}}
     @keyframes boxPulse{0%,75%{transform:scale(1)}85%{transform:scale(1.18)}100%{transform:scale(1)}}
     @keyframes ring{0%{transform:scale(.6) translateX(0);opacity:0}20%{opacity:1}100%{transform:scale(1.8) translateX(92px);opacity:0}}
     @keyframes bellMove{0%{transform:translateX(0) scale(1)}35%{transform:translateX(0) scale(1.12)}70%{transform:translateX(4px) scale(1.08)}100%{transform:translateX(0) scale(1)}}
 
     /* =========================
-       10) FOOTER
+       10) BEWERTUNGSANFRAGE-ANIMATION
+       - Nur im Statusbereich
+       - Stern fliegt von links nach rechts
+       - Daumen bleibt am Ende sichtbar
+    ========================== */
+    .reviewMiniAnim{position:relative;width:140px;height:26px;overflow:hidden}
+    .reviewMiniStar{position:absolute;left:-26px;top:0;font-size:18px;opacity:0}
+    .reviewMiniThumb{position:absolute;right:0;top:0;font-size:18px;opacity:0;transform:scale(.5)}
+    .step.showIcons.animating .reviewMiniStar{animation:miniStarFly 1.4s ease-in-out forwards}
+    .step.showIcons.animating .reviewMiniThumb{animation:miniThumbIn .5s ease forwards;animation-delay:1.08s}
+    .step.showIcons .reviewMiniThumb{opacity:1;transform:scale(1)}
+    @keyframes miniStarFly{
+      0%{transform:translateX(0) translateY(0) scale(.7) rotate(-20deg);opacity:0}
+      12%{opacity:1}
+      68%{transform:translateX(88px) translateY(-1px) scale(1) rotate(12deg);opacity:1}
+      100%{transform:translateX(118px) translateY(0) scale(.8) rotate(18deg);opacity:0}
+    }
+    @keyframes miniThumbIn{
+      from{opacity:0;transform:scale(.5) rotate(-10deg)}
+      to{opacity:1;transform:scale(1) rotate(0deg)}
+    }
+
+    /* =========================
+       11) FOOTER
     ========================== */
     .footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:12px 0 24px;color:var(--muted);font-size:14px}
 
     /* =========================
-       11) RESPONSIVE
+       12) RESPONSIVE
        - Mobile Anpassungen
     ========================== */
     @media (max-width: 980px){
@@ -197,7 +222,7 @@
   <div class="wrap">
 
     <!-- =========================
-         12) HEADER-INHALT
+         13) HEADER-INHALT
          - Markenname
          - Logo
          - Hier Logo oder Name ändern
@@ -210,7 +235,7 @@
     </header>
 
     <!-- =========================
-         13) HERO-INHALT
+         14) HERO-INHALT
          - Hauptüberschrift
          - Buttons für Navigation
     ========================== -->
@@ -238,7 +263,7 @@
     </section>
 
     <!-- =========================
-         14) BAUSTEINE
+         15) BAUSTEINE
          - Infobereiche / Nutzenkarten
     ========================== -->
     <section id="bausteine" class="section">
@@ -277,12 +302,15 @@
           <li>Stärkere Sichtbarkeit und Vertrauen.</li>
           <li>Bessere Kundenbindung.</li>
         </ul>
-        <div class="benefitInline" style="background:linear-gradient(180deg,rgba(123,108,255,.10),rgba(13,28,43,.95));border-color:rgba(123,108,255,.22)"><b>Mehr Vertrauen</b><p>Durch die professionelle Nachbereitung wirkt dein Unternehmen modern, zuverlässig und kundenorientiert.</p></div>
+        <div class="benefitInline" style="background:linear-gradient(180deg,rgba(123,108,255,.10),rgba(13,28,43,.95));border-color:rgba(123,108,255,.22)">
+          <b>Mehr Vertrauen</b>
+          <p>Durch die professionelle Nachbereitung wirkt dein Unternehmen modern, zuverlässig und kundenorientiert.</p>
+        </div>
       </article>
     </section>
 
     <!-- =========================
-         15) LIVE-DEMO
+         16) LIVE-DEMO
          - Dropdown für Produktwahl
          - Formular für TerminPilot
          - Coming soon für TerminPilot Plus
@@ -329,6 +357,7 @@
                 </div>
               </div>
             </div>
+
             <div class="step pending" id="step2">
               <span>2</span>
               <div class="stepLabel">
@@ -343,7 +372,20 @@
                 </div>
               </div>
             </div>
-            <div class="step pending" id="step3"><span>3</span>Bewertung vorbereitet</div>
+
+            <div class="step pending" id="step3">
+              <span>3</span>
+              <div class="stepLabel">
+                <div class="stepTitle">Bewertung vorbereitet</div>
+                <div class="stepAnim">
+                  <div class="reviewMiniAnim">
+                    <div class="reviewMiniStar">⭐</div>
+                    <div class="reviewMiniThumb">👍</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="step disabled"><span>4</span>TerminPilot Plus</div>
           </div>
           <p class="desc" style="margin-top:16px">So sieht der sichtbare Kundenweg aus: klar, verständlich und ohne technische Details.</p>
@@ -352,7 +394,7 @@
     </section>
 
     <!-- =========================
-         16) FOOTER-INHALT
+         17) FOOTER-INHALT
     ========================== -->
     <div class="footer">
       <div>© 2026 PlexPilot</div>
@@ -361,11 +403,6 @@
   </div>
 
   <script>
-    /* =========================
-       17) FORMULAR-VORLAGE
-       - Hier werden die Eingabefelder definiert
-       - IDs sind wichtig für den Workflow
-    ========================== */
     const sel = document.getElementById('productSelect');
     const area = document.getElementById('bookingArea');
     const startBtnContainer = document.getElementById('start');
@@ -380,12 +417,6 @@
         <div class="field"><label>Uhrzeit</label><select id="inpTime"><option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option></select></div>
       </div>`;
 
-    /* =========================
-       18) ANZEIGE-LOGIK
-       - TerminPilot => Formular anzeigen
-       - TerminPilot Plus => Coming soon anzeigen
-       - Status initial grau setzen
-    ========================== */
     function showBooking(){
       area.style.display = 'block';
       area.innerHTML = baseForm;
@@ -398,9 +429,18 @@
       const s3=document.getElementById('step3');
       [s1,s2,s3].forEach(s=>{
         if(s){
-          s.classList.remove('done','active','animating');
+          s.classList.remove('done','active','animating','showIcons');
           s.classList.add('pending');
         }
+      });
+    }
+
+    function prepareIcons(){
+      const s1=document.getElementById('step1');
+      const s2=document.getElementById('step2');
+      const s3=document.getElementById('step3');
+      [s1,s2,s3].forEach(s=>{
+        if(s) s.classList.add('showIcons');
       });
     }
 
@@ -408,7 +448,7 @@
       const s1=document.getElementById('step1');
       if(!s1) return;
       s1.classList.remove('pending','done');
-      s1.classList.add('active','animating');
+      s1.classList.add('active','animating','showIcons');
       setTimeout(()=>{
         s1.classList.remove('animating','active');
         s1.classList.add('done');
@@ -419,11 +459,22 @@
       const s2=document.getElementById('step2');
       if(!s2) return;
       s2.classList.remove('pending','done');
-      s2.classList.add('active','animating');
+      s2.classList.add('active','animating','showIcons');
       setTimeout(()=>{
         s2.classList.remove('animating','active');
         s2.classList.add('done');
       }, 1200);
+    }
+
+    function runStep3Animation(){
+      const s3=document.getElementById('step3');
+      if(!s3) return;
+      s3.classList.remove('pending','done');
+      s3.classList.add('active','animating','showIcons');
+      setTimeout(()=>{
+        s3.classList.remove('animating','active');
+        s3.classList.add('done');
+      }, 1400);
     }
 
     function showComingSoon(){
@@ -443,11 +494,6 @@
     showBooking();
     setStatusInitial();
 
-    /* =========================
-       19) WORKFLOW-ANBINDUNG
-       - Hier deine Webhook-URL eintragen
-       - Beim Klick auf Start werden die Daten gesendet
-    ========================== */
     if(startBtnContainer){
       startBtnContainer.addEventListener('click', async (e) => {
         e.preventDefault();
@@ -479,11 +525,16 @@
             body: JSON.stringify(data)
           });
 
+          prepareIcons();
+
           runStep1Animation();
           setTimeout(() => {
             runStep2Animation();
-            area.innerHTML = '<div class="pill good" style="font-size:16px; padding:16px 20px; width:100%; justify-content:center;">✅ Termin erfolgreich angefragt!</div>';
-            startBtnContainer.style.display = 'none';
+            setTimeout(() => {
+              runStep3Animation();
+              area.innerHTML = '<div class="pill good" style="font-size:16px; padding:16px 20px; width:100%; justify-content:center;">✅ Termin erfolgreich angefragt!</div>';
+              startBtnContainer.style.display = 'none';
+            }, 1250);
           }, 1250);
         } catch (err) {
           btn.innerText = oldText;
