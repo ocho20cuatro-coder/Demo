@@ -419,6 +419,10 @@
       setTimeout(() => {
         const dateEl = document.getElementById('inpDate');
         if (dateEl) {
+          // Setzt das Mindest-Datum auf heute
+          const today = new Date().toISOString().split('T')[0];
+          dateEl.setAttribute('min', today);
+          
           dateEl.addEventListener('change', loadAvailabilityForDate);
         }
       }, 0);
