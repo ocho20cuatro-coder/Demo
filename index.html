@@ -549,17 +549,44 @@
         if(!btn) return;
         if(btn.style.pointerEvents === 'none') return;
 
+        // 1. Alle Werte aus den Feldern auslesen
+        const nameVal = document.getElementById('inpName')?.value.trim() || '';
+        const emailVal = document.getElementById('inpEmail')?.value.trim() || '';
+        const dateVal = document.getElementById('inpDate')?.value || '';
         const timeSelect = document.getElementById('inpTime');
-        const selectedTime = timeSelect?.value || '';
+        const timeVal = timeSelect?.value || '';
+
+        // 2. Bestehende Fehlermeldung (falls vorhanden) entfernen
+        const existingError = document.getElementById('formError');
+        if(existingError) existingError.remove();
+
+        // 3. PFLICHTFELD-PRÜFUNG
+        if(!nameVal || !emailVal || !dateVal || !timeVal) {
+          // Fehlermeldung erstellen und über dem Start-Button anzeigen
+          const errorMsg = document.createElement('div');
+          errorMsg.id = 'formError';
+          errorMsg.style.color = '#ff6b6b';
+          errorMsg.style.fontSize = '14px';
+          errorMsg.style.marginBottom = '12px';
+          errorMsg.style.padding = '8px 12px';
+          errorMsg.style.background = 'rgba(255, 107, 107, 0.1)';
+          errorMsg.style.border = '1px solid rgba(255, 107, 107, 0.2)';
+          errorMsg.style.borderRadius = '8px';
+          errorMsg.textContent = 'Bitte fülle Name, E-Mail, Datum und Uhrzeit aus.';
+          
+          startBtnContainer.parentNode.insertBefore(errorMsg, startBtnContainer);
+          return; // Bricht den Vorgang ab, es wird nichts an n8n gesendet!
+        }
+
         const selectedEnd = timeSelect?.selectedOptions?.[0]?.dataset?.end || '';
 
         const data = {
-          Name: document.getElementById('inpName')?.value || '',
-          Email: document.getElementById('inpEmail')?.value || '',
-          Telefon: document.getElementById('inpPhone')?.value || '',
+          Name: nameVal,
+          Email: emailVal,
+          Telefon: document.getElementById('inpPhone')?.value.trim() || '',
           Art: document.getElementById('inpType')?.value || '',
-          Termin_Datum: document.getElementById('inpDate')?.value || '',
-          Termin_Uhrzeit: selectedTime,
+          Termin_Datum: dateVal,
+          Termin_Uhrzeit: timeVal,
           Termin_Bis: selectedEnd
         };
 
@@ -596,3 +623,4 @@
   </script>
 </body>
 </html>
+</query>
