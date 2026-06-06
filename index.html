@@ -206,7 +206,7 @@
     .step-content { flex: 1; display: flex; align-items: center; justify-content: space-between; }
     .step-title { font-weight: 600; font-size: 16px; }
 
-    /* Animation Containers (Basis beibehalten) */
+    /* Animation Containers */
     .stepAnim{width:140px;height:26px;position:relative;overflow:hidden;}
     .mailAnim{position:relative;width:140px;height:26px;overflow:hidden}
     .mail{position:absolute;left:-36px;top:0;font-size:18px;opacity:0}
@@ -347,10 +347,10 @@
           <h2>Live Buchung testen</h2>
           <p class="sub">Simuliere eine echte Buchung oder eine Terminänderung.</p>
           
-          <!-- NEU: TABS -->
+          <!-- ANGEPASSTE TABS -->
           <div class="tabs">
-            <div class="tab active" id="tabBook">Neu Buchen</div>
-            <div class="tab" id="tabReschedule">Termin Ändern</div>
+            <div class="tab active" id="tabBook">Termin buchen</div>
+            <div class="tab" id="tabReschedule">Termin ändern</div>
           </div>
 
           <div class="field" id="planSelectWrapper">
@@ -376,7 +376,7 @@
           
           <!-- Dynamische Timeline -->
           <div class="timeline" id="timelineArea">
-            <!-- Wird von JS gefüllt, damit die HTML Struktur erhalten bleibt -->
+            <!-- Wird von JS gefüllt -->
           </div>
         </div>
 
@@ -435,7 +435,7 @@
         <div class="field"><label>Neue Uhrzeit *</label><select id="inpTime" class="glass-input"><option value="">Bitte Datum wählen</option></select></div>
       </div>`;
 
-    // Timeline dynamisch rendern und dabei die Animations-Divs der Basis erhalten
+    // Timeline dynamisch rendern
     function renderTracker() {
       const isPlus = sel.value === 'plus';
 
@@ -448,7 +448,6 @@
               <div class="stepAnim"><div class="mailAnim"><div class="mail">✉️</div><div class="mailbox">📮</div></div></div>
             </div>
           </div>
-
           <div class="step pending" id="step2">
             <div class="step-number">2</div>
             <div class="step-content">
@@ -456,7 +455,6 @@
               <div class="stepAnim"><div class="bellAnim"><div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div><div class="bell">${isPlus ? '💬' : '🔔'}</div></div></div>
             </div>
           </div>
-
           <div class="step pending" id="step3">
             <div class="step-number">3</div>
             <div class="step-content">
@@ -464,7 +462,6 @@
               <div class="stepAnim"><div class="reviewMiniAnim"><div class="reviewMiniStar">⭐</div><div class="reviewMiniThumb">👍</div></div></div>
             </div>
           </div>
-
           <div class="step disabled" id="step4" style="${isPlus ? '' : 'display:none;'}">
             <div class="step-number">4</div>
             <div class="step-content">
@@ -494,10 +491,16 @@
       }
     }
 
-    // Tabs umschalten
+    // Tabs umschalten und BUTTON RESETTEN
     function setMode(mode) {
       currentMode = mode;
       document.getElementById('formError')?.remove();
+
+      // BUTTON RESET: Falls er blockiert war, wieder aktivieren!
+      if (actionBtn) {
+        actionBtn.style.pointerEvents = 'auto';
+        actionBtn.style.opacity = '1';
+      }
 
       if (mode === 'book') {
         tabBook.classList.add('active');
@@ -570,14 +573,13 @@
       }
     }
 
-    // Verbesserte Animation Helper Funktion
+    // Animation Helper Funktion
     function runAnim(id, delayDone, customClass = 'active') {
       return new Promise(resolve => {
         const s = document.getElementById(id);
         if(!s || s.classList.contains('disabled')) return resolve();
         
         s.classList.remove('pending', 'done');
-        // 'animating' und 'showIcons' triggern die originalen CSS Animationen
         s.classList.add(customClass, 'animating', 'showIcons');
         
         setTimeout(()=>{
@@ -628,7 +630,7 @@
           Termin_Bis: selectedEnd
         };
 
-        let myToken = ''; // <-- Speichert den Token für die Anzeige später
+        let myToken = ''; 
 
         if(currentMode === 'book') {
           data.Name = document.getElementById('inpName')?.value.trim();
@@ -636,7 +638,7 @@
           data.Art = document.getElementById('inpType')?.value;
           data.Plan = sel.value === 'plus' ? 'TerminPilot Plus' : 'TerminPilot Standard';
           
-          // NEU: Token generieren und in den n8n-Payload packen!
+          // Token generieren
           myToken = generateToken();
           data.Token = myToken;
         } else {
