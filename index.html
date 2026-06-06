@@ -23,12 +23,12 @@
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       
-      --primary: #3b82f6;     /* Blau */
-      --secondary: #00d4ff;   /* Türkis / Cyan */
-      --tertiary: #0ea5e9;    /* Hellblau */
-      --success: #10b981;     /* Grün */
-      --danger: #ef4444;      /* NEU: Rot für Stornierungen */
-      --plus: #f59e0b;        /* NEU: Orange für Plus Features */
+      --primary: #3b82f6;     
+      --secondary: #00d4ff;   
+      --tertiary: #0ea5e9;    
+      --success: #10b981;     
+      --danger: #ef4444;      
+      --plus: #f59e0b;        
     }
 
     * { box-sizing: border-box; }
@@ -121,11 +121,14 @@
     .section-title h2 { font-size: 36px; letter-spacing: -0.03em; margin: 0 0 16px; }
     .section-title p { color: var(--text-muted); font-size: 18px; max-width: 600px; margin: 0 auto; }
 
-    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 80px; }
+    /* NEU: Grid auf 4 Spalten geändert */
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 80px; }
+    
     .glass-card {
       background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--glass-border); border-radius: 24px; padding: 32px;
       transition: all 0.3s ease; position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
     }
     .glass-card:hover { background: var(--glass-hover); border-color: rgba(255,255,255,0.15); transform: translateY(-5px); }
     
@@ -138,10 +141,10 @@
     .glass-card h3 { font-size: 22px; margin: 0; letter-spacing: -0.02em; }
     
     .glass-card p { color: var(--text-muted); font-size: 15px; margin: 0 0 20px; }
-    .glass-card ul { padding-left: 20px; color: #cbd5e1; margin-bottom: 24px; font-size: 14px; }
+    .glass-card ul { padding-left: 20px; color: #cbd5e1; margin-bottom: 24px; font-size: 14px; flex-grow: 1; }
     .glass-card ul li { margin-bottom: 8px; }
     
-    .highlight-box { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 16px; border: 1px solid var(--glass-border); }
+    .highlight-box { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 16px; border: 1px solid var(--glass-border); margin-top: auto; }
     .highlight-box b { color: #fff; font-size: 14px; display: block; margin-bottom: 4px; }
     .highlight-box span { color: var(--text-muted); font-size: 13px; }
 
@@ -157,7 +160,6 @@
     .panel h2 { font-size: 24px; margin: 0 0 8px; letter-spacing: -0.02em; }
     .panel p.sub { color: var(--text-muted); font-size: 15px; margin: 0 0 24px; }
 
-    /* NEU: TABS */
     .tabs {
       display: flex; gap: 8px; background: rgba(255,255,255,0.02);
       border: 1px solid var(--glass-border); border-radius: 12px; padding: 6px; margin-bottom: 24px;
@@ -200,7 +202,6 @@
     .step.done { border-color: var(--success); background: rgba(16,185,129,0.05); opacity: 1; }
     .step.done .step-number { background: var(--success); color: #000; }
     
-    /* Spezialfarben für Plus und Danger(Storno) */
     .step.plus-active { border-color: var(--plus); background: rgba(245, 158, 11, 0.08); opacity: 1; }
     .step.plus-active .step-number { background: var(--plus); color: #000; box-shadow: 0 0 15px rgba(245, 158, 11, 0.5); }
     .step.danger-active { border-color: var(--danger); background: rgba(239, 68, 68, 0.08); opacity: 1; }
@@ -247,7 +248,10 @@
     ========================== */
     footer { border-top: 1px solid var(--glass-border); padding: 32px 0; text-align: center; color: var(--text-muted); font-size: 14px; }
     
-    @media (max-width: 992px) {
+    @media (max-width: 1100px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
       .grid { grid-template-columns: 1fr; }
       .demo-grid { grid-template-columns: 1fr; }
       .form-row { grid-template-columns: 1fr; }
@@ -285,11 +289,13 @@
       </div>
     </section>
 
+    <!-- NEU: Überschrift auf 4 Bausteine geändert -->
     <div class="section-title">
-      <h2>Die 3 Erfolgs-Bausteine</h2>
+      <h2>Die 4 Erfolgs-Bausteine</h2>
       <p>Jeder Baustein arbeitet im Hintergrund für dich, während der Kunde nur Einfachheit und Professionalität wahrnimmt.</p>
     </div>
 
+    <!-- NEU: 4 Grid-Items -->
     <section class="grid">
       <div class="glass-card">
         <div class="card-header">
@@ -322,6 +328,24 @@
         <div class="highlight-box">
           <b>Mehr Sicherheit</b>
           <span>Kunden sind immer pünktlich.</span>
+        </div>
+      </div>
+      
+      <!-- NEUER BAUSTEIN -->
+      <div class="glass-card">
+        <div class="card-header">
+          <div class="icon-wrap">🔄</div>
+          <h3>Flexibilität</h3>
+        </div>
+        <p>Umbuchung und Stornierung erfolgen komplett ohne deinen Aufwand.</p>
+        <ul>
+          <li>Self-Service für den Kunden</li>
+          <li>Sichere Verifikation per Code</li>
+          <li>Kalender wird direkt aktualisiert</li>
+        </ul>
+        <div class="highlight-box">
+          <b>Mehr Zeit</b>
+          <span>Verwaltung übernimmt das System.</span>
         </div>
       </div>
 
