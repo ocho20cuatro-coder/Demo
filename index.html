@@ -12,9 +12,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* =========================
-       1) AURORA & GLASS DESIGN SYSTEM
-    ========================== */
+    /* ==========================================================================
+       1) FARBSYSTEM & VARIABLEN
+       ========================================================================== */
     :root {
       --bg: #030712;
       --glass-bg: rgba(255, 255, 255, 0.03);
@@ -27,6 +27,8 @@
       --secondary: #00d4ff;   /* Türkis / Cyan */
       --tertiary: #0ea5e9;    /* Hellblau */
       --success: #10b981;     /* Grün */
+      --danger: #ef4444;      /* Rot (Storno) */
+      --plus: #f59e0b;        /* Orange (Plus Features) */
     }
 
     * { box-sizing: border-box; }
@@ -41,19 +43,15 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Ambient Background Glows */
+    /* ==========================================================================
+       2) BACKGROUND & AMBIENT EFFECTS
+       ========================================================================== */
     .ambient-bg {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      z-index: -1;
-      pointer-events: none;
-      overflow: hidden;
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1; pointer-events: none; overflow: hidden;
     }
     .blob {
-      position: absolute;
-      filter: blur(100px);
-      opacity: 0.4;
-      border-radius: 50%;
+      position: absolute; filter: blur(100px); opacity: 0.4; border-radius: 50%;
       animation: float 20s infinite ease-in-out alternate;
     }
     .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(59, 130, 246, 0.3); } 
@@ -69,24 +67,20 @@
     a { text-decoration: none; color: inherit; }
     .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
-    /* =========================
-       2) HEADER
-    ========================== */
+    /* ==========================================================================
+       3) HEADER & HERO SECTION
+       ========================================================================== */
     header { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; }
     .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 20px; letter-spacing: -0.03em; }
     .logo { width: 40px; height: 40px; border-radius: 12px; object-fit: cover; }
 
-    /* =========================
-       3) HERO ZENTRIERT
-    ========================== */
     .hero { padding: 40px 0 60px; text-align: center; display: flex; flex-direction: column; align-items: center; }
     
     .badge {
       display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; 
       border-radius: 99px; font-size: 13px; font-weight: 600;
       background: var(--glass-bg); border: 1px solid var(--glass-border);
-      backdrop-filter: blur(10px); margin-bottom: 32px;
-      color: #e2e8f0;
+      backdrop-filter: blur(10px); margin-bottom: 32px; color: #e2e8f0;
     }
     .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--secondary); box-shadow: 0 0 10px var(--secondary); }
     
@@ -104,22 +98,23 @@
     }
     .btn-primary {
       background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: #fff; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+      color: #fff; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3); width: 100%;
     }
     .btn-primary:hover { box-shadow: 0 15px 35px rgba(0, 212, 255, 0.4); transform: translateY(-2px); }
+    .btn-hero { width: auto; }
 
-    /* =========================
-       4) GLASS CARDS (Bausteine)
-    ========================== */
+    /* ==========================================================================
+       4) FEATURE CARDS
+       ========================================================================== */
     .section-title { text-align: center; margin-bottom: 48px; }
     .section-title h2 { font-size: 36px; letter-spacing: -0.03em; margin: 0 0 16px; }
     .section-title p { color: var(--text-muted); font-size: 18px; max-width: 600px; margin: 0 auto; }
 
     .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 80px; }
     .glass-card {
-      background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      background: var(--glass-bg); backdrop-filter: blur(16px);
       border: 1px solid var(--glass-border); border-radius: 24px; padding: 32px;
-      transition: all 0.3s ease; position: relative; overflow: hidden;
+      transition: all 0.3s ease;
     }
     .glass-card:hover { background: var(--glass-hover); border-color: rgba(255,255,255,0.15); transform: translateY(-5px); }
     
@@ -130,48 +125,51 @@
       border: 1px solid rgba(255,255,255,0.05); flex-shrink: 0;
     }
     .glass-card h3 { font-size: 22px; margin: 0; letter-spacing: -0.02em; }
-    
     .glass-card p { color: var(--text-muted); font-size: 15px; margin: 0 0 20px; }
     .glass-card ul { padding-left: 20px; color: #cbd5e1; margin-bottom: 24px; font-size: 14px; }
-    .glass-card ul li { margin-bottom: 8px; }
     
     .highlight-box { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 16px; border: 1px solid var(--glass-border); }
     .highlight-box b { color: #fff; font-size: 14px; display: block; margin-bottom: 4px; }
     .highlight-box span { color: var(--text-muted); font-size: 13px; }
 
-    /* =========================
-       5) DEMO FORMULAR
-    ========================== */
+    /* ==========================================================================
+       5) DEMO INTERFACE (FORM & TABS)
+       ========================================================================== */
     .demo-wrapper {
-      background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      background: rgba(0,0,0,0.4); backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border); border-radius: 32px; padding: 40px; margin-bottom: 80px;
     }
     .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
     
     .panel h2 { font-size: 24px; margin: 0 0 8px; letter-spacing: -0.02em; }
-    .panel p.sub { color: var(--text-muted); font-size: 15px; margin: 0 0 32px; }
+    .panel p.sub { color: var(--text-muted); font-size: 15px; margin: 0 0 24px; }
+
+    /* Tabs */
+    .tabs {
+      display: flex; gap: 8px; background: rgba(255,255,255,0.02);
+      border: 1px solid var(--glass-border); border-radius: 12px; padding: 6px; margin-bottom: 24px;
+    }
+    .tab {
+      flex: 1; text-align: center; padding: 10px; border-radius: 8px; font-size: 14px; font-weight: 600; 
+      cursor: pointer; color: var(--text-muted); transition: all 0.3s;
+    }
+    .tab.active { background: var(--glass-hover); color: #fff; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
     .field { margin-bottom: 20px; }
     .field label { display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
     
     .glass-input {
       width: 100%; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border);
-      color: #fff; padding: 16px; border-radius: 12px; font-family: inherit; font-size: 15px; transition: all 0.2s;
-      color-scheme: dark;
+      color: #fff; padding: 16px; border-radius: 12px; font-family: inherit; font-size: 15px; transition: all 0.2s; color-scheme: dark;
     }
     .glass-input:focus { outline: none; border-color: var(--secondary); background: rgba(0,212,255,0.05); box-shadow: 0 0 0 4px rgba(0,212,255,0.1); }
-    
-    /* Dunkle Schrift für die Optionen im Dropdown */
-    .glass-input option {
-      color: #0f172a; 
-      background-color: #ffffff;
-    }
+    .glass-input option { color: #0f172a; background-color: #ffffff; }
     
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-    /* =========================
-       6) STATUS TRACKER (Rechte Seite)
-    ========================== */
+    /* ==========================================================================
+       6) STATUS TRACKER TIMELINE
+       ========================================================================== */
     .timeline { display: grid; gap: 16px; }
     .step {
       display: flex; align-items: center; gap: 16px; padding: 20px; border-radius: 16px;
@@ -179,66 +177,38 @@
     }
     .step-number {
       width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
-      background: rgba(255,255,255,0.05); font-size: 13px; font-weight: 700; color: var(--text-muted);
+      background: rgba(255,255,255,0.05); font-size: 13px; font-weight: 700; color: var(--text-muted); transition: all 0.3s;
     }
     
+    /* Dynamische Status-Farben */
     .step.pending { opacity: 0.5; }
     .step.active { border-color: var(--secondary); background: rgba(0,212,255,0.08); opacity: 1; }
     .step.active .step-number { background: var(--secondary); color: #000; box-shadow: 0 0 15px rgba(0,212,255,0.5); }
     .step.done { border-color: var(--success); background: rgba(16,185,129,0.05); opacity: 1; }
     .step.done .step-number { background: var(--success); color: #000; }
+    
+    /* Spezial-Farben für Plus-Plan und Stornierungen */
+    .step.plus-active { border-color: var(--plus); background: rgba(245, 158, 11, 0.08); opacity: 1; }
+    .step.plus-active .step-number { background: var(--plus); color: #000; box-shadow: 0 0 15px rgba(245, 158, 11, 0.5); }
+    .step.danger-active { border-color: var(--danger); background: rgba(239, 68, 68, 0.08); opacity: 1; }
+    .step.danger-active .step-number { background: var(--danger); color: #fff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
     .step.disabled { opacity: 0.2; }
 
     .step-content { flex: 1; display: flex; align-items: center; justify-content: space-between; }
     .step-title { font-weight: 600; font-size: 16px; }
 
-    /* Animation Containers */
-    .stepAnim{width:140px;height:26px;position:relative;overflow:hidden;}
-    .mailAnim{position:relative;width:140px;height:26px;overflow:hidden}
-    .mail{position:absolute;left:-36px;top:0;font-size:18px;opacity:0}
-    .mailbox{position:absolute;right:0;top:0;font-size:18px;opacity:0}
-    .step.showIcons .mailbox, .step.showIcons .bell{opacity:1}
-    .step.animating .mail{animation:flyMail 1.2s ease-in-out forwards}
-    .step.animating .mailbox{animation:boxPulse 1.2s ease-in-out forwards}
-    
-    .bellAnim{position:relative;width:140px;height:26px;overflow:hidden}
-    .bell{position:absolute;right:0;top:0;font-size:18px;opacity:0;transform-origin:center center}
-    .wave{position:absolute;top:4px;width:10px;height:10px;border:2px solid var(--secondary);border-radius:50%;opacity:0}
-    .wave1{left:0}.wave2{left:14px}.wave3{left:28px}
-    .step.showIcons.animating .wave1{animation:ring 1.1s ease-out 0s forwards}
-    .step.showIcons.animating .wave2{animation:ring 1.1s ease-out .18s forwards}
-    .step.showIcons.animating .wave3{animation:ring 1.1s ease-out .36s forwards}
-    .step.showIcons.animating .bell{animation:bellMove 1.1s ease-out forwards}
-    
-    .reviewMiniAnim{position:relative;width:140px;height:26px;overflow:hidden}
-    .reviewMiniStar{position:absolute;left:-26px;top:0;font-size:18px;opacity:0}
-    .reviewMiniThumb{position:absolute;right:0;top:0;font-size:18px;opacity:0;transform:scale(.5)}
-    .step.showIcons.animating .reviewMiniStar{animation:miniStarFly 1.4s ease-in-out forwards}
-    .step.showIcons.animating .reviewMiniThumb{animation:miniThumbIn .5s ease forwards;animation-delay:1.08s}
-    .step.showIcons .reviewMiniThumb{opacity:1;transform:scale(1)}
-
-    @keyframes flyMail{0%{left:-36px;opacity:0;transform:translateY(0)}12%{opacity:1}80%{left:72%;opacity:1}100%{left:82%;opacity:0;transform:translateY(0)}}
-    @keyframes boxPulse{0%,75%{transform:scale(1)}85%{transform:scale(1.18)}100%{transform:scale(1)}}
-    @keyframes ring{0%{transform:scale(.6) translateX(0);opacity:0}20%{opacity:1}100%{transform:scale(1.8) translateX(92px);opacity:0}}
-    @keyframes bellMove{0%{transform:translateX(0) scale(1)}35%{transform:translateX(0) scale(1.12)}70%{transform:translateX(4px) scale(1.08)}100%{transform:translateX(0) scale(1)}}
-    @keyframes miniStarFly{0%{transform:translateX(0) translateY(0) scale(.7) rotate(-20deg);opacity:0}12%{opacity:1}68%{transform:translateX(88px) translateY(-1px) scale(1) rotate(12deg);opacity:1}100%{transform:translateX(118px) translateY(0) scale(.8) rotate(18deg);opacity:0}}
-    @keyframes miniThumbIn{from{opacity:0;transform:scale(.5) rotate(-10deg)}to{opacity:1;transform:scale(1) rotate(0deg)}}
-
-    /* =========================
-       7) FOOTER & RESPONSIVE
-    ========================== */
-    footer { border-top: 1px solid var(--glass-border); padding: 32px 0; text-align: center; color: var(--text-muted); font-size: 14px; }
-    
+    /* ==========================================================================
+       7) RESPONSIVE DESIGN
+       ========================================================================== */
     @media (max-width: 992px) {
-      .grid { grid-template-columns: 1fr; }
-      .demo-grid { grid-template-columns: 1fr; }
-      .form-row { grid-template-columns: 1fr; }
+      .grid, .demo-grid, .form-row { grid-template-columns: 1fr; }
       h1 { font-size: 42px; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Ambient Glow Background -->
   <div class="ambient-bg">
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -246,6 +216,8 @@
   </div>
 
   <div class="wrap">
+    
+    <!-- Header -->
     <header>
       <div class="brand">
         <img class="logo" src="https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/028d4327-da9e-4d98-be9c-6c08a6e77a6a.png" alt="Logo">
@@ -253,20 +225,18 @@
       </div>
     </header>
 
+    <!-- Hero Section -->
     <section class="hero">
       <div class="badge">
         <div class="badge-dot"></div>
         TerminPilot Demo System
       </div>
-      
       <h1>Intelligente Termine.<br>Perfektes Erlebnis.</h1>
       <p class="lead">Verwandle Anfragen in echte Buchungen – ganz ohne E-Mail-Ping-Pong. TerminPilot bietet deinen Kunden ein magisches, nahtloses Buchungserlebnis, das vom ersten Klick bis zur 5-Sterne-Bewertung begeistert.</p>
-      
-      <div style="display:flex; justify-content: center; gap:16px;">
-        <a href="#demo" class="btn btn-primary">Live-Demo starten</a>
-      </div>
+      <a href="#demo" class="btn btn-primary btn-hero">Live-Demo starten</a>
     </section>
 
+    <!-- Feature Cards -->
     <div class="section-title">
       <h2>Die 3 Erfolgs-Bausteine</h2>
       <p>Jeder Baustein arbeitet im Hintergrund für dich, während der Kunde nur Einfachheit und Professionalität wahrnimmt.</p>
@@ -274,115 +244,66 @@
 
     <section class="grid">
       <div class="glass-card">
-        <div class="card-header">
-          <div class="icon-wrap">📅</div>
-          <h3>Terminbuchung</h3>
-        </div>
+        <div class="card-header"><div class="icon-wrap">📅</div><h3>Terminbuchung</h3></div>
         <p>Der Kunde wählt seinen Wunschtermin direkt aus freien Kapazitäten.</p>
-        <ul>
-          <li>Einfacher, sofortiger Einstieg</li>
-          <li>Kein manuelles Hin und Her</li>
-          <li>Immer synchronisiert</li>
-        </ul>
-        <div class="highlight-box">
-          <b>Mehr Komfort</b>
-          <span>Perfekte Struktur ohne Wartezeiten.</span>
-        </div>
+        <ul><li>Einfacher, sofortiger Einstieg</li><li>Kein manuelles Hin und Her</li><li>Immer synchronisiert</li></ul>
+        <div class="highlight-box"><b>Mehr Komfort</b><span>Perfekte Struktur ohne Wartezeiten.</span></div>
       </div>
 
       <div class="glass-card">
-        <div class="card-header">
-          <div class="icon-wrap">🔔</div>
-          <h3>Erinnerungen</h3>
-        </div>
+        <div class="card-header"><div class="icon-wrap">🔔</div><h3>Erinnerungen</h3></div>
         <p>Automatische Notifications reduzieren vergessene Termine drastisch.</p>
-        <ul>
-          <li>Keine No-Shows mehr</li>
-          <li>Professionelles Auftreten</li>
-          <li>Vollautomatisiert</li>
-        </ul>
-        <div class="highlight-box">
-          <b>Mehr Sicherheit</b>
-          <span>Kunden sind immer pünktlich.</span>
-        </div>
+        <ul><li>Keine No-Shows mehr</li><li>Professionelles Auftreten</li><li>Vollautomatisiert</li></ul>
+        <div class="highlight-box"><b>Mehr Sicherheit</b><span>Kunden sind immer pünktlich.</span></div>
       </div>
 
       <div class="glass-card">
-        <div class="card-header">
-          <div class="icon-wrap">⭐</div>
-          <h3>Bewertungen</h3>
-        </div>
+        <div class="card-header"><div class="icon-wrap">⭐</div><h3>Bewertungen</h3></div>
         <p>Nach jedem erfolgreichen Termin wird höflich um Feedback gebeten.</p>
-        <ul>
-          <li>Steigerung der Google-Sterne</li>
-          <li>Mehr Neukunden-Vertrauen</li>
-          <li>Stärkere Bindung</li>
-        </ul>
-        <div class="highlight-box">
-          <b>Mehr Wachstum</b>
-          <span>Glückliche Kunden werben für dich.</span>
-        </div>
+        <ul><li>Steigerung der Google-Sterne</li><li>Mehr Neukunden-Vertrauen</li><li>Stärkere Bindung</li></ul>
+        <div class="highlight-box"><b>Mehr Wachstum</b><span>Glückliche Kunden werben für dich.</span></div>
       </div>
     </section>
 
+    <!-- Interactive Demo Section -->
     <section class="demo-wrapper" id="demo">
       <div class="demo-grid">
         
-        <!-- LINKE SEITE: FORMULAR -->
+        <!-- Left: Form Area -->
         <div class="panel">
           <h2>Live Buchung testen</h2>
-          <p class="sub">Simuliere eine echte Buchung aus Sicht deiner Kunden.</p>
+          <p class="sub">Simuliere eine Buchung oder teste die sichere Terminverschiebung.</p>
           
-          <div class="field">
-            <label>Gewähltes Produkt</label>
+          <!-- Tab Navigation -->
+          <div class="tabs">
+            <div class="tab active" id="tabBook">Neu Buchen</div>
+            <div class="tab" id="tabReschedule">Termin Ändern</div>
+          </div>
+
+          <!-- Plan Selection (Only for New Booking) -->
+          <div class="field" id="planSelectWrapper">
+            <label>Gewählter Plan</label>
             <select id="productSelect" class="glass-input">
-              <option value="terminpilot">TerminPilot Standard</option>
-              <option value="plus">TerminPilot Plus</option>
+              <option value="standard">TerminPilot Standard</option>
+              <option value="plus">TerminPilot Plus (WhatsApp & Follow-Ups)</option>
             </select>
           </div>
 
+          <!-- Dynamic Form Container -->
           <div id="bookingArea" style="margin-top: 24px;"></div>
 
           <div id="start" style="margin-top:24px; display:none;">
-            <button class="btn btn-primary" style="width: 100%;">Termin verbindlich anfragen</button>
+            <button class="btn btn-primary" id="actionBtn">Termin verbindlich anfragen</button>
           </div>
         </div>
 
-        <!-- RECHTE SEITE: STATUS TRACKER -->
+        <!-- Right: Status Tracker -->
         <div class="panel">
           <h2>Automatisierungs-Status</h2>
-          <p class="sub">Verfolge live, wie das System im Hintergrund arbeitet.</p>
+          <p class="sub">Verfolge live, welche n8n-Workflows im Hintergrund starten.</p>
           
-          <div class="timeline">
-            <div class="step pending" id="step1">
-              <div class="step-number">1</div>
-              <div class="step-content">
-                <div class="step-title">Buchung verarbeitet</div>
-                <div class="stepAnim"><div class="mailAnim"><div class="mail">✉️</div><div class="mailbox">📮</div></div></div>
-              </div>
-            </div>
-
-            <div class="step pending" id="step2">
-              <div class="step-number">2</div>
-              <div class="step-content">
-                <div class="step-title">Erinnerung eingeplant</div>
-                <div class="stepAnim"><div class="bellAnim"><div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div><div class="bell">🔔</div></div></div>
-              </div>
-            </div>
-
-            <div class="step pending" id="step3">
-              <div class="step-number">3</div>
-              <div class="step-content">
-                <div class="step-title">Bewertung vorbereitet</div>
-                <div class="stepAnim"><div class="reviewMiniAnim"><div class="reviewMiniStar">⭐</div><div class="reviewMiniThumb">👍</div></div></div>
-              </div>
-            </div>
-
-            <div class="step disabled">
-              <div class="step-number">4</div>
-              <div class="step-content"><div class="step-title">TerminPilot Plus (Bald)</div></div>
-            </div>
-          </div>
+          <!-- Dynamic Timeline Container -->
+          <div class="timeline" id="timelineArea"></div>
         </div>
 
       </div>
@@ -395,38 +316,94 @@
     </div>
   </footer>
 
+  <!-- ==========================================================================
+       JAVASCRIPT LOGIK (Tabs, n8n Webhooks, UI Updates)
+       ========================================================================== -->
   <script>
-    /* ===================================================================
-       N8N WEBHOOKS - UNVERÄNDERT
-       =================================================================== */
+    // Webhooks
     const availabilityWebhookUrl = 'https://secretariat-hearts-burst-jokes.trycloudflare.com/webhook/Verfuegbarkeit';
     const bookingWebhookUrl = 'https://secretariat-hearts-burst-jokes.trycloudflare.com/webhook/Terminbuchung';
 
-    const sel = document.getElementById('productSelect');
+    // DOM Elements
+    const tabBook = document.getElementById('tabBook');
+    const tabReschedule = document.getElementById('tabReschedule');
+    const planWrapper = document.getElementById('planSelectWrapper');
+    const selPlan = document.getElementById('productSelect');
     const area = document.getElementById('bookingArea');
+    const timelineArea = document.getElementById('timelineArea');
     const startBtnContainer = document.getElementById('start');
+    const actionBtn = document.getElementById('actionBtn');
 
-    const baseForm = `
+    let currentMode = 'book'; // State: 'book' or 'reschedule'
+
+    // HTML Templates for Forms
+    const formBookTemplate = `
       <div class="field"><label>Name *</label><input id="inpName" type="text" placeholder="Max Mustermann" class="glass-input"></div>
       <div class="form-row">
         <div class="field"><label>E-Mail *</label><input id="inpEmail" type="email" placeholder="max@beispiel.de" class="glass-input"></div>
-        <div class="field"><label>Telefon</label><input id="inpPhone" type="tel" placeholder="+49 170 12345" class="glass-input"></div>
+        <div class="field"><label>Handy (für WhatsApp)</label><input id="inpPhone" type="tel" placeholder="+49 170" class="glass-input"></div>
       </div>
-      <div class="field"><label>Art des Termins</label><select id="inpType" class="glass-input"><option>Beratung</option><option>Erstgespräch</option><option>Online-Call</option></select></div>
+      <div class="field"><label>Art des Termins</label><select id="inpType" class="glass-input"><option>Beratung</option><option>Erstgespräch</option></select></div>
       <div class="form-row">
-        <div class="field">
-          <label>Datum *</label>
-          <input id="inpDate" type="date" class="glass-input">
-        </div>
-        <div class="field">
-          <label>Uhrzeit *</label>
-          <select id="inpTime" class="glass-input"><option value="">Bitte Datum wählen</option></select>
-        </div>
+        <div class="field"><label>Datum *</label><input id="inpDate" type="date" class="glass-input"></div>
+        <div class="field"><label>Uhrzeit *</label><select id="inpTime" class="glass-input"><option value="">Datum wählen</option></select></div>
       </div>`;
 
-    function showBooking(){
-      area.innerHTML = baseForm;
-      if(startBtnContainer) startBtnContainer.style.display = 'block';
+    const formRescheduleTemplate = `
+      <div class="field"><label>E-Mail Adresse *</label><input id="inpEmail" type="email" placeholder="max@beispiel.de" class="glass-input"></div>
+      <div class="field">
+        <label>Sicherheitscode (aus Bestätigungs-Mail) *</label>
+        <input id="inpToken" type="text" placeholder="z.B. TP-8X9A" class="glass-input">
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Neues Datum *</label><input id="inpDate" type="date" class="glass-input"></div>
+        <div class="field"><label>Neue Uhrzeit *</label><select id="inpTime" class="glass-input"><option value="">Datum wählen</option></select></div>
+      </div>`;
+
+    // Render Timeline based on Mode and Plan
+    function renderTracker() {
+      const isPlus = selPlan.value === 'plus';
+      
+      if (currentMode === 'book') {
+        timelineArea.innerHTML = `
+          <div class="step pending" id="step1"><div class="step-number">1</div><div class="step-content"><div class="step-title">Buchung verarbeitet</div></div></div>
+          <div class="step pending" id="step2"><div class="step-number">2</div><div class="step-content"><div class="step-title">${isPlus ? 'WhatsApp Erinnerung eingeplant 💬' : 'E-Mail Erinnerung eingeplant 🔔'}</div></div></div>
+          <div class="step pending" id="step3"><div class="step-number">3</div><div class="step-content"><div class="step-title">${isPlus ? 'WhatsApp Bewertung vorbereitet ⭐' : 'E-Mail Bewertung vorbereitet ⭐'}</div></div></div>
+          <div class="step ${isPlus ? 'pending' : 'disabled'}" id="step4"><div class="step-number">4</div><div class="step-content"><div class="step-title" style="${isPlus ? 'color:var(--plus);' : ''}">${isPlus ? 'Smart Follow-Up aktiviert 🔄' : 'Plus-Funktionen (Inaktiv)'}</div></div></div>
+        `;
+      } else {
+        timelineArea.innerHTML = `
+          <div class="step pending" id="step1"><div class="step-number">1</div><div class="step-content"><div class="step-title">Token & E-Mail abgleichen 🔒</div></div></div>
+          <div class="step pending" id="step2"><div class="step-number">2</div><div class="step-content"><div class="step-title">Alten Termin stornieren 🗑️</div></div></div>
+          <div class="step pending" id="step3"><div class="step-number">3</div><div class="step-content"><div class="step-title">Neuen Termin eintragen 📅</div></div></div>
+          <div class="step pending" id="step4"><div class="step-number">4</div><div class="step-content"><div class="step-title">Updates & Erinnerungen neu planen 🔔</div></div></div>
+        `;
+      }
+    }
+
+    // Tab Switching Logic
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('formError')?.remove();
+      
+      if (mode === 'book') {
+        tabBook.classList.add('active'); 
+        tabReschedule.classList.remove('active');
+        planWrapper.style.display = 'block';
+        area.innerHTML = formBookTemplate;
+        actionBtn.innerText = 'Termin verbindlich buchen';
+      } else {
+        tabReschedule.classList.add('active'); 
+        tabBook.classList.remove('active');
+        planWrapper.style.display = 'none'; // Plan ist beim Ändern irrelevant
+        area.innerHTML = formRescheduleTemplate;
+        actionBtn.innerText = 'Termin sicher verschieben';
+      }
+      
+      startBtnContainer.style.display = 'block';
+      renderTracker();
+      
+      // Datum-Listener für n8n Verfügbarkeit anhängen
       setTimeout(() => {
         const dateEl = document.getElementById('inpDate');
         if (dateEl) {
@@ -437,40 +414,36 @@
       }, 0);
     }
 
+    // Event Listeners
+    tabBook.addEventListener('click', () => setMode('book'));
+    tabReschedule.addEventListener('click', () => setMode('reschedule'));
+    selPlan.addEventListener('change', renderTracker);
+
+    // Initial Load
+    setMode('book');
+
+    // Load Availability from n8n
     async function loadAvailabilityForDate(){
       const date = document.getElementById('inpDate')?.value;
       const timeSelect = document.getElementById('inpTime');
       if(!date || !timeSelect) return;
 
       timeSelect.innerHTML = '<option value="">Lade Verfügbarkeit...</option>';
-
       try {
-        const url = `${availabilityWebhookUrl}?date=${encodeURIComponent(date)}`;
-        const response = await fetch(url, { method: 'GET' });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const response = await fetch(`${availabilityWebhookUrl}?date=${encodeURIComponent(date)}`, { method: 'GET' });
+        if (!response.ok) throw new Error();
         const data = await response.json();
 
-        const freeSlots = data.freeSlots || [];
         timeSelect.innerHTML = '';
-
-        if (!freeSlots.length) {
-          const opt = document.createElement('option');
-          opt.value = '';
-          opt.textContent = 'Keine freien Slots';
-          timeSelect.appendChild(opt);
+        if (!data.freeSlots || !data.freeSlots.length) {
+          timeSelect.innerHTML = '<option value="">Keine freien Slots</option>';
           return;
         }
 
-        const placeholder = document.createElement('option');
-        placeholder.value = '';
-        placeholder.textContent = 'Bitte Uhrzeit auswählen';
-        timeSelect.appendChild(placeholder);
-
-        freeSlots.forEach(slot => {
+        timeSelect.innerHTML = '<option value="">Bitte Uhrzeit auswählen</option>';
+        data.freeSlots.forEach(slot => {
           const opt = document.createElement('option');
-          opt.value = slot.start;
-          opt.textContent = `${slot.start} – ${slot.end} Uhr`;
-          opt.dataset.end = slot.end;
+          opt.value = slot.start; opt.textContent = `${slot.start} – ${slot.end} Uhr`; opt.dataset.end = slot.end;
           timeSelect.appendChild(opt);
         });
       } catch (err) {
@@ -478,116 +451,116 @@
       }
     }
 
-    function setStatusInitial(){
-      ['step1','step2','step3'].forEach(id=>{
+    // Helper: Async Animation Step
+    function runAnim(id, delay, styleClass = 'active') {
+      return new Promise(resolve => {
         const s = document.getElementById(id);
-        if(s) { s.classList.remove('done','active','animating','showIcons'); s.classList.add('pending'); }
+        if(!s || s.classList.contains('disabled')) return resolve();
+        
+        s.classList.remove('pending');
+        s.classList.add(styleClass); // z.B. active, danger-active, plus-active
+        
+        setTimeout(() => {
+          s.classList.remove(styleClass);
+          s.classList.add('done');
+          resolve();
+        }, delay);
       });
     }
 
-    function prepareIcons(){
-      ['step1','step2','step3'].forEach(id=>{
-        const s = document.getElementById(id);
-        if(s) s.classList.add('showIcons');
-      });
-    }
+    // Token Generator für Demo
+    function generateToken() { return 'TP-' + Math.random().toString(36).substring(2, 6).toUpperCase(); }
 
-    function runAnim(id, delayDone) {
-      const s = document.getElementById(id);
-      if(!s) return;
-      s.classList.remove('pending','done');
-      s.classList.add('active','animating','showIcons');
-      setTimeout(()=>{
-        s.classList.remove('animating','active');
-        s.classList.add('done');
-      }, delayDone);
-    }
+    // Submit Logic (Buchung oder Verschiebung)
+    actionBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      document.getElementById('formError')?.remove();
 
-    function showComingSoon(){
-      area.innerHTML = '<div style="padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; text-align:center;">Zukünftiges Feature - bald verfügbar</div>';
-      if(startBtnContainer) startBtnContainer.style.display = 'none';
-    }
+      // Validate Fields
+      const email = document.getElementById('inpEmail')?.value.trim();
+      const date = document.getElementById('inpDate')?.value;
+      const timeSelect = document.getElementById('inpTime');
+      const time = timeSelect?.value;
+      const token = document.getElementById('inpToken')?.value.trim();
 
-    sel.addEventListener('change', () => {
-      if(sel.value === 'plus') showComingSoon(); else showBooking();
+      if (!email || !date || !time || (currentMode === 'reschedule' && !token)) {
+        const err = document.createElement('div');
+        err.id = 'formError';
+        err.style.cssText = 'color:#fca5a5; font-size:14px; margin-bottom:16px; padding:14px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); border-radius:12px;';
+        err.textContent = 'Bitte fülle alle markierten Pflichtfelder (*) aus.';
+        startBtnContainer.parentNode.insertBefore(err, startBtnContainer);
+        return;
+      }
+
+      // Payload für n8n vorbereiten
+      const payload = {
+        Aktion: currentMode === 'book' ? 'Neu Buchung' : 'Termin Verschiebung',
+        Email: email,
+        Termin_Datum: date,
+        Termin_Uhrzeit: time,
+        Termin_Bis: timeSelect?.selectedOptions?.[0]?.dataset?.end || ''
+      };
+
+      if(currentMode === 'book') {
+        payload.Name = document.getElementById('inpName')?.value.trim();
+        payload.Telefon = document.getElementById('inpPhone')?.value.trim();
+        payload.Art = document.getElementById('inpType')?.value;
+        payload.Plan = selPlan.value === 'plus' ? 'TerminPilot Plus' : 'TerminPilot Standard';
+      } else {
+        payload.Token = token;
+      }
+
+      const originalText = actionBtn.innerText;
+      actionBtn.innerText = 'Verarbeite Workflows...';
+      actionBtn.style.opacity = '0.7';
+      actionBtn.style.pointerEvents = 'none';
+
+      try {
+        // HTTP Post zum n8n Webhook
+        await fetch(bookingWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        // Animation der Tracker-Schritte
+        if (currentMode === 'book') {
+          await runAnim('step1', 1000, 'active');
+          await runAnim('step2', 1200, 'active');
+          await runAnim('step3', 1000, 'active');
+          if(selPlan.value === 'plus') await runAnim('step4', 1200, 'plus-active');
+          
+          const fakeToken = generateToken();
+          area.innerHTML = `
+            <div style="padding:24px; text-align:center; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:16px;">
+              <h3 style="color:#10b981; margin:0 0 8px;">✅ Termin bestätigt!</h3>
+              <p style="margin:0 0 16px; color:#cbd5e1; font-size:14px;">(Demo) In der echten Welt erhält der Kunde nun eine Mail. Falls er verschieben muss, ist dies sein Sicherheitscode:</p>
+              <div style="display:inline-block; background:#000; padding:8px 16px; border-radius:8px; border:1px dashed var(--primary); font-family:monospace; font-size:18px; color:var(--secondary); letter-spacing:2px;">
+                ${fakeToken}
+              </div>
+            </div>`;
+        } else {
+          await runAnim('step1', 800, 'active');         // Token check
+          await runAnim('step2', 1000, 'danger-active'); // Alte Buchung stornieren (Rot)
+          await runAnim('step3', 1000, 'active');        // Neu buchen
+          await runAnim('step4', 1000, 'active');        // Update senden
+
+          area.innerHTML = `
+            <div style="padding:24px; text-align:center; background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.3); border-radius:16px;">
+              <h3 style="color:var(--secondary); margin:0 0 8px;">🔄 Termin erfolgreich verschoben!</h3>
+              <p style="margin:0; color:#cbd5e1; font-size:15px;">Der Termin wurde sicher auf den ${date.split('-').reverse().join('.')} um ${time} Uhr verlegt.</p>
+            </div>`;
+        }
+        
+        startBtnContainer.style.display = 'none';
+
+      } catch (err) {
+        actionBtn.innerText = originalText;
+        actionBtn.style.opacity = '1';
+        actionBtn.style.pointerEvents = 'auto';
+        alert('Fehler bei der Verbindung zum n8n Server.');
+      }
     });
-
-    showBooking();
-    setStatusInitial();
-
-    if(startBtnContainer){
-      startBtnContainer.addEventListener('click', async (e) => {
-        e.preventDefault();
-
-        const btn = startBtnContainer.querySelector('button');
-        if(!btn || btn.style.pointerEvents === 'none') return;
-
-        const nameVal = document.getElementById('inpName')?.value.trim() || '';
-        const emailVal = document.getElementById('inpEmail')?.value.trim() || '';
-        const dateVal = document.getElementById('inpDate')?.value || '';
-        const timeSelect = document.getElementById('inpTime');
-        const timeVal = timeSelect?.value || '';
-
-        const existingError = document.getElementById('formError');
-        if(existingError) existingError.remove();
-
-        if(!nameVal || !emailVal || !dateVal || !timeVal) {
-          const errorMsg = document.createElement('div');
-          errorMsg.id = 'formError';
-          errorMsg.style.color = '#fca5a5';
-          errorMsg.style.fontSize = '14px';
-          errorMsg.style.marginBottom = '16px';
-          errorMsg.style.padding = '14px';
-          errorMsg.style.background = 'rgba(239, 68, 68, 0.1)';
-          errorMsg.style.border = '1px solid rgba(239, 68, 68, 0.2)';
-          errorMsg.style.borderRadius = '12px';
-          errorMsg.textContent = 'Bitte fülle alle markierten Pflichtfelder (*) aus.';
-          startBtnContainer.parentNode.insertBefore(errorMsg, startBtnContainer);
-          return;
-        }
-
-        const selectedEnd = timeSelect?.selectedOptions?.[0]?.dataset?.end || '';
-
-        const data = {
-          Name: nameVal,
-          Email: emailVal,
-          Telefon: document.getElementById('inpPhone')?.value.trim() || '',
-          Art: document.getElementById('inpType')?.value || '',
-          Termin_Datum: dateVal,
-          Termin_Uhrzeit: timeVal,
-          Termin_Bis: selectedEnd
-        };
-
-        const oldText = btn.innerText;
-        btn.innerText = 'Buchung wird verarbeitet...';
-        btn.style.opacity = '0.7';
-        btn.style.pointerEvents = 'none';
-
-        try {
-          await fetch(bookingWebhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-          });
-
-          prepareIcons();
-          runAnim('step1', 1200);
-          setTimeout(() => {
-            runAnim('step2', 1200);
-            setTimeout(() => {
-              runAnim('step3', 1400);
-              area.innerHTML = '<div style="padding:24px; text-align:center; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:16px; color:#10b981; font-weight:600; font-size:16px;">✅ Termin erfolgreich angefragt!</div>';
-              startBtnContainer.style.display = 'none';
-            }, 1250);
-          }, 1250);
-        } catch (err) {
-          btn.innerText = oldText;
-          btn.style.opacity = '1';
-          btn.style.pointerEvents = 'auto';
-          alert('Fehler bei der Verbindung zum Server.');
-        }
-      });
-    }
   </script>
 </body>
 </html>
