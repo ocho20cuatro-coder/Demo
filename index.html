@@ -27,6 +27,8 @@
       --secondary: #00d4ff;   /* Türkis / Cyan */
       --tertiary: #0ea5e9;    /* Hellblau */
       --success: #10b981;     /* Grün */
+      --danger: #ef4444;      /* NEU: Rot für Stornierungen */
+      --plus: #f59e0b;        /* NEU: Orange für Plus Features */
     }
 
     * { box-sizing: border-box; }
@@ -140,7 +142,7 @@
     .highlight-box span { color: var(--text-muted); font-size: 13px; }
 
     /* =========================
-       5) DEMO FORMULAR
+       5) DEMO FORMULAR & TABS (NEU)
     ========================== */
     .demo-wrapper {
       background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -149,7 +151,18 @@
     .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
     
     .panel h2 { font-size: 24px; margin: 0 0 8px; letter-spacing: -0.02em; }
-    .panel p.sub { color: var(--text-muted); font-size: 15px; margin: 0 0 32px; }
+    .panel p.sub { color: var(--text-muted); font-size: 15px; margin: 0 0 24px; }
+
+    /* NEU: TABS */
+    .tabs {
+      display: flex; gap: 8px; background: rgba(255,255,255,0.02);
+      border: 1px solid var(--glass-border); border-radius: 12px; padding: 6px; margin-bottom: 24px;
+    }
+    .tab {
+      flex: 1; text-align: center; padding: 10px; border-radius: 8px; font-size: 14px; font-weight: 600; 
+      cursor: pointer; color: var(--text-muted); transition: all 0.3s;
+    }
+    .tab.active { background: var(--glass-hover); color: #fff; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
 
     .field { margin-bottom: 20px; }
     .field label { display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -160,12 +173,7 @@
       color-scheme: dark;
     }
     .glass-input:focus { outline: none; border-color: var(--secondary); background: rgba(0,212,255,0.05); box-shadow: 0 0 0 4px rgba(0,212,255,0.1); }
-    
-    /* Dunkle Schrift für die Optionen im Dropdown */
-    .glass-input option {
-      color: #0f172a; 
-      background-color: #ffffff;
-    }
+    .glass-input option { color: #0f172a; background-color: #ffffff; }
     
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
@@ -187,12 +195,18 @@
     .step.active .step-number { background: var(--secondary); color: #000; box-shadow: 0 0 15px rgba(0,212,255,0.5); }
     .step.done { border-color: var(--success); background: rgba(16,185,129,0.05); opacity: 1; }
     .step.done .step-number { background: var(--success); color: #000; }
+    
+    /* NEU: Spezialfarben für Plus und Danger(Storno) */
+    .step.plus-active { border-color: var(--plus); background: rgba(245, 158, 11, 0.08); opacity: 1; }
+    .step.plus-active .step-number { background: var(--plus); color: #000; box-shadow: 0 0 15px rgba(245, 158, 11, 0.5); }
+    .step.danger-active { border-color: var(--danger); background: rgba(239, 68, 68, 0.08); opacity: 1; }
+    .step.danger-active .step-number { background: var(--danger); color: #fff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
     .step.disabled { opacity: 0.2; }
 
     .step-content { flex: 1; display: flex; align-items: center; justify-content: space-between; }
     .step-title { font-weight: 600; font-size: 16px; }
 
-    /* Animation Containers */
+    /* Animation Containers (Basis beibehalten) */
     .stepAnim{width:140px;height:26px;position:relative;overflow:hidden;}
     .mailAnim{position:relative;width:140px;height:26px;overflow:hidden}
     .mail{position:absolute;left:-36px;top:0;font-size:18px;opacity:0}
@@ -263,7 +277,7 @@
       <p class="lead">Verwandle Anfragen in echte Buchungen – ganz ohne E-Mail-Ping-Pong. TerminPilot bietet deinen Kunden ein magisches, nahtloses Buchungserlebnis, das vom ersten Klick bis zur 5-Sterne-Bewertung begeistert.</p>
       
       <div style="display:flex; justify-content: center; gap:16px;">
-        <a href="#demo" class="btn btn-primary">Live-Demo starten</a>
+        <a href="#demo" class="btn btn-primary" style="width: auto;">Live-Demo starten</a>
       </div>
     </section>
 
@@ -331,20 +345,27 @@
         <!-- LINKE SEITE: FORMULAR -->
         <div class="panel">
           <h2>Live Buchung testen</h2>
-          <p class="sub">Simuliere eine echte Buchung aus Sicht deiner Kunden.</p>
+          <p class="sub">Simuliere eine echte Buchung oder eine Terminänderung.</p>
           
-          <div class="field">
+          <!-- NEU: TABS -->
+          <div class="tabs">
+            <div class="tab active" id="tabBook">Neu Buchen</div>
+            <div class="tab" id="tabReschedule">Termin Ändern</div>
+          </div>
+
+          <div class="field" id="planSelectWrapper">
             <label>Gewähltes Produkt</label>
             <select id="productSelect" class="glass-input">
               <option value="terminpilot">TerminPilot Standard</option>
-              <option value="plus">TerminPilot Plus</option>
+              <option value="plus">TerminPilot Plus (WhatsApp & Follow-Ups)</option>
             </select>
           </div>
 
+          <!-- Dynamischer Bereich für das Formular -->
           <div id="bookingArea" style="margin-top: 24px;"></div>
 
           <div id="start" style="margin-top:24px; display:none;">
-            <button class="btn btn-primary" style="width: 100%;">Termin verbindlich anfragen</button>
+            <button class="btn btn-primary" id="actionBtn" style="width: 100%;">Termin verbindlich anfragen</button>
           </div>
         </div>
 
@@ -353,35 +374,9 @@
           <h2>Automatisierungs-Status</h2>
           <p class="sub">Verfolge live, wie das System im Hintergrund arbeitet.</p>
           
-          <div class="timeline">
-            <div class="step pending" id="step1">
-              <div class="step-number">1</div>
-              <div class="step-content">
-                <div class="step-title">Buchung verarbeitet</div>
-                <div class="stepAnim"><div class="mailAnim"><div class="mail">✉️</div><div class="mailbox">📮</div></div></div>
-              </div>
-            </div>
-
-            <div class="step pending" id="step2">
-              <div class="step-number">2</div>
-              <div class="step-content">
-                <div class="step-title">Erinnerung eingeplant</div>
-                <div class="stepAnim"><div class="bellAnim"><div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div><div class="bell">🔔</div></div></div>
-              </div>
-            </div>
-
-            <div class="step pending" id="step3">
-              <div class="step-number">3</div>
-              <div class="step-content">
-                <div class="step-title">Bewertung vorbereitet</div>
-                <div class="stepAnim"><div class="reviewMiniAnim"><div class="reviewMiniStar">⭐</div><div class="reviewMiniThumb">👍</div></div></div>
-              </div>
-            </div>
-
-            <div class="step disabled">
-              <div class="step-number">4</div>
-              <div class="step-content"><div class="step-title">TerminPilot Plus (Bald)</div></div>
-            </div>
+          <!-- Dynamische Timeline -->
+          <div class="timeline" id="timelineArea">
+            <!-- Wird von JS gefüllt, damit die HTML Struktur erhalten bleibt -->
           </div>
         </div>
 
@@ -397,36 +392,131 @@
 
   <script>
     /* ===================================================================
-       N8N WEBHOOKS - UNVERÄNDERT
+       N8N WEBHOOKS - Deine Basis URLs
        =================================================================== */
     const availabilityWebhookUrl = 'https://cams-acdbentity-scotia-regression.trycloudflare.com/webhook/Verfuegbarkeit';
     const bookingWebhookUrl = 'https://cams-acdbentity-scotia-regression.trycloudflare.com/webhook/Terminbuchung';
 
+    // DOM Elements
     const sel = document.getElementById('productSelect');
     const area = document.getElementById('bookingArea');
     const startBtnContainer = document.getElementById('start');
+    const actionBtn = document.getElementById('actionBtn');
+    const timelineArea = document.getElementById('timelineArea');
+    
+    // Tabs
+    const tabBook = document.getElementById('tabBook');
+    const tabReschedule = document.getElementById('tabReschedule');
+    const planWrapper = document.getElementById('planSelectWrapper');
 
-    const baseForm = `
+    let currentMode = 'book';
+
+    // Formular Templates
+    const formBookTemplate = `
       <div class="field"><label>Name *</label><input id="inpName" type="text" placeholder="Max Mustermann" class="glass-input"></div>
       <div class="form-row">
         <div class="field"><label>E-Mail *</label><input id="inpEmail" type="email" placeholder="max@beispiel.de" class="glass-input"></div>
-        <div class="field"><label>Telefon</label><input id="inpPhone" type="tel" placeholder="+49 170 12345" class="glass-input"></div>
+        <div class="field"><label>Telefon (für WhatsApp)</label><input id="inpPhone" type="tel" placeholder="+49 170 12345" class="glass-input"></div>
       </div>
       <div class="field"><label>Art des Termins</label><select id="inpType" class="glass-input"><option>Beratung</option><option>Erstgespräch</option><option>Online-Call</option></select></div>
       <div class="form-row">
-        <div class="field">
-          <label>Datum *</label>
-          <input id="inpDate" type="date" class="glass-input">
-        </div>
-        <div class="field">
-          <label>Uhrzeit *</label>
-          <select id="inpTime" class="glass-input"><option value="">Bitte Datum wählen</option></select>
-        </div>
+        <div class="field"><label>Datum *</label><input id="inpDate" type="date" class="glass-input"></div>
+        <div class="field"><label>Uhrzeit *</label><select id="inpTime" class="glass-input"><option value="">Bitte Datum wählen</option></select></div>
       </div>`;
 
-    function showBooking(){
-      area.innerHTML = baseForm;
-      if(startBtnContainer) startBtnContainer.style.display = 'block';
+    const formRescheduleTemplate = `
+      <div class="field"><label>E-Mail Adresse *</label><input id="inpEmail" type="email" placeholder="max@beispiel.de" class="glass-input"></div>
+      <div class="field">
+        <label>Sicherheitscode (aus Bestätigungs-Mail) *</label>
+        <input id="inpToken" type="text" placeholder="z.B. TP-8X9A" class="glass-input">
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Neues Datum *</label><input id="inpDate" type="date" class="glass-input"></div>
+        <div class="field"><label>Neue Uhrzeit *</label><select id="inpTime" class="glass-input"><option value="">Bitte Datum wählen</option></select></div>
+      </div>`;
+
+    // Timeline dynamisch rendern und dabei die Animations-Divs der Basis erhalten
+    function renderTracker() {
+      const isPlus = sel.value === 'plus';
+
+      if (currentMode === 'book') {
+        timelineArea.innerHTML = `
+          <div class="step pending" id="step1">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Buchung verarbeitet</div>
+              <div class="stepAnim"><div class="mailAnim"><div class="mail">✉️</div><div class="mailbox">📮</div></div></div>
+            </div>
+          </div>
+
+          <div class="step pending" id="step2">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">${isPlus ? 'WhatsApp Erinnerung (Plus)' : 'Erinnerung eingeplant'}</div>
+              <div class="stepAnim"><div class="bellAnim"><div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div><div class="bell">${isPlus ? '💬' : '🔔'}</div></div></div>
+            </div>
+          </div>
+
+          <div class="step pending" id="step3">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">${isPlus ? 'WhatsApp Bewertung (Plus)' : 'Bewertung vorbereitet'}</div>
+              <div class="stepAnim"><div class="reviewMiniAnim"><div class="reviewMiniStar">⭐</div><div class="reviewMiniThumb">👍</div></div></div>
+            </div>
+          </div>
+
+          <div class="step disabled" id="step4" style="${isPlus ? '' : 'display:none;'}">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title" style="color:var(--plus)">Smart Follow-Up (Plus Feature)</div>
+            </div>
+          </div>
+        `;
+      } else {
+        timelineArea.innerHTML = `
+          <div class="step pending" id="step1">
+            <div class="step-number">1</div>
+            <div class="step-content"><div class="step-title">Sicherheitscode & E-Mail validiert 🔒</div></div>
+          </div>
+          <div class="step pending" id="step2">
+            <div class="step-number">2</div>
+            <div class="step-content"><div class="step-title">Alten Termin storniert 🗑️</div></div>
+          </div>
+          <div class="step pending" id="step3">
+            <div class="step-number">3</div>
+            <div class="step-content"><div class="step-title">Neuen Termin gebucht 📅</div></div>
+          </div>
+          <div class="step pending" id="step4">
+            <div class="step-number">4</div>
+            <div class="step-content"><div class="step-title">Updates & Erinnerungen gesendet 🔄</div></div>
+          </div>
+        `;
+      }
+    }
+
+    // Tabs umschalten
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('formError')?.remove();
+
+      if (mode === 'book') {
+        tabBook.classList.add('active');
+        tabReschedule.classList.remove('active');
+        planWrapper.style.display = 'block';
+        area.innerHTML = formBookTemplate;
+        actionBtn.innerText = 'Termin verbindlich anfragen';
+      } else {
+        tabReschedule.classList.add('active');
+        tabBook.classList.remove('active');
+        planWrapper.style.display = 'none'; // Bei Änderung irrelevant
+        area.innerHTML = formRescheduleTemplate;
+        actionBtn.innerText = 'Termin sicher verschieben';
+      }
+
+      startBtnContainer.style.display = 'block';
+      renderTracker();
+
+      // Datum Listener neu anhängen
       setTimeout(() => {
         const dateEl = document.getElementById('inpDate');
         if (dateEl) {
@@ -436,6 +526,13 @@
         }
       }, 0);
     }
+
+    tabBook.addEventListener('click', () => setMode('book'));
+    tabReschedule.addEventListener('click', () => setMode('reschedule'));
+    sel.addEventListener('change', renderTracker);
+
+    // Initialisierung
+    setMode('book');
 
     async function loadAvailabilityForDate(){
       const date = document.getElementById('inpDate')?.value;
@@ -455,22 +552,17 @@
 
         if (!freeSlots.length) {
           const opt = document.createElement('option');
-          opt.value = '';
-          opt.textContent = 'Keine freien Slots';
-          timeSelect.appendChild(opt);
-          return;
+          opt.value = ''; opt.textContent = 'Keine freien Slots';
+          timeSelect.appendChild(opt); return;
         }
 
         const placeholder = document.createElement('option');
-        placeholder.value = '';
-        placeholder.textContent = 'Bitte Uhrzeit auswählen';
+        placeholder.value = ''; placeholder.textContent = 'Bitte Uhrzeit auswählen';
         timeSelect.appendChild(placeholder);
 
         freeSlots.forEach(slot => {
           const opt = document.createElement('option');
-          opt.value = slot.start;
-          opt.textContent = `${slot.start} – ${slot.end} Uhr`;
-          opt.dataset.end = slot.end;
+          opt.value = slot.start; opt.textContent = `${slot.start} – ${slot.end} Uhr`; opt.dataset.end = slot.end;
           timeSelect.appendChild(opt);
         });
       } catch (err) {
@@ -478,69 +570,48 @@
       }
     }
 
-    function setStatusInitial(){
-      ['step1','step2','step3'].forEach(id=>{
+    // Verbesserte Animation Helper Funktion
+    function runAnim(id, delayDone, customClass = 'active') {
+      return new Promise(resolve => {
         const s = document.getElementById(id);
-        if(s) { s.classList.remove('done','active','animating','showIcons'); s.classList.add('pending'); }
+        if(!s || s.classList.contains('disabled')) return resolve();
+        
+        s.classList.remove('pending', 'done');
+        // 'animating' und 'showIcons' triggern die originalen CSS Animationen
+        s.classList.add(customClass, 'animating', 'showIcons');
+        
+        setTimeout(()=>{
+          s.classList.remove('animating', 'active', 'danger-active', 'plus-active');
+          s.classList.add('done');
+          resolve();
+        }, delayDone);
       });
     }
 
-    function prepareIcons(){
-      ['step1','step2','step3'].forEach(id=>{
-        const s = document.getElementById(id);
-        if(s) s.classList.add('showIcons');
-      });
-    }
-
-    function runAnim(id, delayDone) {
-      const s = document.getElementById(id);
-      if(!s) return;
-      s.classList.remove('pending','done');
-      s.classList.add('active','animating','showIcons');
-      setTimeout(()=>{
-        s.classList.remove('animating','active');
-        s.classList.add('done');
-      }, delayDone);
-    }
-
-    function showComingSoon(){
-      area.innerHTML = '<div style="padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; text-align:center;">Zukünftiges Feature - bald verfügbar</div>';
-      if(startBtnContainer) startBtnContainer.style.display = 'none';
-    }
-
-    sel.addEventListener('change', () => {
-      if(sel.value === 'plus') showComingSoon(); else showBooking();
-    });
-
-    showBooking();
-    setStatusInitial();
+    // Generiere Fake Token
+    function generateToken() { return 'TP-' + Math.random().toString(36).substring(2, 6).toUpperCase(); }
 
     if(startBtnContainer){
-      startBtnContainer.addEventListener('click', async (e) => {
+      actionBtn.addEventListener('click', async (e) => {
         e.preventDefault();
+        if(actionBtn.style.pointerEvents === 'none') return;
 
-        const btn = startBtnContainer.querySelector('button');
-        if(!btn || btn.style.pointerEvents === 'none') return;
-
-        const nameVal = document.getElementById('inpName')?.value.trim() || '';
         const emailVal = document.getElementById('inpEmail')?.value.trim() || '';
         const dateVal = document.getElementById('inpDate')?.value || '';
         const timeSelect = document.getElementById('inpTime');
         const timeVal = timeSelect?.value || '';
+        const tokenVal = document.getElementById('inpToken')?.value.trim() || '';
 
         const existingError = document.getElementById('formError');
         if(existingError) existingError.remove();
 
-        if(!nameVal || !emailVal || !dateVal || !timeVal) {
+        // Validierung
+        if(!emailVal || !dateVal || !timeVal || (currentMode === 'reschedule' && !tokenVal)) {
           const errorMsg = document.createElement('div');
           errorMsg.id = 'formError';
-          errorMsg.style.color = '#fca5a5';
-          errorMsg.style.fontSize = '14px';
-          errorMsg.style.marginBottom = '16px';
-          errorMsg.style.padding = '14px';
-          errorMsg.style.background = 'rgba(239, 68, 68, 0.1)';
-          errorMsg.style.border = '1px solid rgba(239, 68, 68, 0.2)';
-          errorMsg.style.borderRadius = '12px';
+          errorMsg.style.color = '#fca5a5'; errorMsg.style.fontSize = '14px'; errorMsg.style.marginBottom = '16px';
+          errorMsg.style.padding = '14px'; errorMsg.style.background = 'rgba(239, 68, 68, 0.1)';
+          errorMsg.style.border = '1px solid rgba(239, 68, 68, 0.2)'; errorMsg.style.borderRadius = '12px';
           errorMsg.textContent = 'Bitte fülle alle markierten Pflichtfelder (*) aus.';
           startBtnContainer.parentNode.insertBefore(errorMsg, startBtnContainer);
           return;
@@ -548,20 +619,28 @@
 
         const selectedEnd = timeSelect?.selectedOptions?.[0]?.dataset?.end || '';
 
+        // Daten zusammenstellen
         const data = {
-          Name: nameVal,
+          Aktion: currentMode === 'book' ? 'Neu Buchung' : 'Umbuchung',
           Email: emailVal,
-          Telefon: document.getElementById('inpPhone')?.value.trim() || '',
-          Art: document.getElementById('inpType')?.value || '',
           Termin_Datum: dateVal,
           Termin_Uhrzeit: timeVal,
           Termin_Bis: selectedEnd
         };
 
-        const oldText = btn.innerText;
-        btn.innerText = 'Buchung wird verarbeitet...';
-        btn.style.opacity = '0.7';
-        btn.style.pointerEvents = 'none';
+        if(currentMode === 'book') {
+          data.Name = document.getElementById('inpName')?.value.trim();
+          data.Telefon = document.getElementById('inpPhone')?.value.trim();
+          data.Art = document.getElementById('inpType')?.value;
+          data.Plan = sel.value === 'plus' ? 'TerminPilot Plus' : 'TerminPilot Standard';
+        } else {
+          data.Sicherheitscode = tokenVal;
+        }
+
+        const oldText = actionBtn.innerText;
+        actionBtn.innerText = 'Wird verarbeitet...';
+        actionBtn.style.opacity = '0.7';
+        actionBtn.style.pointerEvents = 'none';
 
         try {
           await fetch(bookingWebhookUrl, {
@@ -570,20 +649,46 @@
             body: JSON.stringify(data)
           });
 
-          prepareIcons();
-          runAnim('step1', 1200);
-          setTimeout(() => {
-            runAnim('step2', 1200);
-            setTimeout(() => {
-              runAnim('step3', 1400);
-              area.innerHTML = '<div style="padding:24px; text-align:center; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:16px; color:#10b981; font-weight:600; font-size:16px;">✅ Termin erfolgreich angefragt!</div>';
-              startBtnContainer.style.display = 'none';
-            }, 1250);
-          }, 1250);
+          // Async Tracker Sequence
+          if(currentMode === 'book') {
+            await runAnim('step1', 1200);
+            await runAnim('step2', 1200);
+            await runAnim('step3', 1200);
+            
+            if(sel.value === 'plus') {
+               document.getElementById('step4').classList.remove('disabled');
+               await runAnim('step4', 1200, 'plus-active');
+            }
+
+            const fakeToken = generateToken();
+            area.innerHTML = `
+              <div style="padding:24px; text-align:center; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:16px;">
+                <h3 style="color:#10b981; margin:0 0 8px;">✅ Termin erfolgreich angefragt!</h3>
+                <p style="margin:0 0 16px; color:#cbd5e1; font-size:14px;">In der echten Welt würdest du nun eine Bestätigung erhalten. Falls du den Termin später verschieben musst, nutze diesen Code:</p>
+                <div style="display:inline-block; background:#000; padding:8px 16px; border-radius:8px; border:1px dashed #3b82f6; font-family:monospace; font-size:18px; color:#00d4ff; letter-spacing:2px;">
+                  ${fakeToken}
+                </div>
+              </div>`;
+          } else {
+            // Umbuchung Animation
+            await runAnim('step1', 800);
+            await runAnim('step2', 1000, 'danger-active'); // Rot für Storno
+            await runAnim('step3', 1000);
+            await runAnim('step4', 1000);
+
+            area.innerHTML = `
+              <div style="padding:24px; text-align:center; background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.3); border-radius:16px;">
+                <h3 style="color:var(--secondary); margin:0 0 8px;">🔄 Termin erfolgreich verschoben!</h3>
+                <p style="margin:0; color:#cbd5e1; font-size:15px;">Dein Termin wurde sicher auf den ${dateVal.split('-').reverse().join('.')} um ${timeVal} Uhr verlegt.</p>
+              </div>`;
+          }
+          
+          startBtnContainer.style.display = 'none';
+
         } catch (err) {
-          btn.innerText = oldText;
-          btn.style.opacity = '1';
-          btn.style.pointerEvents = 'auto';
+          actionBtn.innerText = oldText;
+          actionBtn.style.opacity = '1';
+          actionBtn.style.pointerEvents = 'auto';
           alert('Fehler bei der Verbindung zum Server.');
         }
       });
