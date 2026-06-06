@@ -109,6 +109,10 @@
       color: #fff; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
     }
     .btn-primary:hover { box-shadow: 0 15px 35px rgba(0, 212, 255, 0.4); transform: translateY(-2px); }
+    .btn-danger {
+      background: var(--danger); color: #fff; box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
+    }
+    .btn-danger:hover { box-shadow: 0 15px 35px rgba(239, 68, 68, 0.5); transform: translateY(-2px); }
 
     /* =========================
        4) GLASS CARDS (Bausteine)
@@ -142,7 +146,7 @@
     .highlight-box span { color: var(--text-muted); font-size: 13px; }
 
     /* =========================
-       5) DEMO FORMULAR & TABS (NEU)
+       5) DEMO FORMULAR & TABS
     ========================== */
     .demo-wrapper {
       background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -196,7 +200,7 @@
     .step.done { border-color: var(--success); background: rgba(16,185,129,0.05); opacity: 1; }
     .step.done .step-number { background: var(--success); color: #000; }
     
-    /* NEU: Spezialfarben für Plus und Danger(Storno) */
+    /* Spezialfarben für Plus und Danger(Storno) */
     .step.plus-active { border-color: var(--plus); background: rgba(245, 158, 11, 0.08); opacity: 1; }
     .step.plus-active .step-number { background: var(--plus); color: #000; box-shadow: 0 0 15px rgba(245, 158, 11, 0.5); }
     .step.danger-active { border-color: var(--danger); background: rgba(239, 68, 68, 0.08); opacity: 1; }
@@ -347,10 +351,9 @@
           <h2>Live Buchung testen</h2>
           <p class="sub">Simuliere eine echte Buchung oder eine Terminänderung.</p>
           
-          <!-- ANGEPASSTE TABS -->
           <div class="tabs">
             <div class="tab active" id="tabBook">Termin buchen</div>
-            <div class="tab" id="tabReschedule">Termin ändern</div>
+            <div class="tab" id="tabReschedule">Termin ändern / stornieren</div>
           </div>
 
           <div class="field" id="planSelectWrapper">
@@ -409,7 +412,7 @@
     const tabReschedule = document.getElementById('tabReschedule');
     const planWrapper = document.getElementById('planSelectWrapper');
 
-    let currentMode = 'book';
+    let currentMode = 'book'; // 'book', 'reschedule', 'cancel'
 
     // Formular Templates
     const formBookTemplate = `
@@ -424,16 +427,46 @@
         <div class="field"><label>Uhrzeit *</label><select id="inpTime" class="glass-input"><option value="">Bitte Datum wählen</option></select></div>
       </div>`;
 
-    const formRescheduleTemplate = `
+    const formChangeTemplate = `
+      <div class="field">
+        <label>Aktion *</label>
+        <select id="inpChangeAction" class="glass-input" onchange="toggleCancelFields()">
+          <option value="Umbuchung">Termin umbuchen</option>
+          <option value="Stornierung">Termin stornieren</option>
+        </select>
+      </div>
       <div class="field"><label>E-Mail Adresse *</label><input id="inpEmail" type="email" placeholder="max@beispiel.de" class="glass-input"></div>
       <div class="field">
         <label>Sicherheitscode (aus Bestätigungs-Mail) *</label>
         <input id="inpToken" type="text" placeholder="z.B. TP-8X9A" class="glass-input">
       </div>
-      <div class="form-row">
-        <div class="field"><label>Neues Datum *</label><input id="inpDate" type="date" class="glass-input"></div>
-        <div class="field"><label>Neue Uhrzeit *</label><select id="inpTime" class="glass-input"><option value="">Bitte Datum wählen</option></select></div>
+      <div id="newDateTimeWrapper">
+        <div class="form-row">
+          <div class="field"><label>Neues Datum *</label><input id="inpDate" type="date" class="glass-input"></div>
+          <div class="field"><label>Neue Uhrzeit *</label><select id="inpTime" class="glass-input"><option value="">Bitte Datum wählen</option></select></div>
+        </div>
       </div>`;
+
+    // Dropdown-Logik für Umbuchen/Stornieren
+    window.toggleCancelFields = function() {
+      const action = document.getElementById('inpChangeAction').value;
+      const dtWrapper = document.getElementById('newDateTimeWrapper');
+      
+      if(action === 'Stornierung') {
+        currentMode = 'cancel';
+        dtWrapper.style.display = 'none';
+        actionBtn.innerText = 'Termin endgültig stornieren';
+        actionBtn.classList.remove('btn-primary');
+        actionBtn.classList.add('btn-danger');
+      } else {
+        currentMode = 'reschedule';
+        dtWrapper.style.display = 'block';
+        actionBtn.innerText = 'Termin sicher verschieben';
+        actionBtn.classList.add('btn-primary');
+        actionBtn.classList.remove('btn-danger');
+      }
+      renderTracker();
+    }
 
     // Timeline dynamisch rendern
     function renderTracker() {
@@ -441,65 +474,35 @@
 
       if (currentMode === 'book') {
         timelineArea.innerHTML = `
-          <div class="step pending" id="step1">
-            <div class="step-number">1</div>
-            <div class="step-content">
-              <div class="step-title">Buchung verarbeitet</div>
-              <div class="stepAnim"><div class="mailAnim"><div class="mail">✉️</div><div class="mailbox">📮</div></div></div>
-            </div>
-          </div>
-          <div class="step pending" id="step2">
-            <div class="step-number">2</div>
-            <div class="step-content">
-              <div class="step-title">${isPlus ? 'WhatsApp Erinnerung (Plus)' : 'Erinnerung eingeplant'}</div>
-              <div class="stepAnim"><div class="bellAnim"><div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div><div class="bell">${isPlus ? '💬' : '🔔'}</div></div></div>
-            </div>
-          </div>
-          <div class="step pending" id="step3">
-            <div class="step-number">3</div>
-            <div class="step-content">
-              <div class="step-title">${isPlus ? 'WhatsApp Bewertung (Plus)' : 'Bewertung vorbereitet'}</div>
-              <div class="stepAnim"><div class="reviewMiniAnim"><div class="reviewMiniStar">⭐</div><div class="reviewMiniThumb">👍</div></div></div>
-            </div>
-          </div>
-          <div class="step disabled" id="step4" style="${isPlus ? '' : 'display:none;'}">
-            <div class="step-number">4</div>
-            <div class="step-content">
-              <div class="step-title" style="color:var(--plus)">Smart Follow-Up (Plus Feature)</div>
-            </div>
-          </div>
-        `;
-      } else {
+          <div class="step pending" id="step1"><div class="step-number">1</div><div class="step-content"><div class="step-title">Buchung verarbeitet</div><div class="stepAnim"><div class="mailAnim"><div class="mail">✉️</div><div class="mailbox">📮</div></div></div></div></div>
+          <div class="step pending" id="step2"><div class="step-number">2</div><div class="step-content"><div class="step-title">${isPlus ? 'WhatsApp Erinnerung (Plus)' : 'Erinnerung eingeplant'}</div><div class="stepAnim"><div class="bellAnim"><div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div><div class="bell">${isPlus ? '💬' : '🔔'}</div></div></div></div></div>
+          <div class="step pending" id="step3"><div class="step-number">3</div><div class="step-content"><div class="step-title">${isPlus ? 'WhatsApp Bewertung (Plus)' : 'Bewertung vorbereitet'}</div><div class="stepAnim"><div class="reviewMiniAnim"><div class="reviewMiniStar">⭐</div><div class="reviewMiniThumb">👍</div></div></div></div></div>
+          <div class="step disabled" id="step4" style="${isPlus ? '' : 'display:none;'}"><div class="step-number">4</div><div class="step-content"><div class="step-title" style="color:var(--plus)">Smart Follow-Up (Plus Feature)</div></div></div>`;
+      } else if (currentMode === 'reschedule') {
         timelineArea.innerHTML = `
-          <div class="step pending" id="step1">
-            <div class="step-number">1</div>
-            <div class="step-content"><div class="step-title">Sicherheitscode & E-Mail validiert 🔒</div></div>
-          </div>
-          <div class="step pending" id="step2">
-            <div class="step-number">2</div>
-            <div class="step-content"><div class="step-title">Alten Termin storniert 🗑️</div></div>
-          </div>
-          <div class="step pending" id="step3">
-            <div class="step-number">3</div>
-            <div class="step-content"><div class="step-title">Neuen Termin gebucht 📅</div></div>
-          </div>
-          <div class="step pending" id="step4">
-            <div class="step-number">4</div>
-            <div class="step-content"><div class="step-title">Updates & Erinnerungen gesendet 🔄</div></div>
-          </div>
-        `;
+          <div class="step pending" id="step1"><div class="step-number">1</div><div class="step-content"><div class="step-title">Sicherheitscode & E-Mail validiert 🔒</div></div></div>
+          <div class="step pending" id="step2"><div class="step-number">2</div><div class="step-content"><div class="step-title">Alten Termin geändert 🔄</div></div></div>
+          <div class="step pending" id="step3"><div class="step-number">3</div><div class="step-content"><div class="step-title">Neuen Termin gebucht 📅</div></div></div>
+          <div class="step pending" id="step4"><div class="step-number">4</div><div class="step-content"><div class="step-title">Updates & Erinnerungen gesendet ✉️</div></div></div>`;
+      } else if (currentMode === 'cancel') {
+        timelineArea.innerHTML = `
+          <div class="step pending" id="step1"><div class="step-number">1</div><div class="step-content"><div class="step-title">Sicherheitscode validiert 🔒</div></div></div>
+          <div class="step pending" id="step2"><div class="step-number">2</div><div class="step-content"><div class="step-title">Termin aus Kalender entfernt 🗑️</div></div></div>
+          <div class="step pending" id="step3"><div class="step-number">3</div><div class="step-content"><div class="step-title">Platz wieder freigegeben ✨</div></div></div>
+          <div class="step pending" id="step4"><div class="step-number">4</div><div class="step-content"><div class="step-title">Storno-Bestätigung gesendet ✉️</div></div></div>`;
       }
     }
 
-    // Tabs umschalten und BUTTON RESETTEN
+    // Tabs umschalten
     function setMode(mode) {
       currentMode = mode;
       document.getElementById('formError')?.remove();
-
-      // BUTTON RESET: Falls er blockiert war, wieder aktivieren!
+      
       if (actionBtn) {
         actionBtn.style.pointerEvents = 'auto';
         actionBtn.style.opacity = '1';
+        actionBtn.classList.remove('btn-danger');
+        actionBtn.classList.add('btn-primary');
       }
 
       if (mode === 'book') {
@@ -511,15 +514,15 @@
       } else {
         tabReschedule.classList.add('active');
         tabBook.classList.remove('active');
-        planWrapper.style.display = 'none'; // Bei Änderung irrelevant
-        area.innerHTML = formRescheduleTemplate;
+        planWrapper.style.display = 'none'; 
+        area.innerHTML = formChangeTemplate;
         actionBtn.innerText = 'Termin sicher verschieben';
+        currentMode = 'reschedule'; // Default Dropdown Wert ist Umbuchung
       }
 
       startBtnContainer.style.display = 'block';
       renderTracker();
 
-      // Datum Listener neu anhängen
       setTimeout(() => {
         const dateEl = document.getElementById('inpDate');
         if (dateEl) {
@@ -534,7 +537,6 @@
     tabReschedule.addEventListener('click', () => setMode('reschedule'));
     sel.addEventListener('change', renderTracker);
 
-    // Initialisierung
     setMode('book');
 
     async function loadAvailabilityForDate(){
@@ -573,7 +575,6 @@
       }
     }
 
-    // Animation Helper Funktion
     function runAnim(id, delayDone, customClass = 'active') {
       return new Promise(resolve => {
         const s = document.getElementById(id);
@@ -590,7 +591,6 @@
       });
     }
 
-    // Generiere Fake Token
     function generateToken() { return 'TP-' + Math.random().toString(36).substring(2, 6).toUpperCase(); }
 
     if(startBtnContainer){
@@ -599,16 +599,29 @@
         if(actionBtn.style.pointerEvents === 'none') return;
 
         const emailVal = document.getElementById('inpEmail')?.value.trim() || '';
-        const dateVal = document.getElementById('inpDate')?.value || '';
-        const timeSelect = document.getElementById('inpTime');
-        const timeVal = timeSelect?.value || '';
         const tokenVal = document.getElementById('inpToken')?.value.trim() || '';
+        
+        // Date/Time nur relevant, wenn nicht storniert wird
+        let dateVal = '';
+        let timeVal = '';
+        let selectedEnd = '';
+        
+        if(currentMode !== 'cancel') {
+          dateVal = document.getElementById('inpDate')?.value || '';
+          const timeSelect = document.getElementById('inpTime');
+          timeVal = timeSelect?.value || '';
+          selectedEnd = timeSelect?.selectedOptions?.[0]?.dataset?.end || '';
+        }
 
         const existingError = document.getElementById('formError');
         if(existingError) existingError.remove();
 
         // Validierung
-        if(!emailVal || !dateVal || !timeVal || (currentMode === 'reschedule' && !tokenVal)) {
+        if(!emailVal || 
+          (currentMode === 'book' && (!dateVal || !timeVal)) || 
+          (currentMode === 'reschedule' && (!tokenVal || !dateVal || !timeVal)) ||
+          (currentMode === 'cancel' && !tokenVal)
+        ) {
           const errorMsg = document.createElement('div');
           errorMsg.id = 'formError';
           errorMsg.style.color = '#fca5a5'; errorMsg.style.fontSize = '14px'; errorMsg.style.marginBottom = '16px';
@@ -619,11 +632,13 @@
           return;
         }
 
-        const selectedEnd = timeSelect?.selectedOptions?.[0]?.dataset?.end || '';
+        let payloadAktion = '';
+        if(currentMode === 'book') payloadAktion = 'Neu Buchung';
+        if(currentMode === 'reschedule') payloadAktion = 'Umbuchung';
+        if(currentMode === 'cancel') payloadAktion = 'Stornierung';
 
-        // Daten zusammenstellen
         const data = {
-          Aktion: currentMode === 'book' ? 'Neu Buchung' : 'Umbuchung',
+          Aktion: payloadAktion,
           Email: emailVal,
           Termin_Datum: dateVal,
           Termin_Uhrzeit: timeVal,
@@ -638,7 +653,6 @@
           data.Art = document.getElementById('inpType')?.value;
           data.Plan = sel.value === 'plus' ? 'TerminPilot Plus' : 'TerminPilot Standard';
           
-          // Token generieren
           myToken = generateToken();
           data.Token = myToken;
         } else {
@@ -657,7 +671,7 @@
             body: JSON.stringify(data)
           });
 
-          // Async Tracker Sequence
+          // Animation Sequence
           if(currentMode === 'book') {
             await runAnim('step1', 1200);
             await runAnim('step2', 1200);
@@ -671,15 +685,15 @@
             area.innerHTML = `
               <div style="padding:24px; text-align:center; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:16px;">
                 <h3 style="color:#10b981; margin:0 0 8px;">✅ Termin erfolgreich angefragt!</h3>
-                <p style="margin:0 0 16px; color:#cbd5e1; font-size:14px;">In der echten Welt würdest du nun eine Bestätigung erhalten. Falls du den Termin später verschieben musst, nutze diesen Code:</p>
+                <p style="margin:0 0 16px; color:#cbd5e1; font-size:14px;">In der echten Welt würdest du nun eine Bestätigung erhalten. Falls du den Termin später verschieben oder stornieren musst, nutze diesen Code:</p>
                 <div style="display:inline-block; background:#000; padding:8px 16px; border-radius:8px; border:1px dashed #3b82f6; font-family:monospace; font-size:18px; color:#00d4ff; letter-spacing:2px;">
                   ${myToken}
                 </div>
               </div>`;
-          } else {
-            // Umbuchung Animation
+              
+          } else if(currentMode === 'reschedule') {
             await runAnim('step1', 800);
-            await runAnim('step2', 1000, 'danger-active'); // Rot für Storno
+            await runAnim('step2', 1000); 
             await runAnim('step3', 1000);
             await runAnim('step4', 1000);
 
@@ -687,6 +701,18 @@
               <div style="padding:24px; text-align:center; background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.3); border-radius:16px;">
                 <h3 style="color:var(--secondary); margin:0 0 8px;">🔄 Termin erfolgreich verschoben!</h3>
                 <p style="margin:0; color:#cbd5e1; font-size:15px;">Dein Termin wurde sicher auf den ${dateVal.split('-').reverse().join('.')} um ${timeVal} Uhr verlegt.</p>
+              </div>`;
+              
+          } else if(currentMode === 'cancel') {
+            await runAnim('step1', 800);
+            await runAnim('step2', 1000, 'danger-active');
+            await runAnim('step3', 1000, 'danger-active');
+            await runAnim('step4', 1000, 'danger-active');
+
+            area.innerHTML = `
+              <div style="padding:24px; text-align:center; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:16px;">
+                <h3 style="color:var(--danger); margin:0 0 8px;">❌ Termin erfolgreich storniert!</h3>
+                <p style="margin:0; color:#cbd5e1; font-size:15px;">Schade, dass es nicht klappt. Dein Termin wurde restlos aus dem System gelöscht.</p>
               </div>`;
           }
           
