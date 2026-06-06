@@ -628,11 +628,17 @@
           Termin_Bis: selectedEnd
         };
 
+        let myToken = ''; // <-- Speichert den Token für die Anzeige später
+
         if(currentMode === 'book') {
           data.Name = document.getElementById('inpName')?.value.trim();
           data.Telefon = document.getElementById('inpPhone')?.value.trim();
           data.Art = document.getElementById('inpType')?.value;
           data.Plan = sel.value === 'plus' ? 'TerminPilot Plus' : 'TerminPilot Standard';
+          
+          // NEU: Token generieren und in den n8n-Payload packen!
+          myToken = generateToken();
+          data.Token = myToken;
         } else {
           data.Sicherheitscode = tokenVal;
         }
@@ -660,13 +666,12 @@
                await runAnim('step4', 1200, 'plus-active');
             }
 
-            const fakeToken = generateToken();
             area.innerHTML = `
               <div style="padding:24px; text-align:center; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:16px;">
                 <h3 style="color:#10b981; margin:0 0 8px;">✅ Termin erfolgreich angefragt!</h3>
                 <p style="margin:0 0 16px; color:#cbd5e1; font-size:14px;">In der echten Welt würdest du nun eine Bestätigung erhalten. Falls du den Termin später verschieben musst, nutze diesen Code:</p>
                 <div style="display:inline-block; background:#000; padding:8px 16px; border-radius:8px; border:1px dashed #3b82f6; font-family:monospace; font-size:18px; color:#00d4ff; letter-spacing:2px;">
-                  ${fakeToken}
+                  ${myToken}
                 </div>
               </div>`;
           } else {
