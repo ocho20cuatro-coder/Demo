@@ -1,755 +1,2829 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PlexPilot Demo | Premium</title>
-  <meta name="description" content="PlexPilot Demo: Terminbuchung, Terminerinnerung und Bewertungsanfrage." />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Alpax – Vollautomatische Terminverwaltung für KMU. Terminerstellung, Erinnerungen, Bewertungsanfragen – automatisiert. 14 Tage kostenlos testen." />
+  <title>Alpax — Ihr Terminkalender. Vollautomatisch. Ab heute.</title>
 
-  <!-- Neue, ultra-moderne Schriftart: Plus Jakarta Sans -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
 
   <style>
-    /* =========================
-       1) AURORA & GLASS DESIGN SYSTEM
-    ========================== */
+    /* ============================================================
+       CSS CUSTOM PROPERTIES
+    ============================================================ */
     :root {
-      --bg: #030712;
-      --glass-bg: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --glass-hover: rgba(255, 255, 255, 0.06);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      
-      --primary: #3b82f6;     
-      --secondary: #00d4ff;   
-      --tertiary: #0ea5e9;    
-      --success: #10b981;     
-      --danger: #ef4444;      
-      --plus: #f59e0b;        
+      --black:        #0A0A0A;
+      --white:        #FFFFFF;
+      --bg-alt:       #F7F7F7;
+      --sub:          #666666;
+      --border:       #E8E8E8;
+      --border-mid:   #D0D0D0;
+      --muted:        #999999;
+      --muted-2:      #BBBBBB;
+
+      --f-base:   'Inter', sans-serif;
+      --fw-light: 300;
+      --fw-reg:   400;
+      --fw-semi:  600;
+      --fw-bold:  700;
+      --fw-black: 900;
+
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+      --max-w:  1140px;
+      --pad-x:  32px;
+      --r:      4px;
+
+      --section-py: 120px;
     }
 
-    * { box-sizing: border-box; }
-    
-    body {
-      margin: 0;
-      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-      background-color: var(--bg);
-      color: var(--text-main);
-      overflow-x: hidden;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
+    /* ============================================================
+       RESET
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html   { scroll-behavior: smooth; font-size: 16px; }
+    body   { font-family: var(--f-base); font-weight: var(--fw-reg); color: var(--black); background: var(--white); line-height: 1.6; overflow-x: hidden; }
+    img    { display: block; max-width: 100%; }
+    a      { color: inherit; text-decoration: none; }
+    ul     { list-style: none; }
+    button { font-family: var(--f-base); cursor: pointer; border: none; background: none; }
+
+    /* ============================================================
+       REDUCED MOTION
+    ============================================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
     }
 
-    /* Ambient Background Glows */
-    .ambient-bg {
+    /* ============================================================
+       LAYOUT UTILITIES
+    ============================================================ */
+    .container {
+      max-width: var(--max-w);
+      margin-inline: auto;
+      padding-inline: var(--pad-x);
+    }
+
+    .section        { padding-block: var(--section-py); }
+    .section--alt   { background: var(--bg-alt); }
+    .section--dark  { background: var(--black); color: var(--white); }
+    .section--border-top { border-top: 1px solid var(--border); }
+
+    /* ============================================================
+       TYPOGRAPHY
+    ============================================================ */
+    .overline {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: var(--fw-bold);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .headline {
+      font-weight: var(--fw-black);
+      line-height: 1.06;
+      letter-spacing: -0.045em;
+    }
+
+    .headline--xl  { font-size: clamp(3rem, 8vw, 7rem); }
+    .headline--lg  { font-size: clamp(2rem, 4vw, 3.2rem); }
+    .headline--md  { font-size: clamp(1.5rem, 3vw, 2.2rem); }
+
+    .body-lg { font-size: 1.1rem; color: var(--sub); line-height: 1.78; }
+    .body-md { font-size: 0.95rem; color: var(--sub); line-height: 1.75; }
+    .body-sm { font-size: 0.84rem; color: var(--sub); line-height: 1.72; }
+
+    .u-draw {
+      position: relative;
+      display: inline-block;
+    }
+    .u-draw::after {
+      content: '';
+      position: absolute;
+      bottom: -6px; left: 0;
+      width: 0; height: 3px;
+      background: var(--black);
+      transition: width 0.8s ease-out;
+    }
+    .u-draw.drawn::after { width: 100%; }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--f-base);
+      font-weight: var(--fw-bold);
+      font-size: 0.90rem;
+      padding: 14px 28px;
+      border-radius: var(--r);
+      border: 2px solid transparent;
+      transition: background 0.3s ease, color 0.3s ease,
+                  border-color 0.3s ease, transform 0.3s var(--ease-out-expo),
+                  box-shadow 0.3s ease;
+      cursor: pointer;
+      white-space: nowrap;
+      position: relative;
+      will-change: transform;
+    }
+
+    .btn--primary {
+      background: var(--black);
+      color: var(--white);
+      border-color: var(--black);
+    }
+    .btn--primary:hover {
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--black);
+    }
+
+    .btn--outline {
+      background: transparent;
+      color: var(--black);
+      border-color: var(--black);
+    }
+    .btn--outline:hover {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    .btn--outline-white {
+      background: transparent;
+      color: var(--white);
+      border-color: rgba(255,255,255,0.45);
+    }
+    .btn--outline-white:hover {
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--white);
+    }
+
+    .btn--white {
+      background: var(--white);
+      color: var(--black);
+      border-color: var(--white);
+    }
+    .btn--white:hover {
+      background: transparent;
+      color: var(--white);
+      border-color: var(--white);
+    }
+
+    .btn--danger {
+      background: #DC2626;
+      color: var(--white);
+      border-color: #DC2626;
+    }
+    .btn--danger:hover {
+      background: #B91C1C;
+      border-color: #B91C1C;
+    }
+
+    .btn--lg { font-size: 1rem; padding: 16px 36px; }
+
+    /* ============================================================
+       SCROLL-REVEAL
+    ============================================================ */
+    .sr {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    }
+    .sr--left  { transform: translateX(-40px); }
+    .sr--right { transform: translateX(60px); }
+    .sr--scale { transform: scale(0.96); }
+    .sr.visible { opacity: 1; transform: none; }
+
+    .sd-1 { transition-delay: 0.05s; }
+    .sd-2 { transition-delay: 0.13s; }
+    .sd-3 { transition-delay: 0.21s; }
+    .sd-4 { transition-delay: 0.29s; }
+    .sd-5 { transition-delay: 0.37s; }
+    .sd-6 { transition-delay: 0.45s; }
+    .sd-7 { transition-delay: 0.53s; }
+    .sd-8 { transition-delay: 0.61s; }
+
+    /* ============================================================
+       1. NAVIGATION
+    ============================================================ */
+    .nav {
       position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      z-index: -1;
-      pointer-events: none;
+      top: 0; left: 0; right: 0;
+      z-index: 900;
+      background: transparent;
+      border-bottom: 1px solid transparent;
+      transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+    .nav.scrolled {
+      background: rgba(255,255,255,0.96);
+      border-color: var(--border);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .nav__bar {
+      max-width: var(--max-w);
+      margin-inline: auto;
+      padding-inline: var(--pad-x);
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .nav__logo {
+      font-size: 1.4rem;
+      font-weight: var(--fw-black);
+      letter-spacing: -0.06em;
+      color: var(--black);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-shrink: 0;
+    }
+    .nav__logo-icon {
+      width: 30px; height: 30px;
+      background: var(--black);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav__logo-icon svg { display: block; }
+
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+    .nav__links a {
+      font-size: 0.86rem;
+      font-weight: var(--fw-semi);
+      color: var(--sub);
+      position: relative;
+      transition: color 0.2s;
+    }
+    .nav__links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 1.5px;
+      background: var(--black);
+      transition: width 0.3s var(--ease-out-expo);
+    }
+    .nav__links a:hover { color: var(--black); }
+    .nav__links a:hover::after { width: 100%; }
+
+    .nav__ham {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 6px;
+      cursor: pointer;
+    }
+    .nav__ham span {
+      display: block;
+      width: 22px; height: 1.5px;
+      background: var(--black);
+      border-radius: 1px;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+      transform-origin: center;
+    }
+    .nav__ham.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav__ham.open span:nth-child(2) { opacity: 0; }
+    .nav__ham.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .nav__mobile {
+      position: fixed;
+      top: 68px; left: 0; right: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.45s var(--ease-out-expo);
+      z-index: 899;
+    }
+    .nav__mobile.open { max-height: 500px; }
+    .nav__mobile__inner {
+      padding: 20px var(--pad-x) 32px;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .nav__mobile a {
+      display: block;
+      padding: 12px 0;
+      font-size: 1rem;
+      font-weight: var(--fw-semi);
+      color: var(--sub);
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s, padding-left 0.2s;
+    }
+    .nav__mobile a:hover { color: var(--black); padding-left: 6px; }
+    .nav__mobile .btn { margin-top: 20px; align-self: flex-start; }
+
+    /* ============================================================
+       2. HERO SECTION
+    ============================================================ */
+    .hero {
+      min-height: 100vh;
+      padding-top: 68px;
+      display: flex;
+      align-items: center;
+      background: var(--white);
+      position: relative;
       overflow: hidden;
     }
-    .blob {
-      position: absolute;
-      filter: blur(100px);
-      opacity: 0.4;
+
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.07) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 20%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 20%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero__inner {
+      position: relative; z-index: 1;
+      max-width: var(--max-w);
+      margin-inline: auto;
+      padding: 80px var(--pad-x) 100px;
+      width: 100%;
+    }
+
+    .hero__line-wrap {
+      overflow: hidden;
+      display: block;
+    }
+    .hero__line {
+      display: block;
+      opacity: 0;
+      transform: translateY(60px);
+      transition: opacity 0.9s var(--ease-out-expo),
+                  transform 0.9s var(--ease-out-expo);
+    }
+    .hero__line.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero__headline {
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: var(--fw-black);
+      line-height: 1.02;
+      letter-spacing: -0.055em;
+      margin-bottom: 36px;
+    }
+    .hero__headline .line-muted { color: var(--muted-2); }
+
+    .hero__sub {
+      font-size: clamp(1rem, 1.8vw, 1.15rem);
+      color: var(--sub);
+      max-width: 520px;
+      line-height: 1.80;
+      margin-bottom: 44px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s var(--ease-out-expo) 0.55s,
+                  transform 0.8s var(--ease-out-expo) 0.55s;
+    }
+    .hero__sub.revealed { opacity: 1; transform: translateY(0); }
+
+    .hero__actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s var(--ease-out-expo) 0.72s,
+                  transform 0.7s var(--ease-out-expo) 0.72s;
+    }
+    .hero__actions.revealed { opacity: 1; transform: translateY(0); }
+
+    .hero__trust {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: var(--fw-semi);
+      opacity: 0;
+      transition: opacity 0.7s ease 0.90s;
+    }
+    .hero__trust.revealed { opacity: 1; }
+    .hero__trust-sep {
+      width: 3px; height: 3px;
+      background: var(--border);
       border-radius: 50%;
-      animation: float 20s infinite ease-in-out alternate;
+      flex-shrink: 0;
     }
-    .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: rgba(59, 130, 246, 0.3); } 
-    .blob-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: rgba(0, 212, 255, 0.2); animation-delay: -5s; } 
-    .blob-3 { top: 40%; left: 50%; width: 40vw; height: 40vw; background: rgba(14, 165, 233, 0.2); animation-delay: -10s; transform: translateX(-50%); }
+    .hero__trust-item { display: flex; align-items: center; gap: 6px; }
+    .hero__trust-check {
+      width: 15px; height: 15px;
+      border-radius: 50%;
+      background: var(--black);
+      color: var(--white);
+      font-size: 0.52rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
 
-    @keyframes float {
-      0% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(5%, 10%) scale(1.1); }
-      100% { transform: translate(-5%, -5%) scale(0.9); }
+    .hero__divider {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: var(--border);
+      overflow: hidden;
+    }
+    .hero__divider::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, var(--black), transparent);
+      animation: dividerSweep 3s ease-in-out 1.2s forwards;
+    }
+    @keyframes dividerSweep {
+      0%   { left: -100%; opacity: 0; }
+      20%  { opacity: 1; }
+      100% { left: 100%; opacity: 0; }
     }
 
-    a { text-decoration: none; color: inherit; }
-    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    /* ============================================================
+       MARQUEE
+    ============================================================ */
+    .marquee {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--white);
+      padding: 14px 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .marquee::before,
+    .marquee::after {
+      content: '';
+      position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2; pointer-events: none;
+    }
+    .marquee::before { left: 0;  background: linear-gradient(90deg, var(--white), transparent); }
+    .marquee::after  { right: 0; background: linear-gradient(-90deg, var(--white), transparent); }
 
-    /* =========================
-       2) HEADER
-    ========================== */
-    header { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; }
-    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 20px; letter-spacing: -0.03em; }
-    .logo { width: 40px; height: 40px; border-radius: 12px; object-fit: cover; }
+    .marquee__track {
+      display: flex;
+      width: max-content;
+      animation: marqueeRoll 40s linear infinite;
+    }
+    .marquee__track:hover { animation-play-state: paused; }
 
-    /* =========================
-       3) HERO ZENTRIERT
-    ========================== */
-    .hero { padding: 40px 0 60px; text-align: center; display: flex; flex-direction: column; align-items: center; }
-    
-    .badge {
-      display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; 
-      border-radius: 99px; font-size: 13px; font-weight: 600;
-      background: var(--glass-bg); border: 1px solid var(--glass-border);
-      backdrop-filter: blur(10px); margin-bottom: 32px;
-      color: #e2e8f0;
+    @keyframes marqueeRoll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
     }
-    .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--secondary); box-shadow: 0 0 10px var(--secondary); }
-    
-    h1 {
-      font-size: clamp(48px, 8vw, 84px); font-weight: 800; line-height: 1.1; letter-spacing: -0.04em; margin: 0 0 24px;
-      background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .lead { font-size: clamp(16px, 2vw, 20px); color: var(--text-muted); max-width: 650px; margin: 0 0 40px; }
-    
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 16px 28px; border-radius: 14px; font-weight: 600; font-size: 16px;
-      transition: all 0.3s ease; cursor: pointer; border: none;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: #fff; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
-    }
-    .btn-primary:hover { box-shadow: 0 15px 35px rgba(0, 212, 255, 0.4); transform: translateY(-2px); }
-    .btn-danger {
-      background: var(--danger); color: #fff; box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
-    }
-    .btn-danger:hover { box-shadow: 0 15px 35px rgba(239, 68, 68, 0.5); transform: translateY(-2px); }
 
-    /* =========================
-       4) GLASS CARDS (Bausteine)
-    ========================== */
-    .section-title { text-align: center; margin-bottom: 48px; }
-    .section-title h2 { font-size: 36px; letter-spacing: -0.03em; margin: 0 0 16px; }
-    .section-title p { color: var(--text-muted); font-size: 18px; max-width: 600px; margin: 0 auto; }
-
-    /* NEU: Grid auf 4 Spalten geändert */
-    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 80px; }
-    
-    .glass-card {
-      background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--glass-border); border-radius: 24px; padding: 32px;
-      transition: all 0.3s ease; position: relative; overflow: hidden;
-      display: flex; flex-direction: column;
+    .marquee__item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 0 32px;
+      font-size: 0.76rem;
+      font-weight: var(--fw-semi);
+      color: var(--muted);
+      white-space: nowrap;
+      border-right: 1px solid var(--border);
     }
-    .glass-card:hover { background: var(--glass-hover); border-color: rgba(255,255,255,0.15); transform: translateY(-5px); }
-    
-    .card-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
-    .icon-wrap {
-      width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; font-size: 22px;
-      background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(0,212,255,0.15));
-      border: 1px solid rgba(255,255,255,0.05); flex-shrink: 0;
-    }
-    .glass-card h3 { font-size: 22px; margin: 0; letter-spacing: -0.02em; }
-    
-    .glass-card p { color: var(--text-muted); font-size: 15px; margin: 0 0 20px; }
-    .glass-card ul { padding-left: 20px; color: #cbd5e1; margin-bottom: 24px; font-size: 14px; flex-grow: 1; }
-    .glass-card ul li { margin-bottom: 8px; }
-    
-    .highlight-box { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 16px; border: 1px solid var(--glass-border); margin-top: auto; }
-    .highlight-box b { color: #fff; font-size: 14px; display: block; margin-bottom: 4px; }
-    .highlight-box span { color: var(--text-muted); font-size: 13px; }
+    .marquee__item strong { color: var(--black); }
 
-    /* =========================
-       5) DEMO FORMULAR & TABS
-    ========================== */
+    /* ============================================================
+       3. PROBLEM SECTION
+    ============================================================ */
+    .problem__header { margin-bottom: 64px; }
+
+    .problem__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .pain-card {
+      background: var(--bg-alt);
+      padding: 48px 36px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s ease;
+    }
+    .pain-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--black);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s var(--ease-out-expo);
+    }
+    .pain-card:hover { background: var(--white); }
+    .pain-card:hover::after { transform: scaleX(1); }
+
+    .pain-card__icon {
+      width: 44px; height: 44px;
+      margin-bottom: 24px;
+      transition: transform 0.4s var(--ease-out-expo);
+    }
+    .pain-card:hover .pain-card__icon { transform: scale(1.08) rotate(-4deg); }
+
+    .pain-card__title {
+      font-size: 1.05rem;
+      font-weight: var(--fw-black);
+      letter-spacing: -0.025em;
+      margin-bottom: 12px;
+    }
+    .pain-card__text {
+      font-size: 0.88rem;
+      color: var(--sub);
+      line-height: 1.78;
+      margin-bottom: 28px;
+    }
+    .pain-card__stat {
+      font-size: 2.8rem;
+      font-weight: var(--fw-black);
+      letter-spacing: -0.05em;
+      line-height: 1;
+    }
+    .pain-card__stat-lbl {
+      font-size: 0.72rem;
+      color: var(--sub);
+      margin-top: 5px;
+      font-weight: var(--fw-semi);
+    }
+
+    /* ============================================================
+       4. FEATURES SECTION
+    ============================================================ */
+    .features__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 64px;
+    }
+
+    .feat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 36px 28px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s var(--ease-out-expo),
+                  box-shadow 0.3s ease,
+                  border-color 0.3s ease;
+    }
+    .feat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 0;
+      background: var(--black);
+      transition: width 0.3s var(--ease-out-expo);
+    }
+    .feat-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      border-color: var(--black);
+    }
+    .feat-card:hover::before { width: 3px; }
+
+    .feat-card__num {
+      font-size: 0.62rem;
+      font-weight: var(--fw-bold);
+      letter-spacing: 0.15em;
+      color: var(--muted-2);
+      margin-bottom: 18px;
+      display: block;
+    }
+    .feat-card__icon {
+      width: 46px; height: 46px;
+      background: var(--black);
+      border-radius: var(--r);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+      transition: transform 0.4s var(--ease-out-expo);
+    }
+    .feat-card:hover .feat-card__icon { transform: scale(1.06) rotate(-5deg); }
+    .feat-card__title {
+      font-size: 0.97rem;
+      font-weight: var(--fw-black);
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .feat-card__text {
+      font-size: 0.86rem;
+      color: var(--sub);
+      line-height: 1.78;
+    }
+
+    /* ============================================================
+       LIVE DEMO SECTION — B&W Adaptation
+    ============================================================ */
+    .demo-section {
+      padding-block: var(--section-py);
+      background: var(--white);
+      border-top: 1px solid var(--border);
+    }
+
+    .demo-section .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
     .demo-wrapper {
-      background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border); border-radius: 32px; padding: 40px; margin-bottom: 80px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 52px 48px;
     }
-    .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-    
-    .panel h2 { font-size: 24px; margin: 0 0 8px; letter-spacing: -0.02em; }
-    .panel p.sub { color: var(--text-muted); font-size: 15px; margin: 0 0 24px; }
 
-    .tabs {
-      display: flex; gap: 8px; background: rgba(255,255,255,0.02);
-      border: 1px solid var(--glass-border); border-radius: 12px; padding: 6px; margin-bottom: 24px;
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 52px;
+      align-items: start;
     }
-    .tab {
-      flex: 1; text-align: center; padding: 10px; border-radius: 8px; font-size: 14px; font-weight: 600; 
-      cursor: pointer; color: var(--text-muted); transition: all 0.3s;
+
+    .demo-panel__title {
+      font-size: 1.2rem;
+      font-weight: var(--fw-black);
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+      color: var(--black);
     }
-    .tab.active { background: var(--glass-hover); color: #fff; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-
-    .field { margin-bottom: 20px; }
-    .field label { display: block; font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
-    
-    .glass-input {
-      width: 100%; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border);
-      color: #fff; padding: 16px; border-radius: 12px; font-family: inherit; font-size: 15px; transition: all 0.2s;
-      color-scheme: dark;
+    .demo-panel__sub {
+      font-size: 0.88rem;
+      color: var(--sub);
+      margin-bottom: 28px;
     }
-    .glass-input:focus { outline: none; border-color: var(--secondary); background: rgba(0,212,255,0.05); box-shadow: 0 0 0 4px rgba(0,212,255,0.1); }
-    .glass-input option { color: #0f172a; background-color: #ffffff; }
-    
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-    /* =========================
-       6) STATUS TRACKER (Rechte Seite)
-    ========================== */
-    .timeline { display: grid; gap: 16px; }
-    .step {
-      display: flex; align-items: center; gap: 16px; padding: 20px; border-radius: 16px;
-      background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); transition: all 0.4s;
+    /* Tabs */
+    .demo-tabs {
+      display: flex;
+      gap: 6px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 5px;
+      margin-bottom: 28px;
     }
-    .step-number {
-      width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
-      background: rgba(255,255,255,0.05); font-size: 13px; font-weight: 700; color: var(--text-muted);
+    .demo-tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px 12px;
+      border-radius: 2px;
+      font-size: 0.82rem;
+      font-weight: var(--fw-bold);
+      cursor: pointer;
+      color: var(--muted);
+      transition: all 0.25s ease;
+      border: 1px solid transparent;
     }
-    
-    .step.pending { opacity: 0.5; }
-    .step.active { border-color: var(--secondary); background: rgba(0,212,255,0.08); opacity: 1; }
-    .step.active .step-number { background: var(--secondary); color: #000; box-shadow: 0 0 15px rgba(0,212,255,0.5); }
-    .step.done { border-color: var(--success); background: rgba(16,185,129,0.05); opacity: 1; }
-    .step.done .step-number { background: var(--success); color: #000; }
-    
-    .step.plus-active { border-color: var(--plus); background: rgba(245, 158, 11, 0.08); opacity: 1; }
-    .step.plus-active .step-number { background: var(--plus); color: #000; box-shadow: 0 0 15px rgba(245, 158, 11, 0.5); }
-    .step.danger-active { border-color: var(--danger); background: rgba(239, 68, 68, 0.08); opacity: 1; }
-    .step.danger-active .step-number { background: var(--danger); color: #fff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
-    .step.disabled { opacity: 0.2; }
-
-    .step-content { flex: 1; display: flex; align-items: center; justify-content: space-between; }
-    .step-title { font-weight: 600; font-size: 16px; }
-
-    /* Animation Containers */
-    .stepAnim{width:140px;height:26px;position:relative;overflow:hidden;}
-    .mailAnim{position:relative;width:140px;height:26px;overflow:hidden}
-    .mail{position:absolute;left:-36px;top:0;font-size:18px;opacity:0}
-    .mailbox{position:absolute;right:0;top:0;font-size:18px;opacity:0}
-    .step.showIcons .mailbox, .step.showIcons .bell{opacity:1}
-    .step.animating .mail{animation:flyMail 1.2s ease-in-out forwards}
-    .step.animating .mailbox{animation:boxPulse 1.2s ease-in-out forwards}
-    
-    .bellAnim{position:relative;width:140px;height:26px;overflow:hidden}
-    .bell{position:absolute;right:0;top:0;font-size:18px;opacity:0;transform-origin:center center}
-    .wave{position:absolute;top:4px;width:10px;height:10px;border:2px solid var(--secondary);border-radius:50%;opacity:0}
-    .wave1{left:0}.wave2{left:14px}.wave3{left:28px}
-    .step.showIcons.animating .wave1{animation:ring 1.1s ease-out 0s forwards}
-    .step.showIcons.animating .wave2{animation:ring 1.1s ease-out .18s forwards}
-    .step.showIcons.animating .wave3{animation:ring 1.1s ease-out .36s forwards}
-    .step.showIcons.animating .bell{animation:bellMove 1.1s ease-out forwards}
-    
-    .reviewMiniAnim{position:relative;width:140px;height:26px;overflow:hidden}
-    .reviewMiniStar{position:absolute;left:-26px;top:0;font-size:18px;opacity:0}
-    .reviewMiniThumb{position:absolute;right:0;top:0;font-size:18px;opacity:0;transform:scale(.5)}
-    .step.showIcons.animating .reviewMiniStar{animation:miniStarFly 1.4s ease-in-out forwards}
-    .step.showIcons.animating .reviewMiniThumb{animation:miniThumbIn .5s ease forwards;animation-delay:1.08s}
-    .step.showIcons .reviewMiniThumb{opacity:1;transform:scale(1)}
-
-    @keyframes flyMail{0%{left:-36px;opacity:0;transform:translateY(0)}12%{opacity:1}80%{left:72%;opacity:1}100%{left:82%;opacity:0;transform:translateY(0)}}
-    @keyframes boxPulse{0%,75%{transform:scale(1)}85%{transform:scale(1.18)}100%{transform:scale(1)}}
-    @keyframes ring{0%{transform:scale(.6) translateX(0);opacity:0}20%{opacity:1}100%{transform:scale(1.8) translateX(92px);opacity:0}}
-    @keyframes bellMove{0%{transform:translateX(0) scale(1)}35%{transform:translateX(0) scale(1.12)}70%{transform:translateX(4px) scale(1.08)}100%{transform:translateX(0) scale(1)}}
-    @keyframes miniStarFly{0%{transform:translateX(0) translateY(0) scale(.7) rotate(-20deg);opacity:0}12%{opacity:1}68%{transform:translateX(88px) translateY(-1px) scale(1) rotate(12deg);opacity:1}100%{transform:translateX(118px) translateY(0) scale(.8) rotate(18deg);opacity:0}}
-    @keyframes miniThumbIn{from{opacity:0;transform:scale(.5) rotate(-10deg)}to{opacity:1;transform:scale(1) rotate(0deg)}}
-
-    /* =========================
-       7) FOOTER & RESPONSIVE
-    ========================== */
-    footer { border-top: 1px solid var(--glass-border); padding: 32px 0; text-align: center; color: var(--text-muted); font-size: 14px; }
-    
-    @media (max-width: 1100px) {
-      .grid { grid-template-columns: repeat(2, 1fr); }
+    .demo-tab.active {
+      background: var(--black);
+      color: var(--white);
+      border-color: var(--black);
     }
+
+    /* Form fields */
+    .demo-field { margin-bottom: 18px; }
+    .demo-field label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: var(--fw-bold);
+      color: var(--muted);
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .demo-input {
+      width: 100%;
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--black);
+      padding: 13px 16px;
+      border-radius: var(--r);
+      font-family: var(--f-base);
+      font-size: 0.90rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      color-scheme: light;
+    }
+    .demo-input:focus {
+      outline: none;
+      border-color: var(--black);
+      box-shadow: 0 0 0 3px rgba(10,10,10,0.07);
+    }
+    .demo-input option { background: #ffffff; color: #0a0a0a; }
+
+    .demo-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .demo-action-btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 15px 28px;
+      font-size: 0.95rem;
+      border-radius: var(--r);
+    }
+
+    /* Product select wrapper */
+    .demo-plan-wrap { margin-bottom: 20px; }
+
+    /* ============================================================
+       TIMELINE / STATUS TRACKER
+    ============================================================ */
+    .demo-timeline { display: grid; gap: 14px; }
+
+    .demo-step {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      border-radius: 10px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      transition: all 0.4s ease;
+    }
+
+    .demo-step__number {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--bg-alt);
+      font-size: 0.78rem;
+      font-weight: var(--fw-black);
+      color: var(--muted);
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+      transition: all 0.4s ease;
+    }
+
+    .demo-step.pending { opacity: 0.45; }
+    .demo-step.disabled { opacity: 0.18; }
+
+    .demo-step.step-active {
+      border-color: var(--black);
+      background: rgba(10,10,10,0.03);
+      opacity: 1;
+    }
+    .demo-step.step-active .demo-step__number {
+      background: var(--black);
+      color: var(--white);
+      border-color: var(--black);
+      box-shadow: 0 0 0 4px rgba(10,10,10,0.08);
+    }
+
+    .demo-step.step-done {
+      border-color: #16a34a;
+      background: rgba(22,163,74,0.04);
+      opacity: 1;
+    }
+    .demo-step.step-done .demo-step__number {
+      background: #16a34a;
+      color: var(--white);
+      border-color: #16a34a;
+    }
+
+    .demo-step.step-cancel-active {
+      border-color: #DC2626;
+      background: rgba(220,38,38,0.04);
+      opacity: 1;
+    }
+    .demo-step.step-cancel-active .demo-step__number {
+      background: #DC2626;
+      color: var(--white);
+      border-color: #DC2626;
+    }
+
+    .demo-step__content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .demo-step__title {
+      font-size: 0.90rem;
+      font-weight: var(--fw-bold);
+      color: var(--black);
+    }
+
+    /* Step animation containers */
+    .stepAnim { width: 120px; height: 24px; position: relative; overflow: hidden; }
+    .mailAnim { position: relative; width: 120px; height: 24px; overflow: hidden; }
+    .mail { position: absolute; left: -32px; top: 0; font-size: 16px; opacity: 0; }
+    .mailbox { position: absolute; right: 0; top: 0; font-size: 16px; opacity: 0; }
+
+    .demo-step.showIcons .mailbox,
+    .demo-step.showIcons .bell { opacity: 1; }
+    .demo-step.animating .mail { animation: flyMail 1.2s ease-in-out forwards; }
+    .demo-step.animating .mailbox { animation: boxPulse 1.2s ease-in-out forwards; }
+
+    .bellAnim { position: relative; width: 120px; height: 24px; overflow: hidden; }
+    .bell { position: absolute; right: 0; top: 0; font-size: 16px; opacity: 0; transform-origin: center center; }
+    .wave { position: absolute; top: 3px; width: 9px; height: 9px; border: 2px solid var(--black); border-radius: 50%; opacity: 0; }
+    .wave1 { left: 0; } .wave2 { left: 12px; } .wave3 { left: 24px; }
+
+    .demo-step.showIcons.animating .wave1 { animation: ring 1.1s ease-out 0s forwards; }
+    .demo-step.showIcons.animating .wave2 { animation: ring 1.1s ease-out .18s forwards; }
+    .demo-step.showIcons.animating .wave3 { animation: ring 1.1s ease-out .36s forwards; }
+    .demo-step.showIcons.animating .bell  { animation: bellMove 1.1s ease-out forwards; }
+
+    .reviewMiniAnim { position: relative; width: 120px; height: 24px; overflow: hidden; }
+    .reviewMiniStar  { position: absolute; left: -24px; top: 0; font-size: 16px; opacity: 0; }
+    .reviewMiniThumb { position: absolute; right: 0; top: 0; font-size: 16px; opacity: 0; transform: scale(.5); }
+    .demo-step.showIcons.animating .reviewMiniStar  { animation: miniStarFly 1.4s ease-in-out forwards; }
+    .demo-step.showIcons.animating .reviewMiniThumb { animation: miniThumbIn .5s ease forwards; animation-delay: 1.08s; }
+    .demo-step.showIcons .reviewMiniThumb { opacity: 1; transform: scale(1); }
+
+    @keyframes flyMail  { 0%{left:-32px;opacity:0}12%{opacity:1}80%{left:68%;opacity:1}100%{left:80%;opacity:0} }
+    @keyframes boxPulse { 0%,75%{transform:scale(1)}85%{transform:scale(1.18)}100%{transform:scale(1)} }
+    @keyframes ring     { 0%{transform:scale(.6) translateX(0);opacity:0}20%{opacity:1}100%{transform:scale(1.8) translateX(84px);opacity:0} }
+    @keyframes bellMove { 0%{transform:translateX(0) scale(1)}35%{transform:translateX(0) scale(1.12)}70%{transform:translateX(4px) scale(1.08)}100%{transform:translateX(0) scale(1)} }
+    @keyframes miniStarFly  { 0%{transform:translateX(0) translateY(0) scale(.7) rotate(-20deg);opacity:0}12%{opacity:1}68%{transform:translateX(82px) translateY(-1px) scale(1) rotate(12deg);opacity:1}100%{transform:translateX(108px) translateY(0) scale(.8) rotate(18deg);opacity:0} }
+    @keyframes miniThumbIn  { from{opacity:0;transform:scale(.5) rotate(-10deg)}to{opacity:1;transform:scale(1) rotate(0deg)} }
+
+    /* ============================================================
+       5. PRICING SECTION
+    ============================================================ */
+    .pricing__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      max-width: 860px;
+      margin-inline: auto;
+      margin-top: 64px;
+    }
+
+    .price-card {
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 44px 40px;
+      position: relative;
+      background: var(--white);
+      transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s ease;
+    }
+    .price-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+    }
+
+    .price-card--featured {
+      background: var(--black);
+      color: var(--white);
+      border-color: var(--black);
+      animation: pricePulse 3s ease-in-out infinite;
+    }
+    @keyframes pricePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(10,10,10,0); }
+      50%       { box-shadow: 0 0 0 6px rgba(10,10,10,0.08); }
+    }
+    .price-card--featured:hover {
+      transform: scale(1.02) translateY(-4px);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+      animation: none;
+    }
+
+    .price-card__badge {
+      position: absolute;
+      top: -13px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--white);
+      color: var(--black);
+      font-size: 0.62rem;
+      font-weight: var(--fw-black);
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      padding: 5px 18px;
+      border-radius: 100px;
+      white-space: nowrap;
+      border: 1px solid var(--border);
+    }
+
+    .price-card__name {
+      font-size: 1.1rem;
+      font-weight: var(--fw-black);
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+    .price-card__tagline {
+      font-size: 0.84rem;
+      color: var(--sub);
+      margin-bottom: 24px;
+    }
+    .price-card--featured .price-card__tagline { color: rgba(255,255,255,0.48); }
+
+    .price-card__amount {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+      margin-bottom: 4px;
+    }
+    .price-card__cur {
+      font-size: 1.3rem;
+      font-weight: var(--fw-bold);
+      color: var(--sub);
+    }
+    .price-card--featured .price-card__cur { color: rgba(255,255,255,0.48); }
+    .price-card__num {
+      font-size: 4rem;
+      font-weight: var(--fw-black);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+    .price-card__period {
+      font-size: 0.84rem;
+      color: var(--sub);
+      margin-bottom: 4px;
+    }
+    .price-card--featured .price-card__period { color: rgba(255,255,255,0.48); }
+    .price-card__tax {
+      font-size: 0.70rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .price-card--featured .price-card__tax { color: rgba(255,255,255,0.28); }
+
+    .price-card__div {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 22px;
+    }
+    .price-card--featured .price-card__div { background: rgba(255,255,255,0.12); }
+
+    .price-card__feats {
+      display: flex; flex-direction: column; gap: 11px;
+      margin-bottom: 28px;
+    }
+    .pf {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 0.86rem;
+      transition: transform 0.2s;
+    }
+    .pf:hover { transform: translateX(4px); }
+    .pf__ico { flex-shrink: 0; font-size: 0.78rem; margin-top: 2px; width: 14px; text-align: center; }
+    .pf--no  { color: var(--muted-2); }
+    .price-card__cta { width: 100%; }
+    .price-card__note {
+      text-align: center;
+      font-size: 0.70rem;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+    .price-card--featured .price-card__note { color: rgba(255,255,255,0.28); }
+
+    /* ============================================================
+       6. TARGET GROUPS
+    ============================================================ */
+    .targets__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 64px;
+    }
+
+    .target-card {
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 32px 20px;
+      text-align: center;
+      background: var(--white);
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: border-color 0.3s ease;
+    }
+    .target-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--black);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.38s var(--ease-out-expo);
+      z-index: 0;
+    }
+    .target-card:hover { border-color: var(--black); }
+    .target-card:hover::before { transform: scaleY(1); }
+
+    .target-card__icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      display: block;
+      position: relative; z-index: 1;
+      transition: transform 0.4s var(--ease-out-expo), filter 0.3s;
+    }
+    .target-card:hover .target-card__icon {
+      transform: scale(1.15);
+      filter: grayscale(1) brightness(5);
+    }
+    .target-card__name {
+      font-size: 0.86rem;
+      font-weight: var(--fw-bold);
+      position: relative; z-index: 1;
+      transition: color 0.3s;
+    }
+    .target-card:hover .target-card__name { color: var(--white); }
+
+    /* ============================================================
+       7. STATS / USPs
+    ============================================================ */
+    .stats__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 64px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      padding: 48px 32px;
+      position: relative;
+      transition: background 0.3s ease;
+    }
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--black);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s var(--ease-out-expo);
+    }
+    .stat-card:hover { background: var(--bg-alt); }
+    .stat-card:hover::after { transform: scaleX(1); }
+
+    .stat-card__num {
+      font-size: clamp(2.4rem, 4vw, 3.4rem);
+      font-weight: var(--fw-black);
+      letter-spacing: -0.05em;
+      line-height: 1;
+      margin-bottom: 10px;
+      display: block;
+    }
+    .stat-card__title {
+      font-size: 0.95rem;
+      font-weight: var(--fw-black);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .stat-card__text {
+      font-size: 0.84rem;
+      color: var(--sub);
+      line-height: 1.72;
+    }
+
+    /* ============================================================
+       8. TESTIMONIALS
+    ============================================================ */
+    .testi__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 64px;
+    }
+
+    .testi-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 36px 30px;
+      position: relative;
+      transition: transform 0.3s var(--ease-out-expo),
+                  box-shadow 0.3s ease,
+                  border-color 0.3s ease;
+    }
+    .testi-card::before {
+      content: '\201C';
+      position: absolute;
+      top: 14px; right: 20px;
+      font-size: 5rem;
+      font-weight: var(--fw-black);
+      color: rgba(0,0,0,0.04);
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+    .testi-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+      border-color: var(--black);
+    }
+
+    .testi-card__stars {
+      color: var(--black);
+      font-size: 0.85rem;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+    }
+    .testi-card__text {
+      font-size: 0.90rem;
+      color: var(--sub);
+      line-height: 1.82;
+      font-style: italic;
+      margin-bottom: 22px;
+    }
+    .testi-card__author { display: flex; align-items: center; gap: 12px; }
+    .testi-card__avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--black);
+      color: var(--white);
+      font-size: 0.78rem;
+      font-weight: var(--fw-black);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.35s var(--ease-out-expo);
+    }
+    .testi-card:hover .testi-card__avatar { transform: scale(1.08); }
+    .testi-card__name { font-size: 0.88rem; font-weight: var(--fw-black); }
+    .testi-card__role { font-size: 0.72rem; color: var(--muted); }
+
+    /* ============================================================
+       9. FAQ
+    ============================================================ */
+    .faq__list {
+      max-width: 720px;
+      margin-inline: auto;
+      margin-top: 64px;
+      border-top: 1px solid var(--border);
+    }
+
+    .faq__item {
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .faq__question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px 0;
+      font-size: 0.95rem;
+      font-weight: var(--fw-bold);
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+      letter-spacing: -0.01em;
+      transition: color 0.2s;
+    }
+    .faq__question::-webkit-details-marker { display: none; }
+    .faq__item[open] .faq__question { color: var(--black); }
+
+    .faq__arrow {
+      flex-shrink: 0;
+      width: 24px; height: 24px;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.4s ease;
+    }
+    .faq__item[open] .faq__arrow { transform: rotate(180deg); }
+
+    .faq__body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.4s ease;
+    }
+    .faq__item[open] .faq__body { grid-template-rows: 1fr; }
+    .faq__body-inner { overflow: hidden; }
+    .faq__answer {
+      padding-bottom: 22px;
+      font-size: 0.88rem;
+      color: var(--sub);
+      line-height: 1.82;
+    }
+
+    /* ============================================================
+       10. FINAL CTA
+    ============================================================ */
+    .cta-final {
+      background: var(--black);
+      color: var(--white);
+      padding-block: var(--section-py);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-final::after {
+      content: 'ALPAX';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 22vw;
+      font-weight: var(--fw-black);
+      color: rgba(255,255,255,0.025);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+      letter-spacing: -0.06em;
+    }
+    .cta-final__inner { position: relative; z-index: 1; }
+    .cta-final__overline {
+      font-size: 0.66rem;
+      font-weight: var(--fw-bold);
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.30);
+      margin-bottom: 20px;
+      display: block;
+    }
+    .cta-final__title {
+      font-size: clamp(2.2rem, 5.5vw, 4.4rem);
+      font-weight: var(--fw-black);
+      line-height: 1.06;
+      letter-spacing: -0.05em;
+      margin-bottom: 18px;
+    }
+    .cta-final__sub {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.42);
+      max-width: 460px;
+      margin-inline: auto;
+      margin-bottom: 44px;
+      line-height: 1.78;
+    }
+    .cta-final__actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+    .cta-final__note {
+      font-size: 0.76rem;
+      color: rgba(255,255,255,0.22);
+      letter-spacing: 0.02em;
+    }
+
+    /* ============================================================
+       11. FOOTER
+    ============================================================ */
+    .footer {
+      background: var(--black);
+      color: var(--white);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-block: 72px 32px;
+    }
+    .footer__top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+    .footer__logo {
+      font-size: 1.4rem;
+      font-weight: var(--fw-black);
+      letter-spacing: -0.06em;
+      color: var(--white);
+      display: flex; align-items: center; gap: 9px;
+      margin-bottom: 14px;
+    }
+    .footer__logo-icon {
+      width: 28px; height: 28px;
+      background: var(--white);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .footer__desc {
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.78;
+      max-width: 240px;
+    }
+    .footer__col-title {
+      font-size: 0.65rem;
+      font-weight: var(--fw-black);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 18px;
+    }
+    .footer__col-links { display: flex; flex-direction: column; gap: 10px; }
+    .footer__col-links a {
+      font-size: 0.86rem;
+      color: var(--muted);
+      transition: color 0.2s, padding-left 0.2s;
+    }
+    .footer__col-links a:hover { color: var(--white); padding-left: 4px; }
+    .footer__div {
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+      margin-bottom: 24px;
+    }
+    .footer__bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer__copy { font-size: 0.80rem; color: var(--muted); }
+    .footer__legal { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer__legal a {
+      font-size: 0.80rem;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .footer__legal a:hover { color: var(--white); }
+
+    /* ============================================================
+       RESPONSIVE — 1024px
+    ============================================================ */
+    @media (max-width: 1024px) {
+      :root { --pad-x: 24px; --section-py: 90px; }
+      .problem__grid  { grid-template-columns: 1fr; }
+      .features__grid { grid-template-columns: repeat(2, 1fr); }
+      .targets__grid  { grid-template-columns: repeat(4, 1fr); }
+      .stats__grid    { grid-template-columns: repeat(2, 1fr); }
+      .testi__grid    { grid-template-columns: 1fr 1fr; }
+      .footer__top    { grid-template-columns: 1fr 1fr; gap: 36px; }
+      .demo-wrapper   { padding: 40px 32px; }
+    }
+
+    /* ============================================================
+       RESPONSIVE — 768px
+    ============================================================ */
     @media (max-width: 768px) {
-      .grid { grid-template-columns: 1fr; }
-      .demo-grid { grid-template-columns: 1fr; }
-      .form-row { grid-template-columns: 1fr; }
-      h1 { font-size: 42px; }
+      :root { --pad-x: 20px; --section-py: 72px; }
+
+      .nav__links, .nav__cta-desktop { display: none; }
+      .nav__ham { display: flex; }
+
+      .hero__headline { font-size: clamp(2.6rem, 10vw, 4rem); }
+      .hero__actions  { flex-direction: column; }
+      .hero__actions .btn { width: 100%; }
+
+      .problem__grid  { grid-template-columns: 1fr; }
+      .features__grid { grid-template-columns: 1fr; }
+      .pricing__grid  { grid-template-columns: 1fr; max-width: 420px; }
+      .targets__grid  { grid-template-columns: repeat(2, 1fr); }
+      .stats__grid    { grid-template-columns: 1fr 1fr; }
+      .testi__grid    { grid-template-columns: 1fr; }
+      .footer__top    { grid-template-columns: 1fr; gap: 32px; }
+      .footer__bottom { flex-direction: column; text-align: center; }
+
+      .cta-final__actions { flex-direction: column; align-items: center; }
+      .cta-final__actions .btn { width: 100%; max-width: 320px; }
+
+      .demo-grid      { grid-template-columns: 1fr; gap: 36px; }
+      .demo-form-row  { grid-template-columns: 1fr; }
+      .demo-wrapper   { padding: 28px 20px; }
+      .stepAnim, .mailAnim, .bellAnim, .reviewMiniAnim { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .targets__grid { grid-template-columns: repeat(2, 1fr); }
+      .stats__grid   { grid-template-columns: 1fr; }
     }
   </style>
 </head>
+
 <body>
 
-  <div class="ambient-bg">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
+<!-- ============================================================
+     NAVIGATION
+============================================================ -->
+<header>
+  <nav class="nav" id="mainNav" aria-label="Hauptnavigation">
+    <div class="nav__bar">
+
+      <a href="#" class="nav__logo" aria-label="Alpax Startseite">
+        <div class="nav__logo-icon" aria-hidden="true">
+          <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
+            <path d="M8 0L16 3.5V11C16 15.5 8 18 8 18C8 18 0 15.5 0 11V3.5L8 0Z" fill="white"/>
+            <text x="8" y="13.5" font-family="Inter,sans-serif" font-weight="900"
+                  font-size="7" letter-spacing="-0.2" text-anchor="middle" fill="#0A0A0A">AX</text>
+          </svg>
+        </div>
+        Alpax
+      </a>
+
+      <ul class="nav__links" role="list">
+        <li><a href="#problem">Problem</a></li>
+        <li><a href="#features">Funktionen</a></li>
+        <li><a href="#demo">Live Demo</a></li>
+        <li><a href="#pricing">Preise</a></li>
+        <li><a href="#testimonials">Referenzen</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+
+      <a href="#demo" class="btn btn--primary nav__cta-desktop" aria-label="Demo testen">
+        Demo testen
+      </a>
+
+      <button class="nav__ham" id="navHam"
+              aria-label="Menü öffnen" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="nav__mobile" id="mobileMenu">
+    <div class="nav__mobile__inner">
+      <a href="#problem">Problem</a>
+      <a href="#features">Funktionen</a>
+      <a href="#demo">Live Demo</a>
+      <a href="#pricing">Preise</a>
+      <a href="#testimonials">Referenzen</a>
+      <a href="#faq">FAQ</a>
+      <a href="#demo" class="btn btn--primary">Demo testen</a>
+    </div>
   </div>
+</header>
 
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <img class="logo" src="https://user-gen-media-assets.s3.amazonaws.com/gpt4o_images/028d4327-da9e-4d98-be9c-6c08a6e77a6a.png" alt="Logo">
-        PlexPilot
-      </div>
-    </header>
+<main>
 
-    <section class="hero">
-      <div class="badge">
-        <div class="badge-dot"></div>
-        TerminPilot Demo System
-      </div>
-      
-      <h1>Intelligente Termine.<br>Perfektes Erlebnis.</h1>
-      <p class="lead">Verwandle Anfragen in echte Buchungen – ganz ohne E-Mail-Ping-Pong. TerminPilot bietet deinen Kunden ein magisches, nahtloses Buchungserlebnis, das vom ersten Klick bis zur 5-Sterne-Bewertung begeistert.</p>
-      
-      <div style="display:flex; justify-content: center; gap:16px;">
-        <a href="#demo" class="btn btn-primary" style="width: auto;">Live-Demo starten</a>
-      </div>
-    </section>
+<!-- ============================================================
+     HERO SECTION
+============================================================ -->
+<section class="hero" id="hero" aria-labelledby="heroTitle">
+  <div class="hero__inner">
 
-    <!-- NEU: Überschrift auf 4 Bausteine geändert -->
-    <div class="section-title">
-      <h2>Die 4 Erfolgs-Bausteine</h2>
-      <p>Jeder Baustein arbeitet im Hintergrund für dich, während der Kunde nur Einfachheit und Professionalität wahrnimmt.</p>
+    <div class="hero__line-wrap" aria-hidden="true">
+      <span class="hero__line" id="hLine0" style="transition-delay:0ms">
+        <span class="overline">Automatisierung für KMU</span>
+      </span>
     </div>
 
-    <!-- NEU: 4 Grid-Items -->
-    <section class="grid">
-      <div class="glass-card">
-        <div class="card-header">
-          <div class="icon-wrap">📅</div>
-          <h3>Terminbuchung</h3>
-        </div>
-        <p>Der Kunde wählt seinen Wunschtermin direkt aus freien Kapazitäten.</p>
-        <ul>
-          <li>Einfacher, sofortiger Einstieg</li>
-          <li>Kein manuelles Hin und Her</li>
-          <li>Immer synchronisiert</li>
-        </ul>
-        <div class="highlight-box">
-          <b>Mehr Komfort</b>
-          <span>Perfekte Struktur ohne Wartezeiten.</span>
-        </div>
+    <h1 id="heroTitle">
+      <div class="hero__line-wrap">
+        <span class="hero__line hero__headline" id="hLine1" style="transition-delay:0ms">
+          Ihr Terminkalender.
+        </span>
+      </div>
+      <div class="hero__line-wrap">
+        <span class="hero__line hero__headline" id="hLine2" style="transition-delay:150ms">
+          Vollautomatisch.
+        </span>
+      </div>
+      <div class="hero__line-wrap">
+        <span class="hero__line hero__headline" id="hLine3" style="transition-delay:300ms">
+          <span class="line-muted">Ab heute.</span>
+        </span>
+      </div>
+    </h1>
+
+    <p class="hero__sub" id="heroSub">
+      Alpax übernimmt Buchung, Umbuchung, Stornierung, Erinnerung
+      und Bewertungsanfrage — vollautomatisch, rund um die Uhr.
+      Damit Sie sich auf Ihre Kunden konzentrieren können.
+    </p>
+
+    <div class="hero__actions" id="heroActions">
+      <a href="#demo" class="btn btn--primary btn--lg magnetic-btn">
+        Live Demo testen →
+      </a>
+      <a href="#pricing" class="btn btn--outline btn--lg magnetic-btn">
+        Beratung buchen
+      </a>
+    </div>
+
+    <div class="hero__trust" id="heroTrust">
+      <div class="hero__trust-item">
+        <span class="hero__trust-check" aria-hidden="true">✓</span>
+        Kein Vertrag
+      </div>
+      <span class="hero__trust-sep" aria-hidden="true"></span>
+      <div class="hero__trust-item">
+        <span class="hero__trust-check" aria-hidden="true">✓</span>
+        Sofort einsatzbereit
+      </div>
+      <span class="hero__trust-sep" aria-hidden="true"></span>
+      <div class="hero__trust-item">
+        <span class="hero__trust-check" aria-hidden="true">✓</span>
+        DSGVO-konform
+      </div>
+      <span class="hero__trust-sep" aria-hidden="true"></span>
+      <div class="hero__trust-item">
+        <span class="hero__trust-check" aria-hidden="true">✓</span>
+        14 Tage kostenlos
+      </div>
+    </div>
+
+  </div>
+  <div class="hero__divider" aria-hidden="true"></div>
+</section>
+
+<!-- Marquee Ticker -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <div class="marquee__item"><strong>−70%</strong> No-Shows</div>
+    <div class="marquee__item"><strong>8 Std.</strong> gespart pro Woche</div>
+    <div class="marquee__item"><strong>3×</strong> mehr Google-Bewertungen</div>
+    <div class="marquee__item"><strong>100%</strong> automatisiert</div>
+    <div class="marquee__item">DSGVO-konform</div>
+    <div class="marquee__item">In <strong>15 Min.</strong> eingerichtet</div>
+    <div class="marquee__item">WhatsApp &amp; SMS Integration</div>
+    <div class="marquee__item">Kein Vertrag · Monatlich kündbar</div>
+    <div class="marquee__item"><strong>500+</strong> zufriedene Kunden</div>
+    <div class="marquee__item"><strong>−70%</strong> No-Shows</div>
+    <div class="marquee__item"><strong>8 Std.</strong> gespart pro Woche</div>
+    <div class="marquee__item"><strong>3×</strong> mehr Google-Bewertungen</div>
+    <div class="marquee__item"><strong>100%</strong> automatisiert</div>
+    <div class="marquee__item">DSGVO-konform</div>
+    <div class="marquee__item">In <strong>15 Min.</strong> eingerichtet</div>
+    <div class="marquee__item">WhatsApp &amp; SMS Integration</div>
+    <div class="marquee__item">Kein Vertrag · Monatlich kündbar</div>
+    <div class="marquee__item"><strong>500+</strong> zufriedene Kunden</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PROBLEM SECTION
+============================================================ -->
+<section class="section section--alt section--border-top" id="problem" aria-labelledby="problemTitle">
+  <div class="container">
+
+    <div class="problem__header sr" data-sr>
+      <span class="overline">Das Problem</span>
+      <h2 class="headline headline--lg" id="problemTitle">
+        Wie viel Zeit verlieren Sie täglich<br/>
+        durch <span class="u-draw" data-draw>manuelle Terminverwaltung?</span>
+      </h2>
+      <p class="body-lg" style="max-width:520px;margin-top:16px;">
+        Für KMU-Inhaber ist die Terminverwaltung einer der größten
+        versteckten Kostentreiber — in Zeit, Geld und Nerven.
+      </p>
+    </div>
+
+    <div class="problem__grid">
+
+      <div class="pain-card sr sd-1" data-sr>
+        <svg class="pain-card__icon" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+          <rect width="44" height="44" rx="4" fill="#0A0A0A"/>
+          <path d="M14 16h16M14 22h10M22 28l4-4 4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="30" cy="14" r="4" fill="white" fill-opacity="0.15" stroke="white" stroke-width="1.5"/>
+          <path d="M28.5 14l1 1 2-2" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3 class="pain-card__title">Endlose Telefonate</h3>
+        <p class="pain-card__text">
+          Kunden rufen an, wenn Sie gerade arbeiten. Termine werden
+          mündlich vereinbart, vergessen oder doppelt gebucht.
+          Jeder Anruf unterbricht Ihren Arbeitsfluss und kostet bares Geld.
+        </p>
+        <span class="pain-card__stat">8 Std.</span>
+        <span class="pain-card__stat-lbl">verloren pro Woche durch manuelle Verwaltung</span>
       </div>
 
-      <div class="glass-card">
-        <div class="card-header">
-          <div class="icon-wrap">🔔</div>
-          <h3>Erinnerungen</h3>
-        </div>
-        <p>Automatische Notifications reduzieren vergessene Termine drastisch.</p>
-        <ul>
-          <li>Keine No-Shows mehr</li>
-          <li>Professionelles Auftreten</li>
-          <li>Vollautomatisiert</li>
-        </ul>
-        <div class="highlight-box">
-          <b>Mehr Sicherheit</b>
-          <span>Kunden sind immer pünktlich.</span>
-        </div>
-      </div>
-      
-      <!-- NEUER BAUSTEIN -->
-      <div class="glass-card">
-        <div class="card-header">
-          <div class="icon-wrap">🔄</div>
-          <h3>Flexibilität</h3>
-        </div>
-        <p>Umbuchung und Stornierung erfolgen komplett ohne deinen Aufwand.</p>
-        <ul>
-          <li>Self-Service für den Kunden</li>
-          <li>Sichere Verifikation per Code</li>
-          <li>Kalender wird direkt aktualisiert</li>
-        </ul>
-        <div class="highlight-box">
-          <b>Mehr Zeit</b>
-          <span>Verwaltung übernimmt das System.</span>
-        </div>
+      <div class="pain-card sr sd-2" data-sr>
+        <svg class="pain-card__icon" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+          <rect width="44" height="44" rx="4" fill="#0A0A0A"/>
+          <rect x="12" y="13" width="20" height="18" rx="2" stroke="white" stroke-width="1.8"/>
+          <path d="M17 13v-2M27 13v-2M12 19h20" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M22 24v-3M22 27v-1" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <h3 class="pain-card__title">No-Shows kosten Geld</h3>
+        <p class="pain-card__text">
+          Kunden vergessen Termine ohne automatische Erinnerung.
+          Jeder nicht wahrgenommene Termin ist direkter Umsatzverlust —
+          Zeit, die Sie nie zurückbekommen.
+        </p>
+        <span class="pain-card__stat">€ 4.200</span>
+        <span class="pain-card__stat-lbl">durchschnittlicher Verlust pro Jahr durch No-Shows</span>
       </div>
 
-      <div class="glass-card">
-        <div class="card-header">
-          <div class="icon-wrap">⭐</div>
-          <h3>Bewertungen</h3>
-        </div>
-        <p>Nach jedem erfolgreichen Termin wird höflich um Feedback gebeten.</p>
-        <ul>
-          <li>Steigerung der Google-Sterne</li>
-          <li>Mehr Neukunden-Vertrauen</li>
-          <li>Stärkere Bindung</li>
-        </ul>
-        <div class="highlight-box">
-          <b>Mehr Wachstum</b>
-          <span>Glückliche Kunden werben für dich.</span>
-        </div>
+      <div class="pain-card sr sd-3" data-sr>
+        <svg class="pain-card__icon" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+          <rect width="44" height="44" rx="4" fill="#0A0A0A"/>
+          <path d="M22 13l2.2 4.5 5 .7-3.6 3.5.85 4.95L22 24.4l-4.45 2.35.85-4.95L14.8 18.2l5-.7L22 13z" stroke="white" stroke-width="1.7" stroke-linejoin="round"/>
+          <path d="M16 32h12" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <h3 class="pain-card__title">Kaum Online-Bewertungen</h3>
+        <p class="pain-card__text">
+          Zufriedene Kunden hinterlassen selten von sich aus Bewertungen.
+          Ohne aktive Anfrage zum richtigen Zeitpunkt verschenken Sie
+          wertvolles Vertrauen und Neukunden.
+        </p>
+        <span class="pain-card__stat">3×</span>
+        <span class="pain-card__stat-lbl">mehr Bewertungen mit automatisierten Anfragen</span>
       </div>
-    </section>
 
-    <section class="demo-wrapper" id="demo">
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FEATURES SECTION
+============================================================ -->
+<section class="section section--border-top" id="features" aria-labelledby="featuresTitle">
+  <div class="container">
+
+    <div class="sr" data-sr style="text-align:center;margin-bottom:0;">
+      <span class="overline">Die Lösung</span>
+      <h2 class="headline headline--lg" id="featuresTitle">
+        Alles automatisiert.<br/>
+        <span class="u-draw" data-draw>Sie entspannen.</span>
+      </h2>
+      <p class="body-lg" style="max-width:500px;margin:16px auto 0;">
+        Alpax übernimmt jeden Schritt Ihrer Terminverwaltung —
+        vollautomatisch, 24 Stunden am Tag, 7 Tage die Woche.
+      </p>
+    </div>
+
+    <div class="features__grid">
+
+      <div class="feat-card sr sd-1" data-sr>
+        <span class="feat-card__num">01</span>
+        <div class="feat-card__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="2" y="4" width="18" height="16" rx="2" stroke="white" stroke-width="1.6"/>
+            <path d="M7 4V2M15 4V2M2 9h18" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M7 13h4M7 16h8" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 class="feat-card__title">Automatische Terminerstellung</h3>
+        <p class="feat-card__text">
+          Ihre Kunden buchen selbst — online, rund um die Uhr, ohne Anruf.
+          Alpax bestätigt sofort und trägt den Termin automatisch in
+          Ihren Kalender ein.
+        </p>
+      </div>
+
+      <div class="feat-card sr sd-2" data-sr>
+        <span class="feat-card__num">02</span>
+        <div class="feat-card__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M4 11a7 7 0 0 1 7-7 7 7 0 0 1 5 2.1" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M18 11a7 7 0 0 1-7 7 7 7 0 0 1-5-2.1" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M15 6l1.5-1.5L18 6M7 16l-1.5 1.5L4 16" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="feat-card__title">Automatische Umbuchung</h3>
+        <p class="feat-card__text">
+          Muss ein Termin verschoben werden? Alpax schlägt automatisch
+          freie Alternativen vor und bestätigt die Umbuchung —
+          ohne Ihr Zutun.
+        </p>
+      </div>
+
+      <div class="feat-card sr sd-3" data-sr>
+        <span class="feat-card__num">03</span>
+        <div class="feat-card__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="11" r="8" stroke="white" stroke-width="1.6"/>
+            <path d="M8 8l6 6M14 8l-6 6" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 class="feat-card__title">Automatische Stornierung</h3>
+        <p class="feat-card__text">
+          Stornierungen werden automatisch verarbeitet, der Slot
+          freigegeben und Kunden auf der Warteliste sofort
+          benachrichtigt — kein manueller Aufwand.
+        </p>
+      </div>
+
+      <div class="feat-card sr sd-1" data-sr>
+        <span class="feat-card__num">04</span>
+        <div class="feat-card__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M11 3a6 6 0 0 1 6 6v3l1.5 2.5H3.5L5 12V9a6 6 0 0 1 6-6z" stroke="white" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M9 15.5a2 2 0 0 0 4 0" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 class="feat-card__title">Automatische Erinnerungen</h3>
+        <p class="feat-card__text">
+          Alpax erinnert Ihre Kunden automatisch per E-Mail, WhatsApp,
+          SMS oder Telegram — zum richtigen Zeitpunkt, damit
+          No-Shows der Vergangenheit angehören.
+        </p>
+      </div>
+
+      <div class="feat-card sr sd-2" data-sr>
+        <span class="feat-card__num">05</span>
+        <div class="feat-card__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M11 2l2.4 4.9 5.4.8-3.9 3.8.92 5.35L11 14.3l-4.82 2.55.92-5.35L3.2 7.7l5.4-.8L11 2z" stroke="white" stroke-width="1.6" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3 class="feat-card__title">Automatische Bewertungsanfragen</h3>
+        <p class="feat-card__text">
+          Nach jedem Termin fragt Alpax automatisch nach einer Bewertung —
+          zum optimalen Zeitpunkt, auf dem richtigen Kanal.
+          Mehr Bewertungen, mehr Vertrauen, mehr Neukunden.
+        </p>
+      </div>
+
+      <div class="feat-card sr sd-3" data-sr>
+        <span class="feat-card__num">06</span>
+        <div class="feat-card__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="2" y="2" width="18" height="18" rx="2" stroke="white" stroke-width="1.6"/>
+            <path d="M6 15V11M10 15V8M14 15V12M18 15V9" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 class="feat-card__title">Dashboard &amp; Analytics</h3>
+        <p class="feat-card__text">
+          Alle Termine, Auslastung, No-Show-Rate und Bewertungen
+          auf einen Blick — übersichtlich, klar und immer aktuell.
+          Entscheidungen auf Datenbasis.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     LIVE DEMO SECTION
+============================================================ -->
+<section class="demo-section section--border-top" id="demo" aria-labelledby="demoTitle">
+  <div class="container">
+
+    <div class="sr" data-sr style="text-align:center;" class="section-header">
+      <span class="overline">Live Buchungstest</span>
+      <h2 class="headline headline--lg" id="demoTitle">
+        Erleben Sie Alpax<br/>
+        <span class="u-draw" data-draw>in Echtzeit.</span>
+      </h2>
+      <p class="body-lg" style="max-width:520px;margin:16px auto 0;">
+        Testen Sie eine echte Buchung, Umbuchung oder Stornierung —
+        und sehen Sie live, wie das System im Hintergrund arbeitet.
+      </p>
+    </div>
+
+    <div class="demo-wrapper sr" data-sr style="margin-top:64px;">
       <div class="demo-grid">
-        
+
         <!-- LINKE SEITE: FORMULAR -->
-        <div class="panel">
-          <h2>Live Buchung testen</h2>
-          <p class="sub">Simuliere eine echte Buchung oder eine Terminänderung.</p>
-          
-          <div class="tabs">
-            <div class="tab active" id="tabBook">Termin buchen</div>
-            <div class="tab" id="tabReschedule">Termin ändern / stornieren</div>
+        <div>
+          <h3 class="demo-panel__title">Live Buchung testen</h3>
+          <p class="demo-panel__sub">Simulieren Sie eine echte Buchung oder eine Terminänderung.</p>
+
+          <div class="demo-tabs">
+            <div class="demo-tab active" id="tabBook">Termin buchen</div>
+            <div class="demo-tab" id="tabReschedule">Termin ändern / stornieren</div>
           </div>
 
-          <div class="field" id="planSelectWrapper">
-            <label>Gewähltes Produkt</label>
-            <select id="productSelect" class="glass-input">
-              <option value="terminpilot">TerminPilot Standard</option>
-              <option value="plus">TerminPilot Plus (WhatsApp & Follow-Ups)</option>
-            </select>
+          <div class="demo-plan-wrap" id="planSelectWrapper">
+            <div class="demo-field">
+              <label>Gewähltes Produkt</label>
+              <select id="productSelect" class="demo-input">
+                <option value="terminpilot">TerminPilot Standard</option>
+                <option value="plus">TerminPilot Plus (WhatsApp &amp; Follow-Ups)</option>
+              </select>
+            </div>
           </div>
 
-          <!-- Dynamischer Bereich für das Formular -->
-          <div id="bookingArea" style="margin-top: 24px;"></div>
+          <div id="bookingArea"></div>
 
-          <div id="start" style="margin-top:24px; display:none;">
-            <button class="btn btn-primary" id="actionBtn" style="width: 100%;">Termin verbindlich anfragen</button>
+          <div id="demoStartBtn" style="margin-top:8px; display:none;">
+            <button class="btn btn--primary demo-action-btn" id="actionBtn">Termin verbindlich anfragen</button>
           </div>
         </div>
 
         <!-- RECHTE SEITE: STATUS TRACKER -->
-        <div class="panel">
-          <h2>Automatisierungs-Status</h2>
-          <p class="sub">Verfolge live, wie das System im Hintergrund arbeitet.</p>
-          
-          <!-- Dynamische Timeline -->
-          <div class="timeline" id="timelineArea">
-            <!-- Wird von JS gefüllt -->
+        <div>
+          <h3 class="demo-panel__title">Automatisierungs-Status</h3>
+          <p class="demo-panel__sub">Verfolgen Sie live, wie das System im Hintergrund arbeitet.</p>
+          <div class="demo-timeline" id="timelineArea"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PRICING SECTION
+============================================================ -->
+<section class="section section--alt section--border-top" id="pricing" aria-labelledby="pricingTitle">
+  <div class="container">
+
+    <div class="sr" data-sr style="text-align:center;">
+      <span class="overline">Preise</span>
+      <h2 class="headline headline--lg" id="pricingTitle">
+        Transparent. Fair.<br/>
+        <span class="u-draw" data-draw>Ohne versteckte Kosten.</span>
+      </h2>
+      <p class="body-lg" style="max-width:480px;margin:16px auto 0;">
+        Monatlich kündbar, keine Einrichtungsgebühr,
+        keine Mindestlaufzeit. 14 Tage kostenlos testen.
+      </p>
+    </div>
+
+    <div class="pricing__grid">
+
+      <div class="price-card sr sr--left" data-sr>
+        <div class="price-card__name">TerminPilot</div>
+        <div class="price-card__tagline">Der perfekte Einstieg für KMU</div>
+        <div class="price-card__amount">
+          <span class="price-card__cur">€</span>
+          <span class="price-card__num">36</span>
+        </div>
+        <div class="price-card__period">pro Monat</div>
+        <div class="price-card__tax">zzgl. gesetzl. MwSt.</div>
+        <div class="price-card__div" aria-hidden="true"></div>
+        <ul class="price-card__feats" role="list">
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>Automatische Terminerstellung</li>
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>Automatische Terminumbuchung</li>
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>Automatische Terminstornierung</li>
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>Erinnerungen per E-Mail</li>
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>Automatische Bewertungsanfragen</li>
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>Dashboard &amp; Übersicht</li>
+          <li class="pf pf--no" aria-label="Nicht enthalten"><span class="pf__ico" aria-hidden="true">✗</span>WhatsApp-Integration</li>
+          <li class="pf pf--no" aria-label="Nicht enthalten"><span class="pf__ico" aria-hidden="true">✗</span>SMS &amp; Telegram</li>
+          <li class="pf pf--no" aria-label="Nicht enthalten"><span class="pf__ico" aria-hidden="true">✗</span>Erweiterte Analytics</li>
+        </ul>
+        <a href="#demo" class="btn btn--outline price-card__cta magnetic-btn">
+          Jetzt kostenlos starten →
+        </a>
+        <p class="price-card__note">14 Tage kostenlos · Keine Kreditkarte</p>
+      </div>
+
+      <div class="price-card price-card--featured sr sr--right" data-sr>
+        <div class="price-card__badge">⭐ Empfohlen</div>
+        <div class="price-card__name">TerminPilot Plus</div>
+        <div class="price-card__tagline">Maximale Automatisierung</div>
+        <div class="price-card__amount">
+          <span class="price-card__cur">€</span>
+          <span class="price-card__num">65</span>
+        </div>
+        <div class="price-card__period">pro Monat</div>
+        <div class="price-card__tax">zzgl. gesetzl. MwSt.</div>
+        <div class="price-card__div" aria-hidden="true"></div>
+        <ul class="price-card__feats" role="list">
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>Alles aus TerminPilot</li>
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>WhatsApp-Integration</li>
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>SMS-Integration</li>
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>Telegram-Integration</li>
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>Erweiterte Automatisierungsregeln</li>
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>Prioritäts-Support</li>
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>Detaillierte Analytics &amp; Berichte</li>
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>Individuelle Automatisierungen</li>
+          <li class="pf"><span class="pf__ico" aria-hidden="true">✓</span>Dedizierter Ansprechpartner</li>
+        </ul>
+        <a href="#demo" class="btn btn--white price-card__cta magnetic-btn">
+          Jetzt kostenlos starten →
+        </a>
+        <p class="price-card__note">14 Tage kostenlos · Keine Kreditkarte</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TARGET GROUPS
+============================================================ -->
+<section class="section section--border-top" id="targets" aria-labelledby="targetsTitle">
+  <div class="container">
+
+    <div class="sr" data-sr style="text-align:center;">
+      <span class="overline">Zielgruppen</span>
+      <h2 class="headline headline--lg" id="targetsTitle">
+        Alpax funktioniert für<br/>
+        <span class="u-draw" data-draw>jede Dienstleistungsbranche.</span>
+      </h2>
+      <p class="body-lg" style="max-width:480px;margin:16px auto 0;">
+        Ob Einzelkämpfer oder kleines Team — wenn Sie Termine haben,
+        kann Alpax Ihnen helfen.
+      </p>
+    </div>
+
+    <div class="targets__grid">
+      <div class="target-card sr sd-1" data-sr><span class="target-card__icon" aria-hidden="true">💇</span><span class="target-card__name">Friseure</span></div>
+      <div class="target-card sr sd-2" data-sr><span class="target-card__icon" aria-hidden="true">🧘</span><span class="target-card__name">Therapeuten</span></div>
+      <div class="target-card sr sd-3" data-sr><span class="target-card__icon" aria-hidden="true">💅</span><span class="target-card__name">Salons</span></div>
+      <div class="target-card sr sd-4" data-sr><span class="target-card__icon" aria-hidden="true">🔧</span><span class="target-card__name">Handwerker</span></div>
+      <div class="target-card sr sd-1" data-sr><span class="target-card__icon" aria-hidden="true">🎯</span><span class="target-card__name">Coaches</span></div>
+      <div class="target-card sr sd-2" data-sr><span class="target-card__icon" aria-hidden="true">🏥</span><span class="target-card__name">Ärzte</span></div>
+      <div class="target-card sr sd-3" data-sr><span class="target-card__icon" aria-hidden="true">⚖️</span><span class="target-card__name">Rechtsanwälte</span></div>
+      <div class="target-card sr sd-4" data-sr><span class="target-card__icon" aria-hidden="true">💪</span><span class="target-card__name">Fitnessstudios</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     STATS / USPs
+============================================================ -->
+<section class="section section--alt section--border-top" id="stats" aria-labelledby="statsTitle">
+  <div class="container">
+
+    <div class="sr" data-sr style="text-align:center;">
+      <span class="overline">Warum Alpax</span>
+      <h2 class="headline headline--lg" id="statsTitle">
+        Zahlen, die für sich<br/>
+        <span class="u-draw" data-draw>selbst sprechen.</span>
+      </h2>
+    </div>
+
+    <div class="stats__grid" id="statsGrid">
+
+      <div class="stat-card sr sd-1" data-sr>
+        <span class="stat-card__num" data-countup data-target="70" data-suffix="%" data-prefix="−">0%</span>
+        <h3 class="stat-card__title">Weniger No-Shows</h3>
+        <p class="stat-card__text">
+          Automatische Erinnerungen per E-Mail, WhatsApp und SMS
+          reduzieren Terminausfälle um durchschnittlich 70 Prozent.
+        </p>
+      </div>
+
+      <div class="stat-card sr sd-2" data-sr>
+        <span class="stat-card__num" data-countup data-target="8" data-suffix=" Std.">0 Std.</span>
+        <h3 class="stat-card__title">Gespart pro Woche</h3>
+        <p class="stat-card__text">
+          Unsere Kunden sparen im Schnitt 8 Stunden pro Woche,
+          die sie bisher für manuelle Terminverwaltung aufgewendet haben.
+        </p>
+      </div>
+
+      <div class="stat-card sr sd-3" data-sr>
+        <span class="stat-card__num" data-countup data-target="500" data-suffix="+">0+</span>
+        <h3 class="stat-card__title">Zufriedene Kunden</h3>
+        <p class="stat-card__text">
+          Über 500 KMU-Inhaber vertrauen bereits auf Alpax —
+          von der Einzelpraxis bis zum kleinen Salon-Team.
+        </p>
+      </div>
+
+      <div class="stat-card sr sd-4" data-sr>
+        <span class="stat-card__num" data-countup data-target="15" data-suffix=" Min.">0 Min.</span>
+        <h3 class="stat-card__title">Bis zur Einrichtung</h3>
+        <p class="stat-card__text">
+          Kein IT-Wissen nötig. Alpax ist in 15 Minuten eingerichtet
+          und sofort einsatzbereit — wir begleiten Sie Schritt für Schritt.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TESTIMONIALS
+============================================================ -->
+<section class="section section--border-top" id="testimonials" aria-labelledby="testiTitle">
+  <div class="container">
+
+    <div class="sr" data-sr style="text-align:center;">
+      <span class="overline">Kundenstimmen</span>
+      <h2 class="headline headline--lg" id="testiTitle">
+        Was unsere Kunden über<br/>
+        <span class="u-draw" data-draw>Alpax sagen.</span>
+      </h2>
+      <p class="body-lg" style="max-width:480px;margin:16px auto 0;">
+        Echte Erfahrungen von KMU-Inhabern, die mit Alpax
+        ihre Terminverwaltung revolutioniert haben.
+      </p>
+    </div>
+
+    <div class="testi__grid">
+
+      <div class="testi-card sr sr--right sd-1" data-sr>
+        <div class="testi-card__stars" aria-label="5 von 5 Sternen">★★★★★</div>
+        <p class="testi-card__text">
+          „Seit ich Alpax nutze, habe ich endlich wieder Zeit für
+          meine Kunden. Die No-Show-Rate ist von 20 % auf unter 5 %
+          gesunken — das ist für mich bares Geld."
+        </p>
+        <div class="testi-card__author">
+          <div class="testi-card__avatar" aria-hidden="true">SK</div>
+          <div>
+            <div class="testi-card__name">Sandra K.</div>
+            <div class="testi-card__role">Friseurmeisterin, Berlin</div>
           </div>
         </div>
-
       </div>
-    </section>
-  </div>
 
-  <footer>
-    <div class="wrap">
-      © 2026 PlexPilot. Modernes Demo System.
+      <div class="testi-card sr sr--right sd-2" data-sr>
+        <div class="testi-card__stars" aria-label="5 von 5 Sternen">★★★★★</div>
+        <p class="testi-card__text">
+          „Als Physiotherapeut war die Terminverwaltung mein größter
+          Stressfaktor. Mit Alpax läuft alles automatisch — ich spare
+          locker 10 Stunden pro Woche."
+        </p>
+        <div class="testi-card__author">
+          <div class="testi-card__avatar" aria-hidden="true">MH</div>
+          <div>
+            <div class="testi-card__name">Markus H.</div>
+            <div class="testi-card__role">Physiotherapeut, München</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card sr sr--right sd-3" data-sr>
+        <div class="testi-card__stars" aria-label="5 von 5 Sternen">★★★★★</div>
+        <p class="testi-card__text">
+          „Die WhatsApp-Integration ist ein absoluter Game-Changer.
+          Meine Google-Bewertungen sind in drei Monaten von 12 auf
+          über 60 gestiegen. Unglaublich!"
+        </p>
+        <div class="testi-card__author">
+          <div class="testi-card__avatar" aria-hidden="true">LM</div>
+          <div>
+            <div class="testi-card__name">Laura M.</div>
+            <div class="testi-card__role">Beauty Studio, Hamburg</div>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </footer>
+  </div>
+</section>
 
-  <script>
-    /* ===================================================================
-       N8N WEBHOOKS - Deine Basis URLs
-       =================================================================== */
-    const availabilityWebhookUrl = 'https://cams-acdbentity-scotia-regression.trycloudflare.com/webhook/Verfuegbarkeit';
-    const bookingWebhookUrl = 'https://cams-acdbentity-scotia-regression.trycloudflare.com/webhook/Terminbuchung';
+<!-- ============================================================
+     FAQ
+============================================================ -->
+<section class="section section--alt section--border-top" id="faq" aria-labelledby="faqTitle">
+  <div class="container">
 
-    // DOM Elements
-    const sel = document.getElementById('productSelect');
-    const area = document.getElementById('bookingArea');
-    const startBtnContainer = document.getElementById('start');
-    const actionBtn = document.getElementById('actionBtn');
-    const timelineArea = document.getElementById('timelineArea');
-    
-    // Tabs
-    const tabBook = document.getElementById('tabBook');
-    const tabReschedule = document.getElementById('tabReschedule');
-    const planWrapper = document.getElementById('planSelectWrapper');
+    <div class="sr" data-sr style="text-align:center;">
+      <span class="overline">FAQ</span>
+      <h2 class="headline headline--lg" id="faqTitle">
+        Häufig gestellte<br/>
+        <span class="u-draw" data-draw>Fragen.</span>
+      </h2>
+      <p class="body-lg" style="max-width:480px;margin:16px auto 0;">
+        Alles, was Sie vor dem Start wissen möchten —
+        klar und ohne Fachjargon.
+      </p>
+    </div>
 
-    let currentMode = 'book'; // 'book', 'reschedule', 'cancel'
+    <div class="faq__list sr" data-sr style="max-width:720px;margin-inline:auto;margin-top:64px;">
 
-    // Formular Templates
-    const formBookTemplate = `
-      <div class="field"><label>Name *</label><input id="inpName" type="text" placeholder="Max Mustermann" class="glass-input"></div>
-      <div class="form-row">
-        <div class="field"><label>E-Mail *</label><input id="inpEmail" type="email" placeholder="max@beispiel.de" class="glass-input"></div>
-        <div class="field"><label>Telefon (für WhatsApp)</label><input id="inpPhone" type="tel" placeholder="+49 170 12345" class="glass-input"></div>
+      <details class="faq__item">
+        <summary class="faq__question">
+          Wie lange dauert die Einrichtung von Alpax?
+          <span class="faq__arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 6l5 5 5-5" stroke="#0A0A0A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq__body">
+          <div class="faq__body-inner">
+            <p class="faq__answer">
+              Die Einrichtung dauert in der Regel 15 bis 30 Minuten.
+              Sie benötigen keinerlei technisches Vorwissen. Unser
+              Onboarding-Team begleitet Sie Schritt für Schritt —
+              per Video-Call oder Chat, ganz wie Sie es bevorzugen.
+            </p>
+          </div>
+        </div>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__question">
+          Kann ich Alpax kostenlos und unverbindlich testen?
+          <span class="faq__arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 6l5 5 5-5" stroke="#0A0A0A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq__body">
+          <div class="faq__body-inner">
+            <p class="faq__answer">
+              Ja, selbstverständlich. Sie können Alpax 14 Tage lang
+              vollständig kostenlos und ohne Kreditkarte testen.
+              Alle Funktionen Ihres gewählten Pakets sind während
+              der Testphase vollständig freigeschaltet. Es gibt keine
+              automatische Verlängerung oder versteckten Kosten.
+            </p>
+          </div>
+        </div>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__question">
+          Ist Alpax DSGVO-konform und sicher?
+          <span class="faq__arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 6l5 5 5-5" stroke="#0A0A0A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq__body">
+          <div class="faq__body-inner">
+            <p class="faq__answer">
+              Ja. Alpax ist vollständig DSGVO-konform. Alle Daten werden
+              ausschließlich auf deutschen Servern gespeichert und
+              verarbeitet. Wir stellen Ihnen einen Auftragsverarb              eitungsvertrag (AVV) zur Verfügung. Ihre Kundendaten
+              gehören Ihnen — wir verkaufen oder teilen sie niemals
+              mit Dritten.
+            </p>
+          </div>
+        </div>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__question">
+          Welche Kalender-Systeme werden unterstützt?
+          <span class="faq__arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 6l5 5 5-5" stroke="#0A0A0A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq__body">
+          <div class="faq__body-inner">
+            <p class="faq__answer">
+              Alpax unterstützt Google Calendar, Microsoft Outlook,
+              Apple iCloud Calendar sowie alle CalDAV-kompatiblen
+              Kalender-Systeme. Die Synchronisation erfolgt in
+              Echtzeit — Doppelbuchungen sind damit ausgeschlossen.
+            </p>
+          </div>
+        </div>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__question">
+          Wie funktioniert die WhatsApp-Integration?
+          <span class="faq__arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 6l5 5 5-5" stroke="#0A0A0A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq__body">
+          <div class="faq__body-inner">
+            <p class="faq__answer">
+              Mit TerminPilot Plus senden wir Buchungsbestätigungen,
+              Erinnerungen und Bewertungsanfragen automatisch per
+              WhatsApp an Ihre Kunden — über die offizielle
+              WhatsApp Business API. Kein inoffizielles Tool,
+              keine Risiken, volle DSGVO-Konformität.
+            </p>
+          </div>
+        </div>
+      </details>
+
+      <details class="faq__item">
+        <summary class="faq__question">
+          Kann ich monatlich kündigen?
+          <span class="faq__arrow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 6l5 5 5-5" stroke="#0A0A0A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </summary>
+        <div class="faq__body">
+          <div class="faq__body-inner">
+            <p class="faq__answer">
+              Ja, beide Pakete sind monatlich kündbar — ohne Fristen,
+              ohne Formulare, ohne Diskussionen. Sie kündigen einfach
+              in Ihrem Dashboard mit einem Klick. Es gibt keine
+              Mindestlaufzeit und keine Stornogebühren.
+            </p>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FINAL CTA
+============================================================ -->
+<section class="cta-final" id="cta" aria-labelledby="ctaTitle">
+  <div class="container">
+    <div class="cta-final__inner sr" data-sr>
+      <span class="cta-final__overline">Jetzt starten</span>
+      <h2 class="cta-final__title" id="ctaTitle">
+        Bereit, Ihre Terminverwaltung<br/>zu automatisieren?
+      </h2>
+      <p class="cta-final__sub">
+        Richten Sie Alpax in 15 Minuten ein und erleben Sie,
+        wie sich Ihr Arbeitsalltag verändert — ab dem ersten Tag.
+      </p>
+      <div class="cta-final__actions">
+        <a href="#demo" class="btn btn--white btn--lg magnetic-btn">
+          Kostenlos 14 Tage testen →
+        </a>
+        <a href="#demo" class="btn btn--outline-white btn--lg magnetic-btn">
+          Live Demo ansehen
+        </a>
       </div>
-      <div class="field"><label>Art des Termins</label><select id="inpType" class="glass-input"><option>Beratung</option><option>Erstgespräch</option><option>Online-Call</option></select></div>
-      <div class="form-row">
-        <div class="field"><label>Datum *</label><input id="inpDate" type="date" class="glass-input"></div>
-        <div class="field"><label>Uhrzeit *</label><select id="inpTime" class="glass-input"><option value="">Bitte Datum wählen</option></select></div>
-      </div>`;
+      <p class="cta-final__note">Keine Kreditkarte · Keine Mindestlaufzeit · DSGVO-konform</p>
+    </div>
+  </div>
+</section>
 
-    const formChangeTemplate = `
-      <div class="field">
-        <label>Aktion *</label>
-        <select id="inpChangeAction" class="glass-input" onchange="toggleCancelFields()">
-          <option value="Umbuchung">Termin umbuchen</option>
-          <option value="Stornierung">Termin stornieren</option>
+</main>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer class="footer" aria-label="Seitenfu&szlig;">
+  <div class="container">
+
+    <div class="footer__top">
+
+      <div>
+        <div class="footer__logo">
+          <div class="footer__logo-icon" aria-hidden="true">
+            <svg width="14" height="16" viewBox="0 0 16 18" fill="none">
+              <path d="M8 0L16 3.5V11C16 15.5 8 18 8 18C8 18 0 15.5 0 11V3.5L8 0Z" fill="#0A0A0A"/>
+              <text x="8" y="13.5" font-family="Inter,sans-serif" font-weight="900"
+                    font-size="7" letter-spacing="-0.2" text-anchor="middle" fill="white">AX</text>
+            </svg>
+          </div>
+          Alpax
+        </div>
+        <p class="footer__desc">
+          Vollautomatische Terminverwaltung für KMU —
+          von der Buchung bis zur Bewertungsanfrage.
+        </p>
+      </div>
+
+      <div>
+        <div class="footer__col-title">Produkt</div>
+        <ul class="footer__col-links" role="list">
+          <li><a href="#features">Funktionen</a></li>
+          <li><a href="#pricing">Preise</a></li>
+          <li><a href="#demo">Live Demo</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer__col-title">Unternehmen</div>
+        <ul class="footer__col-links" role="list">
+          <li><a href="#">Über uns</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Karriere</a></li>
+          <li><a href="#">Kontakt</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer__col-title">Rechtliches</div>
+        <ul class="footer__col-links" role="list">
+          <li><a href="#">Datenschutz</a></li>
+          <li><a href="#">Impressum</a></li>
+          <li><a href="#">AGB</a></li>
+          <li><a href="#">Cookie-Einstellungen</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer__div" aria-hidden="true"></div>
+
+    <div class="footer__bottom">
+      <span class="footer__copy">© 2026 Alpax. Alle Rechte vorbehalten.</span>
+      <nav class="footer__legal" aria-label="Rechtliche Links">
+        <a href="#">Datenschutz</a>
+        <a href="#">Impressum</a>
+        <a href="#">AGB</a>
+      </nav>
+    </div>
+
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+/* ===================================================================
+   WEBHOOK URLS
+=================================================================== */
+const availabilityWebhookUrl = 'https://cams-acdbentity-scotia-regression.trycloudflare.com/webhook/Verfuegbarkeit';
+const bookingWebhookUrl      = 'https://cams-acdbentity-scotia-regression.trycloudflare.com/webhook/Terminbuchung';
+
+/* ===================================================================
+   1) NAVIGATION — Scroll + Hamburger
+=================================================================== */
+const nav     = document.getElementById('mainNav');
+const navHam  = document.getElementById('navHam');
+const mobMenu = document.getElementById('mobileMenu');
+
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+}, { passive: true });
+
+navHam.addEventListener('click', () => {
+  const open = navHam.classList.toggle('open');
+  mobMenu.classList.toggle('open', open);
+  navHam.setAttribute('aria-expanded', open);
+});
+
+document.querySelectorAll('.nav__mobile a').forEach(link => {
+  link.addEventListener('click', () => {
+    navHam.classList.remove('open');
+    mobMenu.classList.remove('open');
+    navHam.setAttribute('aria-expanded', 'false');
+  });
+});
+
+/* ===================================================================
+   2) SCROLL-REVEAL
+=================================================================== */
+const srObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      srObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.sr[data-sr]').forEach(el => srObserver.observe(el));
+
+/* ===================================================================
+   3) HERO LINE REVEAL
+=================================================================== */
+window.addEventListener('DOMContentLoaded', () => {
+  ['hLine0','hLine1','hLine2','hLine3'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) setTimeout(() => el.classList.add('revealed'), i * 160);
+  });
+  setTimeout(() => document.getElementById('heroSub')?.classList.add('revealed'), 500);
+  setTimeout(() => document.getElementById('heroActions')?.classList.add('revealed'), 680);
+  setTimeout(() => document.getElementById('heroTrust')?.classList.add('revealed'), 860);
+});
+
+/* ===================================================================
+   4) UNDERLINE DRAW
+=================================================================== */
+const drawObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('drawn');
+      drawObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.6 });
+
+document.querySelectorAll('.u-draw[data-draw]').forEach(el => drawObserver.observe(el));
+
+/* ===================================================================
+   5) COUNT-UP ANIMATION
+=================================================================== */
+function animateCountUp(el) {
+  const target   = parseFloat(el.dataset.target);
+  const suffix   = el.dataset.suffix || '';
+  const prefix   = el.dataset.prefix || '';
+  const duration = 1800;
+  const start    = performance.now();
+
+  function update(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    const ease     = 1 - Math.pow(1 - progress, 3);
+    const current  = Math.round(ease * target);
+    el.textContent = prefix + current + suffix;
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+const countObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCountUp(e.target);
+      countObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('[data-countup]').forEach(el => countObserver.observe(el));
+
+/* ===================================================================
+   6) MAGNETIC BUTTONS
+=================================================================== */
+document.querySelectorAll('.magnetic-btn').forEach(btn => {
+  btn.addEventListener('mousemove', (e) => {
+    const r  = btn.getBoundingClientRect();
+    const dx = (e.clientX - r.left - r.width  / 2) * 0.25;
+    const dy = (e.clientY - r.top  - r.height / 2) * 0.25;
+    btn.style.transform = `translate(${dx}px, ${dy}px)`;
+  });
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transform = '';
+  });
+});
+
+/* ===================================================================
+   7) FAQ SMOOTH ACCORDION
+=================================================================== */
+document.querySelectorAll('.faq__item').forEach(item => {
+  item.addEventListener('toggle', () => {
+    if (item.open) {
+      document.querySelectorAll('.faq__item[open]').forEach(other => {
+        if (other !== item) other.removeAttribute('open');
+      });
+    }
+  });
+});
+
+/* ===================================================================
+   8) LIVE DEMO — Booking System
+=================================================================== */
+const sel            = document.getElementById('productSelect');
+const area           = document.getElementById('bookingArea');
+const startBtnWrap   = document.getElementById('demoStartBtn');
+const actionBtn      = document.getElementById('actionBtn');
+const timelineArea   = document.getElementById('timelineArea');
+const tabBook        = document.getElementById('tabBook');
+const tabReschedule  = document.getElementById('tabReschedule');
+const planWrapper    = document.getElementById('planSelectWrapper');
+
+let currentMode = 'book';
+
+/* Form Templates */
+const formBookTemplate = `
+  <div class="demo-field">
+    <label>Name *</label>
+    <input id="inpName" type="text" placeholder="Max Mustermann" class="demo-input">
+  </div>
+  <div class="demo-form-row">
+    <div class="demo-field">
+      <label>E-Mail *</label>
+      <input id="inpEmail" type="email" placeholder="max@beispiel.de" class="demo-input">
+    </div>
+    <div class="demo-field">
+      <label>Telefon (WhatsApp)</label>
+      <input id="inpPhone" type="tel" placeholder="+49 170 12345" class="demo-input">
+    </div>
+  </div>
+  <div class="demo-field">
+    <label>Art des Termins</label>
+    <select id="inpType" class="demo-input">
+      <option>Beratung</option>
+      <option>Erstgespräch</option>
+      <option>Online-Call</option>
+    </select>
+  </div>
+  <div class="demo-form-row">
+    <div class="demo-field">
+      <label>Datum *</label>
+      <input id="inpDate" type="date" class="demo-input">
+    </div>
+    <div class="demo-field">
+      <label>Uhrzeit *</label>
+      <select id="inpTime" class="demo-input">
+        <option value="">Bitte Datum wählen</option>
+      </select>
+    </div>
+  </div>`;
+
+const formChangeTemplate = `
+  <div class="demo-field">
+    <label>Aktion *</label>
+    <select id="inpChangeAction" class="demo-input" onchange="toggleCancelFields()">
+      <option value="Umbuchung">Termin umbuchen</option>
+      <option value="Stornierung">Termin stornieren</option>
+    </select>
+  </div>
+  <div class="demo-field">
+    <label>E-Mail Adresse *</label>
+    <input id="inpEmail" type="email" placeholder="max@beispiel.de" class="demo-input">
+  </div>
+  <div class="demo-field">
+    <label>Sicherheitscode (aus Bestätigungs-Mail) *</label>
+    <input id="inpToken" type="text" placeholder="z.B. TP-8X9A" class="demo-input">
+  </div>
+  <div id="newDateTimeWrapper">
+    <div class="demo-form-row">
+      <div class="demo-field">
+        <label>Neues Datum *</label>
+        <input id="inpDate" type="date" class="demo-input">
+      </div>
+      <div class="demo-field">
+        <label>Neue Uhrzeit *</label>
+        <select id="inpTime" class="demo-input">
+          <option value="">Bitte Datum wählen</option>
         </select>
       </div>
-      <div class="field"><label>E-Mail Adresse *</label><input id="inpEmail" type="email" placeholder="max@beispiel.de" class="glass-input"></div>
-      <div class="field">
-        <label>Sicherheitscode (aus Bestätigungs-Mail) *</label>
-        <input id="inpToken" type="text" placeholder="z.B. TP-8X9A" class="glass-input">
+    </div>
+  </div>`;
+
+/* Toggle Cancel / Reschedule fields */
+window.toggleCancelFields = function () {
+  const action    = document.getElementById('inpChangeAction').value;
+  const dtWrapper = document.getElementById('newDateTimeWrapper');
+  if (action === 'Stornierung') {
+    currentMode = 'cancel';
+    dtWrapper.style.display = 'none';
+    actionBtn.textContent = 'Termin endgültig stornieren';
+    actionBtn.classList.remove('btn--primary');
+    actionBtn.classList.add('btn--danger');
+  } else {
+    currentMode = 'reschedule';
+    dtWrapper.style.display = 'block';
+    actionBtn.textContent = 'Termin sicher verschieben';
+    actionBtn.classList.add('btn--primary');
+    actionBtn.classList.remove('btn--danger');
+  }
+  renderTracker();
+};
+
+/* Render Timeline */
+function renderTracker() {
+  const isPlus = sel.value === 'plus';
+
+  if (currentMode === 'book') {
+    timelineArea.innerHTML = `
+      <div class="demo-step pending" id="step1">
+        <div class="demo-step__number">1</div>
+        <div class="demo-step__content">
+          <div class="demo-step__title">Buchung verarbeitet</div>
+          <div class="stepAnim"><div class="mailAnim"><div class="mail">✉️</div><div class="mailbox">📮</div></div></div>
+        </div>
       </div>
-      <div id="newDateTimeWrapper">
-        <div class="form-row">
-          <div class="field"><label>Neues Datum *</label><input id="inpDate" type="date" class="glass-input"></div>
-          <div class="field"><label>Neue Uhrzeit *</label><select id="inpTime" class="glass-input"><option value="">Bitte Datum wählen</option></select></div>
+      <div class="demo-step pending" id="step2">
+        <div class="demo-step__number">2</div>
+        <div class="demo-step__content">
+          <div class="demo-step__title">${isPlus ? 'WhatsApp Erinnerung (Plus)' : 'Erinnerung eingeplant'}</div>
+          <div class="stepAnim"><div class="bellAnim"><div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div><div class="bell">${isPlus ? '💬' : '🔔'}</div></div></div>
+        </div>
+      </div>
+      <div class="demo-step pending" id="step3">
+        <div class="demo-step__number">3</div>
+        <div class="demo-step__content">
+          <div class="demo-step__title">${isPlus ? 'WhatsApp Bewertung (Plus)' : 'Bewertungsanfrage vorbereitet'}</div>
+          <div class="stepAnim"><div class="reviewMiniAnim"><div class="reviewMiniStar">⭐</div><div class="reviewMiniThumb">👍</div></div></div>
+        </div>
+      </div>
+      <div class="demo-step disabled" id="step4" style="${isPlus ? '' : 'display:none'}">
+        <div class="demo-step__number">4</div>
+        <div class="demo-step__content">
+          <div class="demo-step__title" style="color:var(--muted)">Smart Follow-Up (Plus Feature)</div>
         </div>
       </div>`;
+  } else if (currentMode === 'reschedule') {
+    timelineArea.innerHTML = `
+      <div class="demo-step pending" id="step1"><div class="demo-step__number">1</div><div class="demo-step__content"><div class="demo-step__title">Sicherheitscode &amp; E-Mail validiert 🔒</div></div></div>
+      <div class="demo-step pending" id="step2"><div class="demo-step__number">2</div><div class="demo-step__content"><div class="demo-step__title">Alten Termin geändert 🔄</div></div></div>
+      <div class="demo-step pending" id="step3"><div class="demo-step__number">3</div><div class="demo-step__content"><div class="demo-step__title">Neuen Termin gebucht 📅</div></div></div>
+      <div class="demo-step pending" id="step4"><div class="demo-step__number">4</div><div class="demo-step__content"><div class="demo-step__title">Updates &amp; Erinnerungen gesendet ✉️</div></div></div>`;
+  } else if (currentMode === 'cancel') {
+    timelineArea.innerHTML = `
+      <div class="demo-step pending" id="step1"><div class="demo-step__number">1</div><div class="demo-step__content"><div class="demo-step__title">Sicherheitscode validiert 🔒</div></div></div>
+      <div class="demo-step pending" id="step2"><div class="demo-step__number">2</div><div class="demo-step__content"><div class="demo-step__title">Termin aus Kalender entfernt 🗑️</div></div></div>
+      <div class="demo-step pending" id="step3"><div class="demo-step__number">3</div><div class="demo-step__content"><div class="demo-step__title">Platz wieder freigegeben ✨</div></div></div>
+      <div class="demo-step pending" id="step4"><div class="demo-step__number">4</div><div class="demo-step__content"><div class="demo-step__title">Storno-Bestätigung gesendet ✉️</div></div></div>`;
+  }
+}
 
-    // Dropdown-Logik für Umbuchen/Stornieren
-    window.toggleCancelFields = function() {
-      const action = document.getElementById('inpChangeAction').value;
-      const dtWrapper = document.getElementById('newDateTimeWrapper');
-      
-      if(action === 'Stornierung') {
-        currentMode = 'cancel';
-        dtWrapper.style.display = 'none';
-        actionBtn.innerText = 'Termin endgültig stornieren';
-        actionBtn.classList.remove('btn-primary');
-        actionBtn.classList.add('btn-danger');
-      } else {
-        currentMode = 'reschedule';
-        dtWrapper.style.display = 'block';
-        actionBtn.innerText = 'Termin sicher verschieben';
-        actionBtn.classList.add('btn-primary');
-        actionBtn.classList.remove('btn-danger');
+/* Set Mode (Tab switch) */
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('formError')?.remove();
+
+  if (actionBtn) {
+    actionBtn.style.pointerEvents = 'auto';
+    actionBtn.style.opacity       = '1';
+    actionBtn.classList.remove('btn--danger');
+    actionBtn.classList.add('btn--primary');
+  }
+
+  if (mode === 'book') {
+    tabBook.classList.add('active');
+    tabReschedule.classList.remove('active');
+    planWrapper.style.display = 'block';
+    area.innerHTML            = formBookTemplate;
+    actionBtn.textContent     = 'Termin verbindlich anfragen';
+  } else {
+    tabReschedule.classList.add('active');
+    tabBook.classList.remove('active');
+    planWrapper.style.display = 'none';
+    area.innerHTML            = formChangeTemplate;
+    actionBtn.textContent     = 'Termin sicher verschieben';
+    currentMode = 'reschedule';
+  }
+
+  startBtnWrap.style.display = 'block';
+  renderTracker();
+
+  setTimeout(() => {
+    const dateEl = document.getElementById('inpDate');
+    if (dateEl) {
+      dateEl.setAttribute('min', new Date().toISOString().split('T')[0]);
+      dateEl.addEventListener('change', loadAvailabilityForDate);
+    }
+  }, 0);
+}
+
+tabBook.addEventListener('click', () => setMode('book'));
+tabReschedule.addEventListener('click', () => setMode('reschedule'));
+sel.addEventListener('change', renderTracker);
+
+setMode('book');
+
+/* Load availability */
+async function loadAvailabilityForDate() {
+  const date       = document.getElementById('inpDate')?.value;
+  const timeSelect = document.getElementById('inpTime');
+  if (!date || !timeSelect) return;
+
+  timeSelect.innerHTML = '<option value="">Lade Verfügbarkeit…</option>';
+
+  try {
+    const res  = await fetch(`${availabilityWebhookUrl}?date=${encodeURIComponent(date)}`);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    const slots = data.freeSlots || [];
+
+    timeSelect.innerHTML = '';
+    if (!slots.length) {
+      timeSelect.innerHTML = '<option value="">Keine freien Slots</option>';
+      return;
+    }
+
+    const placeholder = document.createElement('option');
+    placeholder.value = ''; placeholder.textContent = 'Bitte Uhrzeit auswählen';
+    timeSelect.appendChild(placeholder);
+
+    slots.forEach(slot => {
+      const opt = document.createElement('option');
+      opt.value = slot.start;
+      opt.textContent = `${slot.start} – ${slot.end} Uhr`;
+      opt.dataset.end = slot.end;
+      timeSelect.appendChild(opt);
+    });
+  } catch {
+    timeSelect.innerHTML = '<option value="">Fehler beim Laden</option>';
+  }
+}
+
+/* Step animation */
+function runAnim(id, delayDone, customClass = 'step-active') {
+  return new Promise(resolve => {
+    const s = document.getElementById(id);
+    if (!s || s.classList.contains('disabled')) return resolve();
+    s.classList.remove('pending', 'step-done');
+    s.classList.add(customClass, 'animating', 'showIcons');
+    setTimeout(() => {
+      s.classList.remove('animating', 'step-active', 'step-cancel-active');
+      s.classList.add('step-done');
+      resolve();
+    }, delayDone);
+  });
+}
+
+function generateToken() {
+  return 'TP-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+}
+
+/* Action Button */
+actionBtn.addEventListener('click', async (e) => {
+  e.preventDefault();
+  if (actionBtn.style.pointerEvents === 'none') return;
+
+  const emailVal = document.getElementById('inpEmail')?.value.trim() || '';
+  const tokenVal = document.getElementById('inpToken')?.value.trim() || '';
+  let dateVal = '', timeVal = '', selectedEnd = '';
+
+  if (currentMode !== 'cancel') {
+    dateVal      = document.getElementById('inpDate')?.value || '';
+    const tSel   = document.getElementById('inpTime');
+    timeVal      = tSel?.value || '';
+    selectedEnd  = tSel?.selectedOptions?.[0]?.dataset?.end || '';
+  }
+
+  document.getElementById('formError')?.remove();
+
+  const invalid =
+    !emailVal ||
+    (currentMode === 'book'       && (!dateVal || !timeVal)) ||
+    (currentMode === 'reschedule' && (!tokenVal || !dateVal || !timeVal)) ||
+    (currentMode === 'cancel'     && !tokenVal);
+
+  if (invalid) {
+    const err = document.createElement('div');
+    err.id = 'formError';
+    err.style.cssText = `
+      color:#DC2626; font-size:0.84rem; margin-bottom:14px;
+      padding:12px 16px; background:rgba(220,38,38,0.06);
+      border:1px solid rgba(220,38,38,0.2); border-radius:var(--r);`;
+    err.textContent = 'Bitte fülle alle markierten Pflichtfelder (*) aus.';
+    startBtnWrap.parentNode.insertBefore(err, startBtnWrap);
+    return;
+  }
+
+  let payloadAktion = '';
+  if (currentMode === 'book')       payloadAktion = 'Neu Buchung';
+  if (currentMode === 'reschedule') payloadAktion = 'Umbuchung';
+  if (currentMode === 'cancel')     payloadAktion = 'Stornierung';
+
+  const data = {
+    Aktion: payloadAktion,
+    Email: emailVal,
+    Termin_Datum: dateVal,
+    Termin_Uhrzeit: timeVal,
+    Termin_Bis: selectedEnd
+  };
+
+  let myToken = '';
+  if (currentMode === 'book') {
+    data.Name    = document.getElementById('inpName')?.value.trim();
+    data.Telefon = document.getElementById('inpPhone')?.value.trim();
+    data.Art     = document.getElementById('inpType')?.value;
+    data.Plan    = sel.value === 'plus' ? 'TerminPilot Plus' : 'TerminPilot Standard';
+    myToken = generateToken();
+    data.Token = myToken;
+  } else {
+    data.Sicherheitscode = tokenVal;
+  }
+
+  const oldText = actionBtn.textContent;
+  actionBtn.textContent     = 'Wird verarbeitet…';
+  actionBtn.style.opacity   = '0.6';
+  actionBtn.style.pointerEvents = 'none';
+
+  try {
+    await fetch(bookingWebhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    if (currentMode === 'book') {
+      await runAnim('step1', 1200);
+      await runAnim('step2', 1200);
+      await runAnim('step3', 1200);
+      if (sel.value === 'plus') {
+        document.getElementById('step4').classList.remove('disabled');
+        await runAnim('step4', 1200);
       }
-      renderTracker();
+
+      area.innerHTML = `
+        <div style="padding:24px;text-align:center;background:rgba(22,163,74,0.06);
+                    border:1px solid rgba(22,163,74,0.25);border-radius:var(--r);">
+          <h3 style="color:#16a34a;margin:0 0 10px;font-size:1rem;">✅ Termin erfolgreich angefragt!</h3>
+          <p style="margin:0 0 16px;color:var(--sub);font-size:0.88rem;line-height:1.7;">
+            In der echten Welt würdest du jetzt eine Bestätigung erhalten.
+            Für spätere Änderungen oder Stornierungen, notiere dir diesen Code:
+          </p>
+          <div style="display:inline-block;background:var(--black);padding:8px 20px;
+                      border-radius:var(--r);font-family:monospace;font-size:1.2rem;
+                      color:#fff;letter-spacing:3px;">
+            ${myToken}
+          </div>
+        </div>`;
+
+    } else if (currentMode === 'reschedule') {
+      await runAnim('step1', 800);
+      await runAnim('step2', 1000);
+      await runAnim('step3', 1000);
+      await runAnim('step4', 1000);
+
+      area.innerHTML = `
+        <div style="padding:24px;text-align:center;background:rgba(10,10,10,0.04);
+                    border:1px solid var(--border);border-radius:var(--r);">
+          <h3 style="margin:0 0 8px;font-size:1rem;">🔄 Termin erfolgreich verschoben!</h3>
+          <p style="margin:0;color:var(--sub);font-size:0.88rem;">
+            Dein Termin wurde auf den ${dateVal.split('-').reverse().join('.')} um ${timeVal} Uhr verlegt.
+          </p>
+        </div>`;
+
+    } else if (currentMode === 'cancel') {
+      await runAnim('step1', 800);
+      await runAnim('step2', 1000, 'step-cancel-active');
+      await runAnim('step3', 1000, 'step-cancel-active');
+      await runAnim('step4', 1000, 'step-cancel-active');
+
+      area.innerHTML = `
+        <div style="padding:24px;text-align:center;background:rgba(220,38,38,0.05);
+                    border:1px solid rgba(220,38,38,0.2);border-radius:var(--r);">
+          <h3 style="color:#DC2626;margin:0 0 8px;font-size:1rem;">❌ Termin erfolgreich storniert!</h3>
+          <p style="margin:0;color:var(--sub);font-size:0.88rem;">
+            Schade, dass es nicht klappt. Dein Termin wurde vollständig aus dem System entfernt.
+          </p>
+        </div>`;
     }
 
-    // Timeline dynamisch rendern
-    function renderTracker() {
-      const isPlus = sel.value === 'plus';
+    startBtnWrap.style.display = 'none';
 
-      if (currentMode === 'book') {
-        timelineArea.innerHTML = `
-          <div class="step pending" id="step1"><div class="step-number">1</div><div class="step-content"><div class="step-title">Buchung verarbeitet</div><div class="stepAnim"><div class="mailAnim"><div class="mail">✉️</div><div class="mailbox">📮</div></div></div></div></div>
-          <div class="step pending" id="step2"><div class="step-number">2</div><div class="step-content"><div class="step-title">${isPlus ? 'WhatsApp Erinnerung (Plus)' : 'Erinnerung eingeplant'}</div><div class="stepAnim"><div class="bellAnim"><div class="wave wave1"></div><div class="wave wave2"></div><div class="wave wave3"></div><div class="bell">${isPlus ? '💬' : '🔔'}</div></div></div></div></div>
-          <div class="step pending" id="step3"><div class="step-number">3</div><div class="step-content"><div class="step-title">${isPlus ? 'WhatsApp Bewertung (Plus)' : 'Bewertung vorbereitet'}</div><div class="stepAnim"><div class="reviewMiniAnim"><div class="reviewMiniStar">⭐</div><div class="reviewMiniThumb">👍</div></div></div></div></div>
-          <div class="step disabled" id="step4" style="${isPlus ? '' : 'display:none;'}"><div class="step-number">4</div><div class="step-content"><div class="step-title" style="color:var(--plus)">Smart Follow-Up (Plus Feature)</div></div></div>`;
-      } else if (currentMode === 'reschedule') {
-        timelineArea.innerHTML = `
-          <div class="step pending" id="step1"><div class="step-number">1</div><div class="step-content"><div class="step-title">Sicherheitscode & E-Mail validiert 🔒</div></div></div>
-          <div class="step pending" id="step2"><div class="step-number">2</div><div class="step-content"><div class="step-title">Alten Termin geändert 🔄</div></div></div>
-          <div class="step pending" id="step3"><div class="step-number">3</div><div class="step-content"><div class="step-title">Neuen Termin gebucht 📅</div></div></div>
-          <div class="step pending" id="step4"><div class="step-number">4</div><div class="step-content"><div class="step-title">Updates & Erinnerungen gesendet ✉️</div></div></div>`;
-      } else if (currentMode === 'cancel') {
-        timelineArea.innerHTML = `
-          <div class="step pending" id="step1"><div class="step-number">1</div><div class="step-content"><div class="step-title">Sicherheitscode validiert 🔒</div></div></div>
-          <div class="step pending" id="step2"><div class="step-number">2</div><div class="step-content"><div class="step-title">Termin aus Kalender entfernt 🗑️</div></div></div>
-          <div class="step pending" id="step3"><div class="step-number">3</div><div class="step-content"><div class="step-title">Platz wieder freigegeben ✨</div></div></div>
-          <div class="step pending" id="step4"><div class="step-number">4</div><div class="step-content"><div class="step-title">Storno-Bestätigung gesendet ✉️</div></div></div>`;
-      }
-    }
+  } catch {
+    actionBtn.textContent         = oldText;
+    actionBtn.style.opacity       = '1';
+    actionBtn.style.pointerEvents = 'auto';
+    alert('Fehler bei der Verbindung zum Server. Bitte versuche es erneut.');
+  }
+});
+</script>
 
-    // Tabs umschalten
-    function setMode(mode) {
-      currentMode = mode;
-      document.getElementById('formError')?.remove();
-      
-      if (actionBtn) {
-        actionBtn.style.pointerEvents = 'auto';
-        actionBtn.style.opacity = '1';
-        actionBtn.classList.remove('btn-danger');
-        actionBtn.classList.add('btn-primary');
-      }
-
-      if (mode === 'book') {
-        tabBook.classList.add('active');
-        tabReschedule.classList.remove('active');
-        planWrapper.style.display = 'block';
-        area.innerHTML = formBookTemplate;
-        actionBtn.innerText = 'Termin verbindlich anfragen';
-      } else {
-        tabReschedule.classList.add('active');
-        tabBook.classList.remove('active');
-        planWrapper.style.display = 'none'; 
-        area.innerHTML = formChangeTemplate;
-        actionBtn.innerText = 'Termin sicher verschieben';
-        currentMode = 'reschedule'; // Default Dropdown Wert ist Umbuchung
-      }
-
-      startBtnContainer.style.display = 'block';
-      renderTracker();
-
-      setTimeout(() => {
-        const dateEl = document.getElementById('inpDate');
-        if (dateEl) {
-          const today = new Date().toISOString().split('T')[0];
-          dateEl.setAttribute('min', today);
-          dateEl.addEventListener('change', loadAvailabilityForDate);
-        }
-      }, 0);
-    }
-
-    tabBook.addEventListener('click', () => setMode('book'));
-    tabReschedule.addEventListener('click', () => setMode('reschedule'));
-    sel.addEventListener('change', renderTracker);
-
-    setMode('book');
-
-    async function loadAvailabilityForDate(){
-      const date = document.getElementById('inpDate')?.value;
-      const timeSelect = document.getElementById('inpTime');
-      if(!date || !timeSelect) return;
-
-      timeSelect.innerHTML = '<option value="">Lade Verfügbarkeit...</option>';
-
-      try {
-        const url = `${availabilityWebhookUrl}?date=${encodeURIComponent(date)}`;
-        const response = await fetch(url, { method: 'GET' });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const data = await response.json();
-
-        const freeSlots = data.freeSlots || [];
-        timeSelect.innerHTML = '';
-
-        if (!freeSlots.length) {
-          const opt = document.createElement('option');
-          opt.value = ''; opt.textContent = 'Keine freien Slots';
-          timeSelect.appendChild(opt); return;
-        }
-
-        const placeholder = document.createElement('option');
-        placeholder.value = ''; placeholder.textContent = 'Bitte Uhrzeit auswählen';
-        timeSelect.appendChild(placeholder);
-
-        freeSlots.forEach(slot => {
-          const opt = document.createElement('option');
-          opt.value = slot.start; opt.textContent = `${slot.start} – ${slot.end} Uhr`; opt.dataset.end = slot.end;
-          timeSelect.appendChild(opt);
-        });
-      } catch (err) {
-        timeSelect.innerHTML = '<option value="">Fehler beim Laden</option>';
-      }
-    }
-
-    function runAnim(id, delayDone, customClass = 'active') {
-      return new Promise(resolve => {
-        const s = document.getElementById(id);
-        if(!s || s.classList.contains('disabled')) return resolve();
-        
-        s.classList.remove('pending', 'done');
-        s.classList.add(customClass, 'animating', 'showIcons');
-        
-        setTimeout(()=>{
-          s.classList.remove('animating', 'active', 'danger-active', 'plus-active');
-          s.classList.add('done');
-          resolve();
-        }, delayDone);
-      });
-    }
-
-    function generateToken() { return 'TP-' + Math.random().toString(36).substring(2, 6).toUpperCase(); }
-
-    if(startBtnContainer){
-      actionBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        if(actionBtn.style.pointerEvents === 'none') return;
-
-        const emailVal = document.getElementById('inpEmail')?.value.trim() || '';
-        const tokenVal = document.getElementById('inpToken')?.value.trim() || '';
-        
-        // Date/Time nur relevant, wenn nicht storniert wird
-        let dateVal = '';
-        let timeVal = '';
-        let selectedEnd = '';
-        
-        if(currentMode !== 'cancel') {
-          dateVal = document.getElementById('inpDate')?.value || '';
-          const timeSelect = document.getElementById('inpTime');
-          timeVal = timeSelect?.value || '';
-          selectedEnd = timeSelect?.selectedOptions?.[0]?.dataset?.end || '';
-        }
-
-        const existingError = document.getElementById('formError');
-        if(existingError) existingError.remove();
-
-        // Validierung
-        if(!emailVal || 
-          (currentMode === 'book' && (!dateVal || !timeVal)) || 
-          (currentMode === 'reschedule' && (!tokenVal || !dateVal || !timeVal)) ||
-          (currentMode === 'cancel' && !tokenVal)
-        ) {
-          const errorMsg = document.createElement('div');
-          errorMsg.id = 'formError';
-          errorMsg.style.color = '#fca5a5'; errorMsg.style.fontSize = '14px'; errorMsg.style.marginBottom = '16px';
-          errorMsg.style.padding = '14px'; errorMsg.style.background = 'rgba(239, 68, 68, 0.1)';
-          errorMsg.style.border = '1px solid rgba(239, 68, 68, 0.2)'; errorMsg.style.borderRadius = '12px';
-          errorMsg.textContent = 'Bitte fülle alle markierten Pflichtfelder (*) aus.';
-          startBtnContainer.parentNode.insertBefore(errorMsg, startBtnContainer);
-          return;
-        }
-
-        let payloadAktion = '';
-        if(currentMode === 'book') payloadAktion = 'Neu Buchung';
-        if(currentMode === 'reschedule') payloadAktion = 'Umbuchung';
-        if(currentMode === 'cancel') payloadAktion = 'Stornierung';
-
-        const data = {
-          Aktion: payloadAktion,
-          Email: emailVal,
-          Termin_Datum: dateVal,
-          Termin_Uhrzeit: timeVal,
-          Termin_Bis: selectedEnd
-        };
-
-        let myToken = ''; 
-
-        if(currentMode === 'book') {
-          data.Name = document.getElementById('inpName')?.value.trim();
-          data.Telefon = document.getElementById('inpPhone')?.value.trim();
-          data.Art = document.getElementById('inpType')?.value;
-          data.Plan = sel.value === 'plus' ? 'TerminPilot Plus' : 'TerminPilot Standard';
-          
-          myToken = generateToken();
-          data.Token = myToken;
-        } else {
-          data.Sicherheitscode = tokenVal;
-        }
-
-        const oldText = actionBtn.innerText;
-        actionBtn.innerText = 'Wird verarbeitet...';
-        actionBtn.style.opacity = '0.7';
-        actionBtn.style.pointerEvents = 'none';
-
-        try {
-          await fetch(bookingWebhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-          });
-
-          // Animation Sequence
-          if(currentMode === 'book') {
-            await runAnim('step1', 1200);
-            await runAnim('step2', 1200);
-            await runAnim('step3', 1200);
-            
-            if(sel.value === 'plus') {
-               document.getElementById('step4').classList.remove('disabled');
-               await runAnim('step4', 1200, 'plus-active');
-            }
-
-            area.innerHTML = `
-              <div style="padding:24px; text-align:center; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:16px;">
-                <h3 style="color:#10b981; margin:0 0 8px;">✅ Termin erfolgreich angefragt!</h3>
-                <p style="margin:0 0 16px; color:#cbd5e1; font-size:14px;">In der echten Welt würdest du nun eine Bestätigung erhalten. Falls du den Termin später verschieben oder stornieren musst, nutze diesen Code:</p>
-                <div style="display:inline-block; background:#000; padding:8px 16px; border-radius:8px; border:1px dashed #3b82f6; font-family:monospace; font-size:18px; color:#00d4ff; letter-spacing:2px;">
-                  ${myToken}
-                </div>
-              </div>`;
-              
-          } else if(currentMode === 'reschedule') {
-            await runAnim('step1', 800);
-            await runAnim('step2', 1000); 
-            await runAnim('step3', 1000);
-            await runAnim('step4', 1000);
-
-            area.innerHTML = `
-              <div style="padding:24px; text-align:center; background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.3); border-radius:16px;">
-                <h3 style="color:var(--secondary); margin:0 0 8px;">🔄 Termin erfolgreich verschoben!</h3>
-                <p style="margin:0; color:#cbd5e1; font-size:15px;">Dein Termin wurde sicher auf den ${dateVal.split('-').reverse().join('.')} um ${timeVal} Uhr verlegt.</p>
-              </div>`;
-              
-          } else if(currentMode === 'cancel') {
-            await runAnim('step1', 800);
-            await runAnim('step2', 1000, 'danger-active');
-            await runAnim('step3', 1000, 'danger-active');
-            await runAnim('step4', 1000, 'danger-active');
-
-            area.innerHTML = `
-              <div style="padding:24px; text-align:center; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); border-radius:16px;">
-                <h3 style="color:var(--danger); margin:0 0 8px;">❌ Termin erfolgreich storniert!</h3>
-                <p style="margin:0; color:#cbd5e1; font-size:15px;">Schade, dass es nicht klappt. Dein Termin wurde restlos aus dem System gelöscht.</p>
-              </div>`;
-          }
-          
-          startBtnContainer.style.display = 'none';
-
-        } catch (err) {
-          actionBtn.innerText = oldText;
-          actionBtn.style.opacity = '1';
-          actionBtn.style.pointerEvents = 'auto';
-          alert('Fehler bei der Verbindung zum Server.');
-        }
-      });
-    }
-  </script>
 </body>
 </html>
